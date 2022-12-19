@@ -1,0 +1,68 @@
+# File paths
+train_data: yellow_tripdata_2022-01.parquet
+test_data: yellow_tripdata_2022-02.parquet
+
+# Model Config
+RANDOM_STATE: 123
+TEST_SIZE: 0.1
+
+TARGET: trip_duration
+
+NUMERICAL_VARS: 
+  - VendorID
+  - tpep_pickup_datetime
+  - tpep_dropoff_datetime
+  - passenger_count
+  - trip_distance
+  - RatecodeID
+  - PULocationID
+  - DOLocationID
+  - payment_type
+  - fare_amount
+  - extra
+  - mta_tax
+  - tip_amount
+  - tolls_amount
+  - improvement_surcharge
+  - total_amount
+  - congestion_surcharge
+  - airport_fee
+
+
+CATEGORICAL_VARS: 
+  - store_and_fwd_flag
+
+NUM_VARS_WF_NA: 
+  - RatecodeID
+
+INPUT_FEATURES:
+  - DOLocationID
+  - payment_type
+  - PULocationID
+  - RatecodeID
+  - total_amount
+  - tpep_pickup_datetime
+  - trip_distance
+  - VendorID
+
+IMPORTANT_FEATURES:
+  - day_of_week
+  - DOLocationID
+  - hour_of_day
+  - payment_type
+  - PULocationID
+  - RatecodeID
+  - RatecodeID_na
+  - total_amount
+  - tpep_pickup_datetime
+  - trip_distance
+  - VendorID
+  
+VARS_TO_DROP:
+  - tpep_pickup_datetime
+  
+VARS_TO_LOG_TRANSFORM: 
+  - trip_distance 
+  - total_amount
+  
+TEMPORAL_VAR: tpep_pickup_datetime
