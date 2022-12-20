@@ -1,9 +1,12 @@
 import warnings
 import logging
+import typing as tp
 
 import pandas as pd
+
 # from Scikit-learn
 from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
 
 
 # Custom Imports
@@ -15,8 +18,7 @@ from src.utilities.experiment import eval_metrics
 warnings.filterwarnings("error")
 
 
-
-def train_model(*, train_data: pd.DataFrame) -> None:
+def train_model(*, train_data: pd.DataFrame, pipe: Pipeline) -> tp.Tuple:
     """This is used to train the model.
 
     Params:
@@ -27,7 +29,8 @@ def train_model(*, train_data: pd.DataFrame) -> None:
     --------
     None
     """
-    def _set_up_logger(delim: str = "::") -> None:
+
+    def _set_up_logger(delim: str = "::") -> tp.Tuple:
         """This is used to create a basic logger."""
         format_ = f"%(levelname)s {delim} %(asctime)s {delim} %(message)s"
         logging.basicConfig(level=logging.INFO, format=format_)
@@ -49,28 +52,26 @@ def train_model(*, train_data: pd.DataFrame) -> None:
 
     # Train Model
     logger.info("========== Training model ==========")
-    rf_pipe.fit(X_train, y_train)
+    pipe.fit(X_train, y_train)
 
     # Predictions using train data
     logger.info("========== Making Predictions ==========")
-    y_pred_train = rf_pipe.predict(X_train)
+    _ = pipe.predict(X_train)
+    
     # Predictions using validation data
     y_pred = rf_pipe.predict(X_validate)
-
-    # Persist Model
-    save_model(filename=config.src_config.MODEL_PATH, pipe=rf_pipe)
-
-    logger.info("========== Evaluating Performance ==========")
-    rmse, mse, mae, r2 = eval_metrics(actual=y_validate, pred=y_pred)
-
-    logger.info(f"  RMSE: {rmse}")
-    logger.info(f"  MSE: {mse}")
-    logger.info(f"  MAE: {mae}")
-    logger.info(f"  R2: {r2}")
+    return pipe, y_validate, y_pred
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Load Data
     train_data = load_data(filename=config.src_config.TRAIN_DATA)
-    train_model(train_data=train_data)
+
+    # Train model
+    pipe, y_validate, y_pred = train_model(train_data=train_data, pipe=rf_pipe)
+
+    # Save model
+    save_model(filename=config.src_config.MODEL_PATH, pipe=rf_pipe)
+
+    # Evaluate model performance
+    rmse, mse, mae, r2 = eval_metrics(actual=y_validate, pred=y_pred)

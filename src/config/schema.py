@@ -3,11 +3,12 @@ This module is used to validate the data.
 
 author: Chinedu Ezeofor
 """
-
-import datetime
+import pandas as pd
+from sklearn.pipeline import Pipeline
 
 # Built-in
 import typing as tp
+import datetime
 
 # Standard imports
 from pydantic import BaseModel
@@ -83,3 +84,10 @@ class SrcConfig(BaseModel):
 class ConfigVars(BaseModel):
     model_config: ModelConfig
     src_config: SrcConfig
+
+
+class ValidateSklearnPipe(BaseModel):
+    pipe: Pipeline
+
+    class Config:
+        arbitrary_types_allowed = True

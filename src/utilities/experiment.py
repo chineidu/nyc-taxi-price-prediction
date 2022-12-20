@@ -7,6 +7,7 @@ author: Chinedu Ezeofor
 # Built-in
 import typing as tp
 import warnings
+import logging
 
 import mlflow
 
@@ -20,12 +21,17 @@ from sklearn import metrics
 from sklearn.pipeline import Pipeline
 
 
-def eval_metrics(actual: np.ndarray, pred: np.ndarray) -> tp.Tuple:
+def eval_metrics(actual: np.ndarray, pred: np.ndarray) -> tp.Tuple[float]:
     """This is used to evaluate the performance of the model."""
     rmse = metrics.mean_squared_error(actual, pred, squared=False)
     mse = metrics.mean_squared_error(actual, pred, squared=True)
     mae = metrics.mean_absolute_error(actual, pred)
     r2 = metrics.r2_score(actual, pred)
+
+    logging.info(f"  RMSE: {rmse}")
+    logging.info(f"  MSE: {mse}")
+    logging.info(f"  MAE: {mae}")
+    logging.info(f"  R2: {r2}")
 
     return (rmse, mse, mae, r2)
 
