@@ -4,12 +4,13 @@ This module is used to validate the data.
 author: Chinedu Ezeofor
 """
 
-# Standard imports
-from pydantic import BaseModel
+import datetime
 
 # Built-in
 import typing as tp
-import datetime
+
+# Standard imports
+from pydantic import BaseModel
 
 
 class TrainingSchema(BaseModel):
@@ -60,6 +61,8 @@ class ValidateInputSchema(BaseModel):
 class ModelConfig(BaseModel):
     RANDOM_STATE: int
     TEST_SIZE: float
+    N_ESTIMATORS: int
+    MAX_DEPTH: int
     TARGET: str
     NUMERICAL_VARS: tp.List[str]
     INPUT_FEATURES: tp.List[str]
@@ -71,11 +74,12 @@ class ModelConfig(BaseModel):
     TEMPORAL_VAR: str
 
 
-class MLFlowConfig(BaseModel):
-    pass
+class SrcConfig(BaseModel):
+    TRAIN_DATA: str
+    TEST_DATA: str
+    MODEL_PATH: str
 
 
 class ConfigVars(BaseModel):
     model_config: ModelConfig
-    mlflow_config: MLFlowConfig
-    
+    src_config: SrcConfig

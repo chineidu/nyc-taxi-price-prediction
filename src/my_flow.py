@@ -4,6 +4,8 @@ import logging
 # from Scikit-learn
 from sklearn.model_selection import train_test_split
 
+from prefect import task, flow
+
 # Custom Imports
 from processing.data_manager import load_data, save_model
 from src.config.core import config
@@ -13,6 +15,7 @@ from src.utilities.experiment import eval_metrics
 warnings.filterwarnings("error")
 
 
+@task(retries=3, retry_delay_seconds=3)
 def train_model() -> None:
     """This is used to train the model.
 
@@ -25,6 +28,7 @@ def train_model() -> None:
     data (Pandas DF): The validated DF.
     error (str or None): None if there's no error else a str.
     """
+
     def _set_up_logger(delim: str = "::") -> None:
         """This is used to create a basic logger."""
         format_ = f"%(levelname)s {delim} %(asctime)s {delim} %(message)s"
@@ -69,4 +73,9 @@ def train_model() -> None:
     logger.info(f"  R2: {r2}")
 
 
-train_model()
+@flow
+def run_flow():
+    train_model()
+
+
+run_flow()

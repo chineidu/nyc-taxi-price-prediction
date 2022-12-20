@@ -4,20 +4,20 @@ This module contains function(s) for tracking an experiment using MLFlow.
 author: Chinedu Ezeofor
 """
 
+# Built-in
+import typing as tp
+import warnings
+
+import mlflow
+
 # Standard imports
 import numpy as np
 import pandas as pd
+from pydantic import BaseModel
 
 # Sklearn
 from sklearn import metrics
 from sklearn.pipeline import Pipeline
-
-from pydantic import BaseModel
-import mlflow
-
-# Built-in
-import typing as tp
-import warnings
 
 
 def eval_metrics(actual: np.ndarray, pred: np.ndarray) -> tp.Tuple:
@@ -70,8 +70,8 @@ def run_experiment(
     None
     """
 
-    from urllib.parse import urlparse
     import logging
+    from urllib.parse import urlparse
 
     warnings.filterwarnings("ignore")  # Required
 
@@ -117,4 +117,3 @@ def run_experiment(
         else:
             mlflow.sklearn.log_model(estimator, "model")
     logger.info(f"========= Training {experiment.model_name!r} Done! =========")
-    

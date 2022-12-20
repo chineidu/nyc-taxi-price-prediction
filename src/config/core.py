@@ -1,17 +1,18 @@
-import yaml
-
-# Custom Imports
-from schema import MLFlowConfig, ConfigVars, ModelConfig
-import src
-
 import typing as tp
 from pathlib import Path
 
-SRC_DIR = Path(src.__file__).absolute().parent
-ROOT_DIR = SRC_DIR.parent
-CONFIG_FILEPATH = SRC_DIR / "config.yml"
-DATA_FILEPATH = SRC_DIR / "data"
-TRAINED_MODELS_FILEPATH = SRC_DIR / "models"
+import yaml
+
+import src
+
+# Custom Imports
+from src.config.schema import ConfigVars, ModelConfig, SrcConfig
+
+SRC_ROOT = Path(src.__file__).absolute().parent
+ROOT = SRC_ROOT.parent
+CONFIG_FILEPATH = SRC_ROOT / "config.yml"
+DATA_FILEPATH = SRC_ROOT / "data"
+TRAINED_MODELS_FILEPATH = SRC_ROOT / "models"
 
 
 def load_yaml_file(*, filename: tp.Optional[Path] = None) -> tp.Dict:
@@ -26,13 +27,15 @@ def load_yaml_file(*, filename: tp.Optional[Path] = None) -> tp.Dict:
 
 def validate_config_file(*, filename: tp.Optional[Path] = None) -> ConfigVars:
     """This loads the config as a Pydantic object."""
-    config_dict = load_yaml_file(filename)
+    config_dict = load_yaml_file(filename=filename)
 
+    # Validate config
     config_file = ConfigVars(
         model_config=ModelConfig(**config_dict),
-        mlflow_config=MLFlowConfig(**config_dict),
+        src_config=SrcConfig(**config_dict),
     )
     return config_file
 
 
+print(CONFIG_FILEPATH)
 config = validate_config_file(filename=None)

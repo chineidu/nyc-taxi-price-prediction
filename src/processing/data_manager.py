@@ -4,24 +4,44 @@ This module is used to load the data.
 author: Chinedu Ezeofor
 """
 
+import typing as tp
+from pathlib import Path
+import logging
+import joblib
+
 # Standard imports
 import numpy as np
 import pandas as pd
 from pydantic import ValidationError
-from schema import ValidateInputSchema, ValidateTrainingData
 
-import typing as tp
+from sklearn.pipeline import Pipeline
+
+# Custom Imports
+from config.schema import ValidateInputSchema, ValidateTrainingData
+from src.config.core import DATA_FILEPATH, TRAINED_MODELS_FILEPATH
 
 
-def load_data(fp: str) -> pd.DataFrame:
-    """This returns the data as a Pandas DF."""
-    data = pd.read_csv(fp) if fp.endswith("csv") else pd.read_parquet(fp)
+def load_data(*, filename: Path) -> pd.DataFrame:
+    """This returns the data as a Pandas DF.
+    
+    Params:
+    -------
+    filename (Path): The input filepath.
+
+    Returns:
+    --------
+    data (Pandas DF): The loaded DF.
+    """
+    filename = f"{DATA_FILEPATH}/{filename}"
+    data = (
+        pd.read_csv(filename) if filename.endswith("csv") else pd.read_parquet(filename)
+    )
     TRIP_DUR_THRESH = 60  # trip_duration
     TRIP_DIST_THRESH = 30  # trip_distance
     TOTAL_AMT_THRESH = 100  # total_amount
     MIN_THRESH = 0
 
-    if fp.endswith("parquet"):
+    if filename.endswith("parquet"):
 
         def calculate_trip_duration(data: pd.DataFrame) -> pd.DataFrame:
             """This returns a DF containing the calculated trip_duration in minutes."""
@@ -45,7 +65,7 @@ def load_data(fp: str) -> pd.DataFrame:
             (data["total_amount"] > MIN_THRESH)
             & (data["total_amount"] <= TOTAL_AMT_THRESH)
         ]
-        data[f"trip_duration"] = np.log1p(data["trip_duration"])  # Log transform
+        data["trip_duration"] = np.log1p(data["trip_duration"])  # Log transform
     return data
 
 
@@ -53,7 +73,17 @@ def validate_training_input(
     *,
     data: pd.DataFrame,
 ) -> tp.Tuple[pd.DataFrame, tp.Union[None, str]]:
-    """This is used to validate the training data using a Pydantic Model."""
+    """This is used to validate the training data using a Pydantic Model.
+
+    Params:
+    -------
+    data (Pandas DF): DF containing the training data.
+
+    Returns:
+    --------
+    data (Pandas DF): The validated DF.
+    error (str or None): None if there's no error else a str.
+    """
     # load the data
     data = data.copy()
     error = None
@@ -66,13 +96,23 @@ def validate_training_input(
     except ValidationError as err:
         error = err.json()
         return (data, error)
-    
-    
+
+
 def validate_input(
     *,
     data: pd.DataFrame,
 ) -> tp.Tuple[pd.DataFrame, tp.Union[None, str]]:
-    """This is used to validate the input data using a Pydantic Model."""
+    """This is used to validate the input data using a Pydantic Model.
+
+    Params:
+    -------
+    data (Pandas DF): DF containing the training data.
+
+    Returns:
+    --------
+    data (Pandas DF): The validated DF.
+    error (str or None): None if there's no error else a str.
+    """
     # load the data
     data = data.copy()
     error = None
@@ -86,4 +126,21 @@ def validate_input(
     except ValidationError as err:
         error = err.json()
         return (data, error)
-    
+
+
+def save_model(*, filename: Path, pipe: Pipeline) -> None:
+    """This is used to persit a model.
+
+    Params:
+    -------
+    filename (Path): Filepath to save the data.
+
+    Returns:
+    --------
+    None
+    """
+    filename = f"{TRAINED_MODELS_FILEPATH}/{filename}"
+
+    logging.info("==========  Saving Model ========== ")
+    with open(filename, "wb") as file:
+        joblib.dump(pipe, filename)

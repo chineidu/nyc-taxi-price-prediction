@@ -1,14 +1,19 @@
 # File paths
-train_data: yellow_tripdata_2022-01.parquet
-test_data: yellow_tripdata_2022-02.parquet
+TRAIN_DATA: yellow_tripdata_2022-01.parquet
+TEST_DATA: yellow_tripdata_2022-02.parquet
+MODEL_PATH: regression_pipe.joblib
 
 # Model Config
 RANDOM_STATE: 123
 TEST_SIZE: 0.1
 
+# Hyperparameters
+N_ESTIMATORS: 10
+MAX_DEPTH: 10
+
 TARGET: trip_duration
 
-NUMERICAL_VARS: 
+NUMERICAL_VARS:
   - VendorID
   - tpep_pickup_datetime
   - tpep_dropoff_datetime
@@ -28,11 +33,10 @@ NUMERICAL_VARS:
   - congestion_surcharge
   - airport_fee
 
-
-CATEGORICAL_VARS: 
+CATEGORICAL_VARS:
   - store_and_fwd_flag
 
-NUM_VARS_WF_NA: 
+NUM_VARS_WF_NA:
   - RatecodeID
 
 INPUT_FEATURES:
@@ -57,12 +61,12 @@ IMPORTANT_FEATURES:
   - tpep_pickup_datetime
   - trip_distance
   - VendorID
-  
+
 VARS_TO_DROP:
   - tpep_pickup_datetime
-  
-VARS_TO_LOG_TRANSFORM: 
-  - trip_distance 
+
+VARS_TO_LOG_TRANSFORM:
+  - trip_distance
   - total_amount
-  
+
 TEMPORAL_VAR: tpep_pickup_datetime
