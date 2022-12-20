@@ -1,8 +1,10 @@
 import warnings
 import logging
 
+import pandas as pd
 # from Scikit-learn
 from sklearn.model_selection import train_test_split
+
 
 # Custom Imports
 from processing.data_manager import load_data, save_model
@@ -13,17 +15,17 @@ from src.utilities.experiment import eval_metrics
 warnings.filterwarnings("error")
 
 
-def train_model() -> None:
+
+def train_model(*, train_data: pd.DataFrame) -> None:
     """This is used to train the model.
 
     Params:
     -------
-    data (Pandas DF): DF containing the training data.
+    train_data (Pandas DF): DF containing the training data.
 
     Returns:
     --------
-    data (Pandas DF): The validated DF.
-    error (str or None): None if there's no error else a str.
+    None
     """
     def _set_up_logger(delim: str = "::") -> None:
         """This is used to create a basic logger."""
@@ -33,8 +35,6 @@ def train_model() -> None:
         return logger
 
     logger = _set_up_logger()
-    # Load Data
-    train_data = load_data(filename=config.src_config.TRAIN_DATA)
 
     # Split the data
     X = train_data.drop(columns=[config.model_config.TARGET])
@@ -69,4 +69,8 @@ def train_model() -> None:
     logger.info(f"  R2: {r2}")
 
 
-train_model()
+
+if __name__ == '__main__':
+    # Load Data
+    train_data = load_data(filename=config.src_config.TRAIN_DATA)
+    train_model(train_data=train_data)
