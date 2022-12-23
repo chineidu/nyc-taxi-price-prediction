@@ -1,7 +1,7 @@
 ###
 ### A complete description of a Prefect Deployment for flow 'run-flow'
 ###
-name: test1
+name: demo
 description: |-
   This is the pipeline for running the workflow.
 
@@ -14,7 +14,7 @@ description: |-
   None
 version: 1f0bb4de70dd49bbe1b3b2e5810ac66f
 # The work queue that will handle this deployment's runs
-work_queue_name: default
+work_queue_name: ml
 tags: []
 parameters: {}
 schedule: null
@@ -35,14 +35,8 @@ infrastructure:
 ###
 flow_name: run-flow
 manifest_path: null
-storage:
-  basepath: ~/neidu_infra
-  _block_document_id: dfe0b0cf-0629-40c7-b5a6-a616d4457ba6
-  _block_document_name: neidu-infra
-  _is_anonymous: false
-  block_type_slug: local-file-system
-  _block_type_slug: local-file-system
-path: ''
+storage: null
+path: /Users/neidu/Desktop/Projects/Personal/My_Projects/nyc-taxi-price-prediction
 entrypoint: src/orchestrate.py:run_flow
 parameter_openapi_schema:
   title: Parameters
