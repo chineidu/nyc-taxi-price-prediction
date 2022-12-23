@@ -75,13 +75,21 @@ $ prefect deployment apply run_flow-deployment.yaml
 * To `build` and `apply` a deployment, run:
 
 ```console  
-$ prefect deployment build -n demo_deployment my_deployments.py:run_flow -q test -a
+$ prefect deployment build -n <deployment_name> <entry_point>:<flow_func> -q <queue_name> -a
 ```
+
+#### Note: `entry_point` is the path to the source code containing the flow.
 
 * To start a Prefect `agent`, run:
 
 ```console
 $ prefect agent start  --work-queue <"work_queue_name">
+```
+
+OR 
+
+```console
+$ prefect agent start  -q <"work_queue_name">
 ```
 
 e.g
@@ -122,10 +130,9 @@ my_process_infra.save(name="process-infra", overwrite=True)
 $ prefect blocks ls
 ```
 
-
 * Deploy a workflow using the `storage block` and `infrastructure block`
 
-``console  
+```console  
 $ prefect deployment build -n <name> -sb <storage_block_Slug> -ib <process_blocks_Slug> <entry_point>:<name_off_flow> -a
 ```
 
