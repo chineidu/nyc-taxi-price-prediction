@@ -133,6 +133,10 @@ $ prefect blocks ls
 * Deploy a workflow using the `storage block` and `infrastructure block`
 
 ```console  
-$ prefect deployment build -n <name> -sb <storage_block_Slug> -ib <process_blocks_Slug> <entry_point>:<name_off_flow> -a
+$ prefect deployment build \
+-n <name> \
+-sb <storage_block_Slug> \
+-ib <process_blocks_Slug> \
+<entry_point>:<name_off_flow> -a
 ```
 
