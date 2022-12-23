@@ -1,21 +1,20 @@
 from pathlib import Path
 import typing as tp
+from datetime import timedelta
 
-from prefect import task, flow
+from prefect import task, flow, get_run_logger
 from prefect.task_runners import ConcurrentTaskRunner
 from prefect.tasks import task_input_hash
+from prefect.filesystems import LocalFileSystem
+from prefect.infrastructure.process import Process
 
 
 # Custom Imports
 from src.train import train_model
-from src.pipeline import rf_pipe
 from processing.data_manager import load_data, save_model
 from src.utilities.experiment import eval_metrics
-from src.config.schema import ValidateSklearnPipe
 from src.config.core import config
 
-
-from datetime import timedelta
 
 # Create task(s). Use this syntax since the functions were imported.
 load_data = task(load_data, retries=3, retry_delay_seconds=3)
@@ -29,16 +28,16 @@ train_model = task(
 eval_metrics = task(eval_metrics, retries=3, retry_delay_seconds=3)
 save_model = task(save_model, retries=3, retry_delay_seconds=3)
 
+local_file_system_block = LocalFileSystem.load("demo-storage-block")
+process_block = Process.load("process-infra")
 
 @flow(task_runner=ConcurrentTaskRunner)
-def train_ML_model_flow(*, filename: Path, pipe_obj: ValidateSklearnPipe) -> tp.Tuple:
+def train_ML_model_flow(*, filename: Path,) -> tp.Tuple:
     """This is the subflow for training the model.
 
     Params:
     -------
     filename (Path): Input data filepath.
-    pipe_obj (ValidateSklearnPipe): A pipeline (estimator) object created by validating an
-        Sklearn pipeline using Pydantic.
 
     Returns:
     --------
@@ -46,29 +45,36 @@ def train_ML_model_flow(*, filename: Path, pipe_obj: ValidateSklearnPipe) -> tp.
         validation y_values and the predicted values (obtaiined from the estimator)
     """
     train_data = load_data(filename=filename)
-    pipe, y_validate, y_pred = train_model(train_data=train_data, pipe=pipe_obj.pipe)
+    pipe, y_validate, y_pred = train_model(train_data=train_data)
     return pipe, y_validate, y_pred
 
 
 @flow(task_runner=ConcurrentTaskRunner)
-def run_flow(*, filename: Path, pipe_obj: ValidateSklearnPipe):
+def run_flow(*, filename: Path):
     """This is the pipeline for running the workflow.
 
     Params:
     -------
     filename (Path): Input data filepath.
-    pipe_obj (ValidateSklearnPipe): A pipeline (estimator) object created by validating an
-        Sklearn pipeline using Pydantic.
 
     Returns:
     --------
     None
     """
-    pipe, y_validate, y_pred = train_ML_model_flow(filename=filename, pipe_obj=pipe_obj)
+    logger = get_run_logger()
+    logger.info("====== Training model ======")
+    pipe, y_validate, y_pred = train_ML_model_flow(filename=filename)
     save_model(filename=config.src_config.MODEL_PATH, pipe=pipe)
-    _ = eval_metrics(actual=y_validate, pred=y_pred)
+    rmse, mse, mae, r2 = eval_metrics(actual=y_validate, pred=y_pred)
+    # Log Metrics
+    logger.info(f"  RMSE: {rmse}")
+    logger.info(f"  MSE: {mse}")
+    logger.info(f"  MAE: {mae}")
+    logger.info(f"  R2: {r2}")
 
 
-# Created because Prefect needs to validate the Pipeline.
-pipe_obj = ValidateSklearnPipe(pipe=rf_pipe)
-run_flow(filename=config.src_config.TRAIN_DATA, pipe_obj=pipe_obj)
+
+if __name__ == '__main__':
+    local_file_system_block = LocalFileSystem.load("demo-storage-block")
+    process_block = Process.load("process-infra")
+    run_flow(filename=config.src_config.TRAIN_DATA)
