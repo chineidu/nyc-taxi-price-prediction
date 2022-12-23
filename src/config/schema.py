@@ -3,15 +3,14 @@ This module is used to validate the data.
 
 author: Chinedu Ezeofor
 """
-import pandas as pd
-from sklearn.pipeline import Pipeline
+import datetime
 
 # Built-in
 import typing as tp
-import datetime
 
 # Standard imports
 from pydantic import BaseModel
+from sklearn.pipeline import Pipeline
 
 
 class TrainingSchema(BaseModel):
@@ -75,7 +74,7 @@ class ModelConfig(BaseModel):
     TEMPORAL_VAR: str
 
 
-class SrcConfig(BaseModel):
+class PathConfig(BaseModel):
     TRAIN_DATA: str
     TEST_DATA: str
     MODEL_PATH: str
@@ -83,7 +82,7 @@ class SrcConfig(BaseModel):
 
 class ConfigVars(BaseModel):
     model_config: ModelConfig
-    src_config: SrcConfig
+    path_config: PathConfig
 
 
 class ValidateSklearnPipe(BaseModel):

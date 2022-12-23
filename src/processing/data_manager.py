@@ -4,26 +4,26 @@ This module is used to load the data.
 author: Chinedu Ezeofor
 """
 
-import typing as tp
-from pathlib import Path
 import logging
+import typing as tp
+
 import joblib
 
 # Standard imports
 import numpy as np
 import pandas as pd
 from pydantic import ValidationError
-
 from sklearn.pipeline import Pipeline
 
-# Custom Imports
-from config.schema import ValidateInputSchema, ValidateTrainingData
 from src.config.core import DATA_FILEPATH, TRAINED_MODELS_FILEPATH
 
+# Custom Imports
+from src.config.schema import ValidateInputSchema, ValidateTrainingData
 
-def load_data(*, filename: Path) -> pd.DataFrame:
+
+def load_data(*, filename: str) -> pd.DataFrame:
     """This returns the data as a Pandas DF.
-    
+
     Params:
     -------
     filename (Path): The input filepath.
@@ -128,7 +128,7 @@ def validate_input(
         return (data, error)
 
 
-def save_model(*, filename: Path, pipe: Pipeline) -> None:
+def save_model(*, filename: str, pipe: Pipeline) -> None:
     """This is used to persit a model.
 
     Params:
@@ -143,4 +143,4 @@ def save_model(*, filename: Path, pipe: Pipeline) -> None:
 
     logging.info("==========  Saving Model ========== ")
     with open(filename, "wb") as file:
-        joblib.dump(pipe, filename)
+        joblib.dump(pipe, file)

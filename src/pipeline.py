@@ -12,7 +12,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
 # Custom Imports
-import processing.feat_engineering as fe
+import src.processing.feat_engineering as fe
 from src.config.core import config
 
 warnings.filterwarnings("error")

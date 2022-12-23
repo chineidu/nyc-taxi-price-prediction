@@ -6,7 +6,7 @@ import yaml
 import src
 
 # Custom Imports
-from src.config.schema import ConfigVars, ModelConfig, SrcConfig
+from src.config.schema import ConfigVars, ModelConfig, PathConfig
 
 SRC_ROOT = Path(src.__file__).absolute().parent
 ROOT = SRC_ROOT.parent
@@ -32,7 +32,7 @@ def validate_config_file(*, filename: tp.Optional[Path] = None) -> ConfigVars:
     # Validate config
     config_file = ConfigVars(
         model_config=ModelConfig(**config_dict),
-        src_config=SrcConfig(**config_dict),
+        path_config=PathConfig(**config_dict),
     )
     return config_file
 

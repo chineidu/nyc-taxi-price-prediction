@@ -4,10 +4,11 @@ This module contains function(s) for tracking an experiment using MLFlow.
 author: Chinedu Ezeofor
 """
 
+import logging
+
 # Built-in
 import typing as tp
 import warnings
-import logging
 
 import mlflow
 
@@ -21,12 +22,14 @@ from sklearn import metrics
 from sklearn.pipeline import Pipeline
 
 
-def eval_metrics(actual: np.ndarray, pred: np.ndarray) -> tp.Tuple[float]:
+def eval_metrics(
+    actual: np.ndarray, pred: np.ndarray
+) -> tp.Tuple[float, float, float, float]:
     """This is used to evaluate the performance of the model."""
-    rmse = metrics.mean_squared_error(actual, pred, squared=False)
-    mse = metrics.mean_squared_error(actual, pred, squared=True)
-    mae = metrics.mean_absolute_error(actual, pred)
-    r2 = metrics.r2_score(actual, pred)
+    rmse = float(metrics.mean_squared_error(actual, pred, squared=False))
+    mse = float(metrics.mean_squared_error(actual, pred, squared=True))
+    mae = float(metrics.mean_absolute_error(actual, pred))
+    r2 = float(metrics.r2_score(actual, pred))
 
     logging.info(f"  RMSE: {rmse}")
     logging.info(f"  MSE: {mse}")

@@ -1,20 +1,17 @@
-from pathlib import Path
 import typing as tp
 from datetime import timedelta
+from pathlib import Path
 
-from prefect import task, flow, get_run_logger
+from prefect import flow, get_run_logger, task
 from prefect.task_runners import ConcurrentTaskRunner
 from prefect.tasks import task_input_hash
-from prefect.filesystems import LocalFileSystem
-from prefect.infrastructure.process import Process
 
+from processing.data_manager import load_data, save_model
+from src.config.core import config
 
 # Custom Imports
 from src.train import train_model
-from processing.data_manager import load_data, save_model
 from src.utilities.experiment import eval_metrics
-from src.config.core import config
-
 
 # Create task(s). Use this syntax since the functions were imported.
 load_data = task(load_data, retries=3, retry_delay_seconds=3)
@@ -28,11 +25,12 @@ train_model = task(
 eval_metrics = task(eval_metrics, retries=3, retry_delay_seconds=3)
 save_model = task(save_model, retries=3, retry_delay_seconds=3)
 
-local_file_system_block = LocalFileSystem.load("demo-storage-block")
-process_block = Process.load("process-infra")
 
 @flow(task_runner=ConcurrentTaskRunner)
-def train_ML_model_flow(*, filename: Path,) -> tp.Tuple:
+def train_ML_model_flow(
+    *,
+    filename: Path,
+) -> tp.Tuple:
     """This is the subflow for training the model.
 
     Params:
@@ -64,7 +62,7 @@ def run_flow(*, filename: Path):
     logger = get_run_logger()
     logger.info("====== Training model ======")
     pipe, y_validate, y_pred = train_ML_model_flow(filename=filename)
-    save_model(filename=config.src_config.MODEL_PATH, pipe=pipe)
+    save_model(filename=config.path_config.MODEL_PATH, pipe=pipe)
     rmse, mse, mae, r2 = eval_metrics(actual=y_validate, pred=y_pred)
     # Log Metrics
     logger.info(f"  RMSE: {rmse}")
@@ -73,8 +71,5 @@ def run_flow(*, filename: Path):
     logger.info(f"  R2: {r2}")
 
 
-
-if __name__ == '__main__':
-    local_file_system_block = LocalFileSystem.load("demo-storage-block")
-    process_block = Process.load("process-infra")
-    run_flow(filename=config.src_config.TRAIN_DATA)
+if __name__ == "__main__":
+    run_flow(filename=config.path_config.TRAIN_DATA)

@@ -1,13 +1,12 @@
+from datetime import timedelta
+
 from prefect.deployments import Deployment
 from prefect.orion.schemas.schedules import IntervalSchedule
 
-# Custom Imports
-from src.orchestrate import run_flow
 from src.config.core import config
 
-from datetime import timedelta
-
-
+# Custom Imports
+from src.orchestrate import run_flow
 
 deployment = Deployment.build_from_flow(
     flow=run_flow,
