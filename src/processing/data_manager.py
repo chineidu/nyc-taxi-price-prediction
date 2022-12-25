@@ -3,7 +3,6 @@ This module is used to load the data.
 
 author: Chinedu Ezeofor
 """
-
 import logging
 import typing as tp
 
@@ -15,10 +14,12 @@ import pandas as pd
 from pydantic import ValidationError
 from sklearn.pipeline import Pipeline
 
-from src.config.core import DATA_FILEPATH, TRAINED_MODELS_FILEPATH
-
 # Custom Imports
 from src.config.schema import ValidateInputSchema, ValidateTrainingData
+from src.config.core import DATA_FILEPATH, TRAINED_MODELS_FILEPATH
+
+
+Estimator = tp.Union[Pipeline, tp.Any]  # Alias for estimator
 
 
 def load_data(*, filename: str) -> pd.DataFrame:
@@ -144,3 +145,23 @@ def save_model(*, filename: str, pipe: Pipeline) -> None:
     logging.info("==========  Saving Model ========== ")
     with open(filename, "wb") as file:
         joblib.dump(pipe, file)
+
+
+def load_model(*, model_fp: str) -> Estimator:
+    """This is used to load the trained model.
+
+    Params:
+    -------
+    None
+
+    Returns:
+    --------
+    Estimator: The trained model.
+    """
+    # model_fp = config.path_config.MODEL_PATH
+    filename = f"{TRAINED_MODELS_FILEPATH}/{model_fp}"
+
+    logging.info("==========  Loading Model ========== ")
+    with open(filename, "rb") as file:
+        model = joblib.load(filename=file)
+    return model
