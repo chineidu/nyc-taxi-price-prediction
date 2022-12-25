@@ -4,14 +4,14 @@ This module is used to test predictions.
 author: Chinedu Ezeofor
 """
 
+import typing as tp
+
 import numpy as np
 import pandas as pd
 
 # Custom imports
 from src.predict import make_predictions
 
-
-import typing as tp
 
 def test_make_predictions(test_data: pd.DataFrame):
     """This tests the the predictions."""

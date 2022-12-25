@@ -4,6 +4,7 @@ This module is used to load the data.
 author: Chinedu Ezeofor
 """
 import typing as tp
+from pathlib import Path
 
 import joblib
 
@@ -13,15 +14,15 @@ import pandas as pd
 from pydantic import ValidationError
 from sklearn.pipeline import Pipeline
 
-# Custom Imports
-from src.config.schema import ValidateInputSchema, ValidateTrainingData
 from src.config.core import DATA_FILEPATH, TRAINED_MODELS_FILEPATH
 
+# Custom Imports
+from src.config.schema import ValidateInputSchema, ValidateTrainingData
 
 Estimator = tp.Union[Pipeline, tp.Any]  # Alias for estimator
 
 
-def load_data(*, filename: str) -> pd.DataFrame:
+def load_data(*, filename: tp.Union[str, Path]) -> pd.DataFrame:
     """This returns the data as a Pandas DF.
 
     Params:
@@ -129,7 +130,7 @@ def validate_input(
         return (data, error)
 
 
-def save_model(*, filename: str, pipe: Pipeline) -> None:
+def save_model(*, filename: tp.Union[str, Path], pipe: Pipeline) -> None:
     """This is used to persit a model.
 
     Params:
@@ -140,14 +141,14 @@ def save_model(*, filename: str, pipe: Pipeline) -> None:
     --------
     None
     """
-    filename = TRAINED_MODELS_FILEPATH / filename 
+    filename = TRAINED_MODELS_FILEPATH / filename
 
     print("==========  Saving Model ========== ")
     with open(filename, "wb") as file:
         joblib.dump(pipe, file)
 
 
-def load_model(*, filename: str) -> Estimator:
+def load_model(*, filename: tp.Union[str, Path]) -> Estimator:
     """This is used to load the trained model.
 
     Params:
@@ -158,7 +159,7 @@ def load_model(*, filename: str) -> Estimator:
     --------
     Estimator: The trained model.
     """
-    filename =  TRAINED_MODELS_FILEPATH / filename 
+    filename = TRAINED_MODELS_FILEPATH / filename
     print("==========  Loading Model ========== ")
     with open(filename, "rb") as file:
         trained_model = joblib.load(filename=file)

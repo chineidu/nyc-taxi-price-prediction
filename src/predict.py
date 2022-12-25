@@ -1,16 +1,16 @@
-import pandas as pd
+import typing as tp
+
 import numpy as np
+import pandas as pd
 
 # Custom Imports
-from src.processing.data_manager import load_model, validate_training_input
 from src.config.core import config
-
-import typing as tp
+from src.processing.data_manager import load_data, load_model, validate_training_input
 
 
 def make_predictions(*, data: pd.DataFrame) -> tp.Dict:
     """This returns the predictions.
-    
+
     Params:
     -------
     data (Pandas DF): DF containing the input data.
@@ -38,10 +38,9 @@ def make_predictions(*, data: pd.DataFrame) -> tp.Dict:
         # Make predictions
         pred = model.predict(validated_data)
         pred = list(np.exp(pred))  # Convert from log to minutes
-        result = [round(x, 1) for x in pred]
 
         result = {
-            "trip_duration": result,
+            "trip_duration": [round(x, 1) for x in pred],  # type: ignore
             "model_version": _version,
             "errors": errors,
         }
@@ -50,9 +49,6 @@ def make_predictions(*, data: pd.DataFrame) -> tp.Dict:
 
 
 if __name__ == "__main__":
-    from src.processing.data_manager import load_data
-    from src.config.core import config
-
     data = load_data(filename=config.path_config.TEST_DATA).iloc[:5]
     pred = make_predictions(data=data)
     print(pred)
