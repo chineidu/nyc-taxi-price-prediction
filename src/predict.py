@@ -9,18 +9,32 @@ import typing as tp
 
 
 def make_predictions(*, data: pd.DataFrame) -> tp.Dict:
-    """This returns the predictions."""
-    model = load_model(model_fp=config.path_config.MODEL_PATH)
+    """This returns the predictions.
+    
+    Params:
+    -------
+    data (Pandas DF): DF containing the input data.
+
+    Returns:
+    --------
+    result (Dict): A dict containing the trip_duration,
+            model_version and the possible errors.
+    """
+    data = data.copy()
+    model = load_model(filename=config.path_config.MODEL_PATH)
     _version = "_version"
-    validated_data, error = validate_training_input(data=data)
+
+    # Validate data
+    validated_data, errors = validate_training_input(data=data)
+
     result = {
         "trip_duration": None,
         "model_version": _version,
-        "errors": error,
+        "errors": errors,
     }
 
-    if not error:
-        print("====== Making Predictions ======")
+    if not errors:
+        print("==========  Making Predictions ========== ")
         # Make predictions
         pred = model.predict(validated_data)
         pred = list(np.exp(pred))  # Convert from log to minutes
@@ -29,7 +43,7 @@ def make_predictions(*, data: pd.DataFrame) -> tp.Dict:
         result = {
             "trip_duration": result,
             "model_version": _version,
-            "errors": error,
+            "errors": errors,
         }
 
     return result

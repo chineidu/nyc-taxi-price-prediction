@@ -3,7 +3,6 @@ This module is used to load the data.
 
 author: Chinedu Ezeofor
 """
-import logging
 import typing as tp
 
 import joblib
@@ -33,7 +32,8 @@ def load_data(*, filename: str) -> pd.DataFrame:
     --------
     data (Pandas DF): The loaded DF.
     """
-    filename = f"{DATA_FILEPATH}/{filename}"
+    filename = DATA_FILEPATH / filename
+    filename = str(filename)
     data = (
         pd.read_csv(filename) if filename.endswith("csv") else pd.read_parquet(filename)
     )
@@ -140,14 +140,14 @@ def save_model(*, filename: str, pipe: Pipeline) -> None:
     --------
     None
     """
-    filename = f"{TRAINED_MODELS_FILEPATH}/{filename}"
+    filename = TRAINED_MODELS_FILEPATH / filename 
 
-    logging.info("==========  Saving Model ========== ")
+    print("==========  Saving Model ========== ")
     with open(filename, "wb") as file:
         joblib.dump(pipe, file)
 
 
-def load_model(*, model_fp: str) -> Estimator:
+def load_model(*, filename: str) -> Estimator:
     """This is used to load the trained model.
 
     Params:
@@ -158,10 +158,8 @@ def load_model(*, model_fp: str) -> Estimator:
     --------
     Estimator: The trained model.
     """
-    # model_fp = config.path_config.MODEL_PATH
-    filename = f"{TRAINED_MODELS_FILEPATH}/{model_fp}"
-
-    logging.info("==========  Loading Model ========== ")
+    filename =  TRAINED_MODELS_FILEPATH / filename 
+    print("==========  Loading Model ========== ")
     with open(filename, "rb") as file:
-        model = joblib.load(filename=file)
-    return model
+        trained_model = joblib.load(filename=file)
+    return trained_model
