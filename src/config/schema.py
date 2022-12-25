@@ -14,7 +14,9 @@ from sklearn.pipeline import Pipeline
 
 
 class TrainingSchema(BaseModel):
-
+    """
+    All training data variables.
+    """
     airport_fee: tp.Optional[float]
     congestion_surcharge: tp.Optional[float]
     day_of_week: tp.Optional[int]
@@ -39,6 +41,9 @@ class TrainingSchema(BaseModel):
 
 
 class InputSchema(BaseModel):
+    """
+    Config object for input data variables.
+    """
 
     DOLocationID: tp.Optional[int]
     payment_type: tp.Optional[int]
@@ -51,14 +56,24 @@ class InputSchema(BaseModel):
 
 
 class ValidateTrainingData(BaseModel):
+    """
+    Config object for training data variables validation.
+    """
     inputs: tp.List[TrainingSchema]
 
 
 class ValidateInputSchema(BaseModel):
+    """
+    Config object for input data variables validation.
+    """
     inputs: tp.List[InputSchema]
 
 
 class ModelConfig(BaseModel):
+    """
+    Config object for model training and feature engineering.
+    """
+
     RANDOM_STATE: int
     TEST_SIZE: float
     N_ESTIMATORS: int
@@ -75,17 +90,26 @@ class ModelConfig(BaseModel):
 
 
 class PathConfig(BaseModel):
+    """
+    Config object for filepaths
+    """
     TRAIN_DATA: str
     TEST_DATA: str
     MODEL_PATH: str
 
 
 class ConfigVars(BaseModel):
+    """
+    Main configuration object.
+    """
     model_config: ModelConfig
     path_config: PathConfig
 
 
 class ValidateSklearnPipe(BaseModel):
+    """
+    Custom object for Scikit-learn Pipeline validation.
+    """
     pipe: Pipeline
 
     class Config:
