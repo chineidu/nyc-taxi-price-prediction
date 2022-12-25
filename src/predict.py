@@ -5,7 +5,12 @@ import pandas as pd
 
 # Custom Imports
 from src.config.core import config
-from src.processing.data_manager import load_data, load_model, validate_training_input
+from src.processing.data_manager import (
+    load_version,
+    load_model,
+    validate_training_input,
+    logger
+)
 
 
 def make_predictions(*, data: pd.DataFrame) -> tp.Dict:
@@ -21,8 +26,8 @@ def make_predictions(*, data: pd.DataFrame) -> tp.Dict:
             model_version and the possible errors.
     """
     data = data.copy()
-    model = load_model(filename=config.path_config.MODEL_PATH)
-    _version = "_version"
+    _version = load_version()
+    _model = load_model(filename=config.path_config.MODEL_PATH)
 
     # Validate data
     validated_data, errors = validate_training_input(data=data)
@@ -34,9 +39,9 @@ def make_predictions(*, data: pd.DataFrame) -> tp.Dict:
     }
 
     if not errors:
-        print("==========  Making Predictions ========== ")
+        logger.info("==========  Making Predictions ========== ")
         # Make predictions
-        pred = model.predict(validated_data)
+        pred = _model.predict(validated_data)
         pred = list(np.exp(pred))  # Convert from log to minutes
 
         result = {
@@ -46,9 +51,3 @@ def make_predictions(*, data: pd.DataFrame) -> tp.Dict:
         }
 
     return result
-
-
-if __name__ == "__main__":
-    data = load_data(filename=config.path_config.TEST_DATA).iloc[:5]
-    pred = make_predictions(data=data)
-    print(pred)

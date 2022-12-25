@@ -1,12 +1,12 @@
 """
-This module is used to load the data.
+This module is used to load/save the data.
 
 author: Chinedu Ezeofor
 """
 import typing as tp
 from pathlib import Path
-
 import joblib
+import logging
 
 # Standard imports
 import numpy as np
@@ -14,12 +14,22 @@ import pandas as pd
 from pydantic import ValidationError
 from sklearn.pipeline import Pipeline
 
-from src.config.core import DATA_FILEPATH, TRAINED_MODELS_FILEPATH
+from src.config.core import DATA_FILEPATH, TRAINED_MODELS_FILEPATH, ROOT
 
 # Custom Imports
 from src.config.schema import ValidateInputSchema, ValidateTrainingData
 
+
+def _set_up_logger(delim: str = "::") -> tp.Any:
+    """This is used to create a basic logger."""
+    format_ = f"%(levelname)s {delim} %(asctime)s {delim} %(message)s"
+    logging.basicConfig(level=logging.INFO, format=format_)
+    logger = logging.getLogger(__name__)
+    return logger
+
+logger = _set_up_logger()
 Estimator = tp.Union[Pipeline, tp.Any]  # Alias for estimator
+
 
 
 def load_data(*, filename: tp.Union[str, Path]) -> pd.DataFrame:
@@ -35,6 +45,7 @@ def load_data(*, filename: tp.Union[str, Path]) -> pd.DataFrame:
     """
     filename = DATA_FILEPATH / filename
     filename = str(filename)
+    logger.info("==========  Loading Data ========== ")
     data = (
         pd.read_csv(filename) if filename.endswith("csv") else pd.read_parquet(filename)
     )
@@ -143,24 +154,23 @@ def save_model(*, filename: tp.Union[str, Path], pipe: Pipeline) -> None:
     """
     filename = TRAINED_MODELS_FILEPATH / filename
 
-    print("==========  Saving Model ========== ")
+    logger.info("==========  Saving Model ========== ")
     with open(filename, "wb") as file:
         joblib.dump(pipe, file)
 
 
 def load_model(*, filename: tp.Union[str, Path]) -> Estimator:
-    """This is used to load the trained model.
-
-    Params:
-    -------
-    None
-
-    Returns:
-    --------
-    Estimator: The trained model.
-    """
+    """This is used to load the trained model."""
     filename = TRAINED_MODELS_FILEPATH / filename
-    print("==========  Loading Model ========== ")
+    logger.info("==========  Loading Model ========== ")
     with open(filename, "rb") as file:
         trained_model = joblib.load(filename=file)
     return trained_model
+
+def load_version() -> str:
+    """This is used to load the model verson."""
+    filename = ROOT / "VERSION"
+    logger.info("==========  VERSION Loaded ========== ")
+    with open(filename, "r") as file:
+        __version__ = file.read().strip()
+    return __version__    

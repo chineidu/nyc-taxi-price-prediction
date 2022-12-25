@@ -64,7 +64,7 @@ class ValidateTrainingData(BaseModel):
 
 class ValidateInputSchema(BaseModel):
     """
-    Config object for input data variables validation.
+    Config object for input data variables.
     """
     inputs: tp.List[InputSchema]
 
