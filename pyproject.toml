@@ -3,12 +3,14 @@ requires = ["setuptools>=42.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]
+addopts = "--cov=src"
 testpaths = [
     "tests",
 ]
 
 [tool.mypy]
 mypy_path = "src"
+python_version = 3.9
 warn_unused_ignores = true
 show_error_context = true
 ignore_missing_imports = true
@@ -18,3 +20,4 @@ disallow_untyped_defs = false
 warn_redundant_casts = true
 warn_unused_configs = true
 strict_optional = true
+

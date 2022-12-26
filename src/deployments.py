@@ -4,7 +4,6 @@ from prefect.deployments import Deployment
 from prefect.orion.schemas.schedules import IntervalSchedule
 
 from src.config.core import config
-
 # Custom Imports
 from src.orchestrate import run_flow
 

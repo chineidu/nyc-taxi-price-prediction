@@ -2,6 +2,7 @@
 TRAIN_DATA: yellow_tripdata_2022-01.parquet
 TEST_DATA: yellow_tripdata_2022-02.parquet
 MODEL_PATH: regression_pipe.joblib
+TEST_MODEL_PATH: test_model.joblib
 
 # Model Config
 RANDOM_STATE: 123

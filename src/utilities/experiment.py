@@ -65,7 +65,7 @@ class TrainingData(BaseModel):
 
 def run_experiment(
     *, experiment: Experiment, estimator: Estimator, training_data: TrainingData
-) -> None:
+) -> None:  # pragma: no cover
     """This is used to track an MLFlow experiment.
 
     Params:

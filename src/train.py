@@ -17,7 +17,7 @@ from src.utilities.experiment import eval_metrics
 warnings.filterwarnings("error")
 
 
-def train_model(*, train_data: pd.DataFrame) -> tp.Tuple:
+def train_model(*, train_data: pd.DataFrame) -> tp.Tuple: 
     """This is used to train the model.
 
     Params:
@@ -51,11 +51,11 @@ def train_model(*, train_data: pd.DataFrame) -> tp.Tuple:
     )
 
     # Train Model
-    logger.info("========== Training model ==========")
+    logger.info("Training model ...")
     pipe.fit(X_train, y_train)
 
     # Predictions using train data
-    logger.info("========== Making Predictions ==========")
+    logger.info("Making Predictions ...")
     _ = pipe.predict(X_train)
 
     # Predictions using validation data
@@ -63,7 +63,7 @@ def train_model(*, train_data: pd.DataFrame) -> tp.Tuple:
     return pipe, y_validate, y_pred
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     # Load Data
     train_data = load_data(filename=config.path_config.TRAIN_DATA)
 
