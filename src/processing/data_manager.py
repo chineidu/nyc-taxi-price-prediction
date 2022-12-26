@@ -6,8 +6,8 @@ author: Chinedu Ezeofor
 import logging
 import typing as tp
 from pathlib import Path
-import joblib
 
+import joblib
 # Standard imports
 import numpy as np
 import pandas as pd
@@ -15,7 +15,8 @@ from pydantic import ValidationError
 from sklearn.pipeline import Pipeline
 
 # Custom Imports
-from src.config.core import DATA_FILEPATH, ROOT, TRAINED_MODELS_FILEPATH, config
+from src.config.core import (DATA_FILEPATH, ROOT, TRAINED_MODELS_FILEPATH,
+                             config)
 from src.config.schema import ValidateInputSchema, ValidateTrainingData
 
 
@@ -126,16 +127,16 @@ def validate_input(
     error (str or None): None if there's no error else a str.
     """
     # load the data
-    data = data.copy() # pragma: no cover
+    data = data.copy()  # pragma: no cover
     error = None  # pragma: no cover
 
     # Validate the data. Convert NaNs to None
-    try: # pragma: no cover
+    try:  # pragma: no cover
         _ = ValidateInputSchema(
             inputs=data.replace({np.nan: None}).to_dict(orient="records")
         )
         return (data, error)
-    except ValidationError as err: # pragma: no cover
+    except ValidationError as err:  # pragma: no cover
         error = err.json()
         return (data, error)
 
@@ -167,7 +168,7 @@ def load_model(*, filename: tp.Union[str, Path]) -> Estimator:
     return trained_model
 
 
-def remove_old_pipelines(*, files_to_remove: tp.List[str] = None) -> None:
+def remove_old_pipelines(*, files_to_remove: tp.Optional[tp.List[str]] = None) -> None:
     """
     This is used to remove trained models.
     """

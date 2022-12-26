@@ -6,26 +6,26 @@ from prefect import flow, get_run_logger, task
 from prefect.task_runners import ConcurrentTaskRunner
 from prefect.tasks import task_input_hash
 
+from src.config.core import config
 # Custom Imports
 from src.processing.data_manager import load_data, save_model
-from src.config.core import config
 from src.train import train_model
 from src.utilities.experiment import eval_metrics
 
 # Create task(s). Use this syntax since the functions were imported.
-load_data = task(load_data, retries=3, retry_delay_seconds=3)
+load_data = task(load_data, retries=3, retry_delay_seconds=3)  # type: ignore
 train_model = task(
     train_model,
     retries=3,
     retry_delay_seconds=3,
     cache_key_fn=task_input_hash,
     cache_expiration=timedelta(days=1),
-)
-eval_metrics = task(eval_metrics, retries=3, retry_delay_seconds=3)
-save_model = task(save_model, retries=3, retry_delay_seconds=3)
+)  # type: ignore
+eval_metrics = task(eval_metrics, retries=3, retry_delay_seconds=3)  # type: ignore
+save_model = task(save_model, retries=3, retry_delay_seconds=3)  # type: ignore
 
 
-@flow(task_runner=ConcurrentTaskRunner)
+@flow(task_runner=ConcurrentTaskRunner)  # type: ignore
 def train_ML_model_flow(
     *,
     filename: Path,
@@ -46,8 +46,10 @@ def train_ML_model_flow(
     return pipe, y_validate, y_pred
 
 
-@flow(task_runner=ConcurrentTaskRunner)
-def run_flow(*, filename: Path, save_estimator: bool=True) -> tp.Dict:  # pragma: no cover
+@flow(task_runner=ConcurrentTaskRunner)  # type: ignore
+def run_flow(
+    *, filename: Path, save_estimator: bool = True
+) -> tp.Dict:  # pragma: no cover
     """This is the pipeline for running the workflow.
 
     Params:
@@ -62,7 +64,7 @@ def run_flow(*, filename: Path, save_estimator: bool=True) -> tp.Dict:  # pragma
     logger = get_run_logger()
     logger.info("Training model ...")
     pipe, y_validate, y_pred = train_ML_model_flow(filename=filename)
-    
+
     if save_estimator:
         save_model(filename=config.path_config.MODEL_PATH, pipe=pipe)
     rmse, mse, mae, r2 = eval_metrics(actual=y_validate, pred=y_pred)

@@ -17,6 +17,6 @@ deployment = Deployment.build_from_flow(
 )
 
 
-if __name__ == '__main__':  # pragma: no cover
-    deployment.apply()
+if __name__ == "__main__":  # pragma: no cover
+    deployment.apply()  # type: ignore
     print("Deployed!!!")

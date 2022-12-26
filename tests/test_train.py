@@ -60,9 +60,8 @@ def test_train_model(train_data: pd.DataFrame):
     remove_old_pipelines(files_to_remove=None)
 
     # Then
-    # assert expected_y_validate == list(y_validate[:10])
-    assert expected_y_validate == list(y_validate.iloc[:10])
-    assert expected_y_pred == list(y_pred[:10])
+    assert expected_y_validate == list(y_validate.iloc[:10])  # Series
+    assert expected_y_pred == list(y_pred[:10])  # Array
 
 
 def test_train_pipeline(train_data: pd.DataFrame):
@@ -122,7 +121,7 @@ def test_train_pipeline(train_data: pd.DataFrame):
 
     # When
     pipe, *_ = train_model(train_data=train_data)
-    result = pipe.named_steps # Get the steps associated with the pipeline
+    result = pipe.named_steps  # Get the steps associated with the pipeline
 
     # Then
     assert str(expected_output.get("drop features")) == str(result.get("drop features"))

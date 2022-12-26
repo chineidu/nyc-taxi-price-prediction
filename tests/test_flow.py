@@ -9,9 +9,6 @@ from src.deployments import deployment
 from src.config.core import config
 
 
-import pandas as pd
-
-
 def test_flow_run():
     """This is used to test the run_flow workflow"""
     # Given

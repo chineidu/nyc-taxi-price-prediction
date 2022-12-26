@@ -1,14 +1,18 @@
-.PHONY: setup-venv setup clean-pyc clean-test test typecheck lint stylecheck check
+.PHONY: setup-venv setup test typecheck lint stylecheck checks
 
 CONTAINER_TAG="fastapi_app" # enter tag for building container
-SRC_CODE=src 
+SRC_CODE=src
 COVERAGE_THRESH=85
 
 setup-venv: # Create virtual env. You have to run this first!
 	python3 -m venv .venv && . .venv/bin/activate
 	python3 -m pip install --upgrade pip
-	python3 -m pip install --upgrade build && python3 -m pip install -e .
 	python3 -m pip install -r test_requirements.txt
+
+setup-venv-local: setup-venv # Create virtual env (Run this locally)
+	python3 -m venv .venv && . .venv/bin/activate
+	python3 -m pip install --upgrade build && python3 \
+	-m pip install -e .
 
 train:  # This is used to run the flow runs that trains the model.
 	. .venv/bin/activate
@@ -47,7 +51,7 @@ lint:  # Run the linting test
 stylecheck:
 	. .venv/bin/activate && flake8 ${SRC_CODE} tests
 
-checks: test lint typecheck clean
+checks: lint typecheck stylecheck clean
 
 run-checks: # opt is the name of the docker's workdir
 	# Use the current working directory as the docker's volume. 
