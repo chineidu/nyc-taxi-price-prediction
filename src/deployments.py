@@ -11,10 +11,12 @@ deployment = Deployment.build_from_flow(
     flow=run_flow,
     name="model_training",
     schedule=IntervalSchedule(interval=timedelta(seconds=60)),
-    parameters={"filename": config.src_config.TRAIN_DATA},
+    parameters={"filename": config.path_config.TRAIN_DATA},
     tags=["demo", "Neidu"],
     work_queue_name="ml",
 )
 
-deployment.apply()
-print("====== Deployed!!! ======")
+
+if __name__ == '__main__':  # pragma: no cover
+    deployment.apply()
+    print("Deployed!!!")

@@ -2,7 +2,7 @@
 
 CONTAINER_TAG="fastapi_app" # enter tag for building container
 SRC_CODE=src 
-COVERAGE_THRESH=80
+COVERAGE_THRESH=85
 
 setup-venv: # Create virtual env. You have to run this first!
 	python3 -m venv .venv && . .venv/bin/activate

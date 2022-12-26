@@ -1,3 +1,8 @@
+"""
+This module is used to test the workflow and deployments.
+
+author: Chinedu Ezeofor
+"""
 # Custom Imports
 from src.orchestrate import run_flow
 from src.deployments import deployment
@@ -13,7 +18,10 @@ def test_flow_run():
     expected_output = "success"
 
     # When
-    result = run_flow(filename=config.path_config.TEST_DATA, save_estimator=False)
+    result = run_flow(
+        filename=config.path_config.TEST_DATA,
+        save_estimator=False,
+    )
 
     # Then
     assert expected_output == result.get("status")
@@ -21,4 +29,14 @@ def test_flow_run():
 
 def test_deployment():
     """This is used to test the prefect deployment"""
-    pass
+    # Given
+    work_queue_name = deployment.work_queue_name
+    name = deployment.name
+    filename = deployment.parameters.get("filename")
+
+    # When
+
+    # Then
+    assert str(work_queue_name) == "ml"
+    assert str(name) == "model_training"
+    assert str(filename) == "yellow_tripdata_2022-01.parquet"

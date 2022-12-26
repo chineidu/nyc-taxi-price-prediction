@@ -1,3 +1,8 @@
+"""
+This module is used to test the model training functions.
+
+author: Chinedu Ezeofor
+"""
 import pandas as pd
 
 from sklearn.preprocessing import StandardScaler
@@ -55,7 +60,8 @@ def test_train_model(train_data: pd.DataFrame):
     remove_old_pipelines(files_to_remove=None)
 
     # Then
-    assert expected_y_validate == list(y_validate[:10])
+    # assert expected_y_validate == list(y_validate[:10])
+    assert expected_y_validate == list(y_validate.iloc[:10])
     assert expected_y_pred == list(y_pred[:10])
 
 
