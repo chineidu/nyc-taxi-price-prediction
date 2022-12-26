@@ -16,3 +16,8 @@ def test_flow_run():
 
     # Then
     assert expected_output == result.get("status")
+
+
+def test_deployment():
+    """This is used to test the prefect deployment"""
+    pass
