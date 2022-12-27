@@ -46,23 +46,3 @@ class APIDetails(BaseModel):
     project_name: str
     api_version: str
     model_version: str
-
-
-"""
-class Settings(BaseSettings):
-    API_V1_STR: str = "/api/v1"
-    API_FULL_VERSION: str = "1.0.0"
-    PROJECT_NAME: str = "New York Taxi Trip Duration Prediction API"
-    logging: LoggingSettings = LoggingSettings()
-
-    # BACKEND_CORS_ORIGINS is a comma-separated list of origins
-    BACKEND_CORS_ORIGINS: tp.List[AnyHttpUrl] = [
-        "http://localhost:3000",  # type: ignore
-        "http://localhost:8000",  # type: ignore
-        "https://localhost:3000",  # type: ignore
-        "https://localhost:8000",  # type: ignore
-    ]
-
-    class Config:
-        case_sensitive = True
-"""

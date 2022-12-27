@@ -15,7 +15,7 @@ from pydantic import ValidationError
 from sklearn.pipeline import Pipeline
 
 # Custom Imports
-from src.config.core import DATA_FILEPATH, ROOT, TRAINED_MODELS_FILEPATH, config
+from src.config.core import DATA_FILEPATH, SRC_ROOT, TRAINED_MODELS_FILEPATH, config
 from src.config.schema import ValidateInputSchema, ValidateTrainingData
 
 
@@ -187,7 +187,7 @@ def remove_old_pipelines(*, files_to_remove: tp.Optional[tp.List[str]] = None) -
 
 def load_version() -> str:
     """This is used to load the model verson."""
-    filename = ROOT / "VERSION"
+    filename = SRC_ROOT / "VERSION"
     logger.info("VERSION Loaded ...")
     with open(filename, "r") as file:
         __version__ = file.read().strip()

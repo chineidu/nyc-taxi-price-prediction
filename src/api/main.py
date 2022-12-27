@@ -1,9 +1,10 @@
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from loguru import logger
 
 # Custom imports
-from config import settings, setup_app_logging
-from routes import api_router
+from src.api.config import settings, setup_app_logging
+from src.api.routes import api_router
 
 
 # Setup logging
@@ -29,3 +30,15 @@ if settings.BACKEND_CORS_ORIGINS:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+if __name__ == "__main__":  # pragma: no cover
+    import uvicorn
+
+    host = "localhost"
+    port = 8001
+
+    # Use this for debugging purposes only
+    logger.warning("Running in development mode. Do not run like this in production.")
+
+    # Run the server
+    uvicorn.run(app, host=host, port=port, log_level="debug")

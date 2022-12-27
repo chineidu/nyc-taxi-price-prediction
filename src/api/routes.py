@@ -3,10 +3,10 @@ from fastapi import APIRouter, status
 from fastapi.encoders import jsonable_encoder
 
 # Custom imports
-from config import settings
+from src.api.config import settings
 from src.predict import make_predictions
 from src import __version__ as model_version
-from schema import InputDataSchema, ResponsePredictSchema, APIDetails
+from src.api.schema import InputDataSchema, ResponsePredictSchema, APIDetails
 
 from loguru import logger
 
@@ -19,7 +19,7 @@ api_router = APIRouter()
     response_model=APIDetails,
     status_code=status.HTTP_200_OK,
 )
-def health():
+def health(): # pragma: no cover
     """This displays the API details."""
     logger.info("Fetching API details ...")
     return {
