@@ -17,6 +17,11 @@ app = FastAPI(
 root_router = APIRouter()
 
 
+@root_router.get(path="/")
+def home():
+    return {"message": f"Welcome to the {settings.PROJECT_NAME!r}"}
+
+
 # Add the routers
 app.include_router(api_router, prefix=settings.API_V1_STR)
 app.include_router(root_router)
@@ -34,11 +39,13 @@ if settings.BACKEND_CORS_ORIGINS:
 if __name__ == "__main__":  # pragma: no cover
     import uvicorn
 
-    host = "localhost"
-    port = 8001
+    host, port = "localhost", 8001
 
     # Use this for debugging purposes only
     logger.warning("Running in development mode. Do not run like this in production.")
 
     # Run the server
-    uvicorn.run(app, host=host, port=port, log_level="debug")
+    uvicorn.run("main:app", host=host, port=port, log_level="info", reload=True)
+
+    # OR
+    # uvicorn.run(app, host=host, port=port, log_level="debug", reload=False)
