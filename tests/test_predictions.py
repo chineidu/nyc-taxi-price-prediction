@@ -11,7 +11,7 @@ from src import make_predictions
 from src.utilities.experiment import eval_metrics
 
 
-def test_make_predictions(test_data: pd.DataFrame):
+def test_make_predictions(test_data: pd.DataFrame) -> None:
     """This tests the predictions."""
     # Given
     expected_output = [17.3, 22.2, 32.7, 22.2, 28.8, 12.3, 22.2, 4.9, 22.2, 10.6]
@@ -25,7 +25,7 @@ def test_make_predictions(test_data: pd.DataFrame):
     assert pred.get("errors") is None
 
 
-def test_evaluate_metrics():
+def test_evaluate_metrics() -> None:
     """This tests the function for calculating
     the evaluation metrics."""
     # Given

@@ -13,7 +13,7 @@ from src.processing.feat_engineering import (
 )
 
 
-def test_day_of_week_feature(test_data: pd.DataFrame):
+def test_day_of_week_feature(test_data: pd.DataFrame) -> None:
     """This tests the day of the week feature."""
     # Given
     expected_output = [1, 0, 1, 1]
@@ -28,7 +28,7 @@ def test_day_of_week_feature(test_data: pd.DataFrame):
     assert expected_output == result
 
 
-def test_hour_of_day_feature(test_data: pd.DataFrame):
+def test_hour_of_day_feature(test_data: pd.DataFrame) -> None:
     """This tests the hour of the day."""
     # Given
     expected_output = [23, 0, 1, 2]
@@ -43,7 +43,7 @@ def test_hour_of_day_feature(test_data: pd.DataFrame):
     assert expected_output == result
 
 
-def test_select_input_feature(test_data: pd.DataFrame):
+def test_select_input_feature(test_data: pd.DataFrame) -> None:
     """This tests the selection of features."""
     # Given
     expected_output = [
@@ -66,7 +66,7 @@ def test_select_input_feature(test_data: pd.DataFrame):
     assert expected_output == result
 
 
-def test_yeo_johnson_transformer(test_data: pd.DataFrame):
+def test_yeo_johnson_transformer(test_data: pd.DataFrame) -> None:
     """This tests the YeoJohnson transformation of features."""
     # Given
     expected_output = [
@@ -87,7 +87,7 @@ def test_yeo_johnson_transformer(test_data: pd.DataFrame):
     assert expected_output == result
 
 
-def test_validate_input(test_data: pd.DataFrame):
+def test_validate_input(test_data: pd.DataFrame) -> None:
     """This tests the validation of input data."""
     # Given
     test_data = test_data.iloc[:20].copy()
@@ -110,7 +110,7 @@ def test_validate_input(test_data: pd.DataFrame):
     assert error is None
 
 
-def test_validate_training_input(test_data: pd.DataFrame):
+def test_validate_training_input(test_data: pd.DataFrame) -> None:
     """This tests the validation of training data."""
     # Given
     test_data = test_data.iloc[:20].copy()

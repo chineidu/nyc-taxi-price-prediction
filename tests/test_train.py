@@ -23,7 +23,7 @@ from feature_engine.transformation import (
 from feature_engine.selection import DropFeatures
 
 
-def test_train_model(train_data: pd.DataFrame):
+def test_train_model(train_data: pd.DataFrame) -> None:
     """This is used to test the model training function."""
     # Given
     expected_y_validate = [
@@ -64,7 +64,7 @@ def test_train_model(train_data: pd.DataFrame):
     assert expected_y_pred == list(y_pred[:10])  # Array
 
 
-def test_train_pipeline(train_data: pd.DataFrame):
+def test_train_pipeline(train_data: pd.DataFrame) -> None:
     """This is used to test the model training pipeline."""
     # Given
     expected_features = [

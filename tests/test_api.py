@@ -12,7 +12,7 @@ import pandas as pd
 from fastapi.testclient import TestClient
 
 
-def test_api_home(client: TestClient):
+def test_api_home(client: TestClient) -> None:
     """This tests the API's home endpoint."""
     # Given
     expected_output = {

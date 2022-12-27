@@ -9,7 +9,7 @@ from src.deployments import deployment
 from src.config.core import config
 
 
-def test_flow_run():
+def test_flow_run() -> None:
     """This is used to test the run_flow workflow"""
     # Given
     expected_output = "success"
@@ -24,7 +24,7 @@ def test_flow_run():
     assert expected_output == result.get("status")
 
 
-def test_deployment():
+def test_deployment() -> None:
     """This is used to test the prefect deployment"""
     # Given
     work_queue_name = deployment.work_queue_name
