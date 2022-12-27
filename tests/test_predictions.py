@@ -5,11 +5,9 @@ author: Chinedu Ezeofor
 """
 import numpy as np
 import pandas as pd
-from fastapi.testclient import TestClient
 
 # Custom imports
 from src import make_predictions
-from src.config.core import config
 from src.utilities.experiment import eval_metrics
 
 
@@ -41,33 +39,3 @@ def test_evaluate_metrics():
 
     # Then
     assert expected_output == (rmse, mse, mae)
-
-
-def test_make_api_prediction(client: TestClient, test_data: pd.DataFrame) -> None:
-    # Given
-    test_data = test_data.iloc[:5].copy()
-
-    expected_output = [17.3, 22.2, 32.7, 22.2, 28.8]
-
-    # When
-    # === Preprocess data ===
-    test_data = test_data[config.model_config.INPUT_FEATURES]
-    pickup_time = config.model_config.TEMPORAL_VAR
-    test_data[pickup_time] = test_data[pickup_time].astype(str)
-    payload = {
-        # Replace NaNs with None
-        "inputs": test_data.replace({np.nan: None}).to_dict(orient="records")
-    }
-    response = client.post(
-        "http://localhost:8001/api/v1/predict",
-        json=payload,
-    )
-    prediction_data = response.json()
-
-    # Then
-    assert response.status_code == 200
-    assert prediction_data["trip_duration"]
-    assert prediction_data["errors"] is None
-    assert np.isclose(
-        expected_output, prediction_data["trip_duration"], rtol=0.03
-    ).all()

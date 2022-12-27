@@ -1,4 +1,4 @@
-from fastapi import APIRouter, FastAPI
+from fastapi import APIRouter, FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 
@@ -6,19 +6,20 @@ from loguru import logger
 from src.api.config import settings, setup_app_logging
 from src.api.routes import api_router
 
-
 # Setup logging
 setup_app_logging(config=settings)
 
 app = FastAPI(
-    title=settings.PROJECT_NAME, openapi_url=f"{settings.API_V1_STR}/openapi.json"
+    title=settings.PROJECT_NAME,
+    openapi_url=f"{settings.API_V1_STR}/openapi.json",
 )
 
 root_router = APIRouter()
 
 
-@root_router.get(path="/")
+@root_router.get(path="/", status_code=status.HTTP_200_OK)
 def home():
+    """This is the default endpoint"""
     return {"message": f"Welcome to the {settings.PROJECT_NAME!r}"}
 
 

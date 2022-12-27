@@ -1,7 +1,8 @@
 import typing as tp
 
-from src.config.schema import InputSchema
 from pydantic import BaseModel
+
+from src.config.schema import InputSchema
 
 
 class InputDataSchema(BaseModel):

@@ -107,7 +107,7 @@ def test_validate_input(test_data: pd.DataFrame):
 
     # Then
     assert expected_output == set(data.columns)
-    assert error == None
+    assert error is None
 
 
 def test_validate_training_input(test_data: pd.DataFrame):
@@ -143,4 +143,4 @@ def test_validate_training_input(test_data: pd.DataFrame):
 
     # Then
     assert expected_output == set(data.columns)
-    assert error == None
+    assert error is None

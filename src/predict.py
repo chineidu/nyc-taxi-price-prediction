@@ -5,7 +5,8 @@ import pandas as pd
 
 # Custom Imports
 from src.config.core import config
-from src.processing.data_manager import load_model, load_version, logger, validate_input
+from src.processing.data_manager import (load_model, load_version, logger,
+                                         validate_input)
 
 
 def make_predictions(*, data: pd.DataFrame) -> tp.Dict:

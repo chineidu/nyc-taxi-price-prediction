@@ -6,8 +6,8 @@ author: Chinedu Ezeofor
 import logging
 import typing as tp
 from pathlib import Path
-import joblib
 
+import joblib
 # Standard imports
 import numpy as np
 import pandas as pd
@@ -15,7 +15,8 @@ from pydantic import ValidationError
 from sklearn.pipeline import Pipeline
 
 # Custom Imports
-from src.config.core import DATA_FILEPATH, SRC_ROOT, TRAINED_MODELS_FILEPATH, config
+from src.config.core import (DATA_FILEPATH, SRC_ROOT, TRAINED_MODELS_FILEPATH,
+                             config)
 from src.config.schema import ValidateInputSchema, ValidateTrainingData
 
 

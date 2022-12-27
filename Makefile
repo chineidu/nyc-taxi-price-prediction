@@ -51,7 +51,7 @@ lint:  # Run the linting test
 stylecheck:
 	. .venv/bin/activate && flake8 ${SRC_CODE} tests
 
-checks: lint typecheck stylecheck clean
+checks: test lint typecheck stylecheck
 
 run-checks: # opt is the name of the docker's workdir
 	# Use the current working directory as the docker's volume. 
