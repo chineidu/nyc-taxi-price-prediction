@@ -53,11 +53,8 @@ def train_model(*, train_data: pd.DataFrame) -> tp.Tuple:
     logger.info("Training model ...")
     pipe.fit(X_train, y_train)
 
-    # Predictions using train data
-    logger.info("Making Predictions ...")
-    _ = pipe.predict(X_train)
-
     # Predictions using validation data
+    logger.info("Making Predictions ...")
     y_pred = rf_pipe.predict(X_validate)
     return pipe, y_validate, y_pred
 
