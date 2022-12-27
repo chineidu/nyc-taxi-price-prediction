@@ -12,13 +12,12 @@ from src.utilities.experiment import eval_metrics
 
 
 def test_make_predictions(test_data: pd.DataFrame):
-    """This tests the predictions."""
+    """This tests the predictions using the train data"""
     # Given
     expected_output = [17.3, 22.2, 32.7, 22.2, 28.8, 12.3, 22.2, 4.9, 22.2, 10.6]
 
     # When
     pred = make_predictions(data=test_data.iloc[:10])  # Make predictions
-    print(pred)
     results = pred.get("trip_duration")
 
     # Then

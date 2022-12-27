@@ -5,6 +5,7 @@ from feature_engine.transformation import YeoJohnsonTransformer
 
 # Custom Imports
 from src.config.core import config
+from src.processing.data_manager import validate_training_input, validate_input
 from src.processing.feat_engineering import (
     CalculateDayOfWeek,
     CalculateHourOfDay,
@@ -84,3 +85,62 @@ def test_yeo_johnson_transformer(test_data: pd.DataFrame):
 
     # Then
     assert expected_output == result
+
+
+def test_validate_input(test_data: pd.DataFrame):
+    """This tests the validation of input data."""
+    # Given
+    test_data = test_data.iloc[:20].copy()
+    expected_output = {
+        "DOLocationID",
+        "payment_type",
+        "PULocationID",
+        "RatecodeID",
+        "total_amount",
+        "tpep_pickup_datetime",
+        "trip_distance",
+        "VendorID",
+    }
+
+    # When
+    data, error = validate_input(data=test_data)
+
+    # Then
+    assert expected_output == set(data.columns)
+    assert error == None
+
+
+def test_validate_training_input(test_data: pd.DataFrame):
+    """This tests the validation of training data."""
+    # Given
+    test_data = test_data.iloc[:20].copy()
+    expected_output = {
+        "airport_fee",
+        "congestion_surcharge",
+        "day_of_week",
+        "DOLocationID",
+        "extra",
+        "fare_amount",
+        "hour_of_day",
+        "improvement_surcharge",
+        "mta_tax",
+        "passenger_count",
+        "payment_type",
+        "RatecodeID",
+        "PULocationID",
+        "store_and_fwd_flag",
+        "tip_amount",
+        "tolls_amount",
+        "total_amount",
+        "tpep_dropoff_datetime",
+        "tpep_pickup_datetime",
+        "trip_distance",
+        "VendorID",
+    }
+
+    # When
+    data, error = validate_training_input(data=test_data)
+
+    # Then
+    assert expected_output == set(data.columns)
+    assert error == None

@@ -38,7 +38,7 @@ clean: clean-pyc clean-test
 	rm -rf logs/
 
 test: clean # src is the source code
-	. .venv/bin/activate && pytest -sv --cov=${SRC_CODE} \
+	. .venv/bin/activate && pytest -svv --cov=${SRC_CODE} \
 	tests --cov-report=term-missing \
 	--cov-fail-under ${COVERAGE_THRESH}
 

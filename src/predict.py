@@ -5,8 +5,7 @@ import pandas as pd
 
 # Custom Imports
 from src.config.core import config
-from src.processing.data_manager import (load_model, load_version, logger,
-                                         validate_training_input)
+from src.processing.data_manager import load_model, load_version, logger, validate_input
 
 
 def make_predictions(*, data: pd.DataFrame) -> tp.Dict:
@@ -26,7 +25,7 @@ def make_predictions(*, data: pd.DataFrame) -> tp.Dict:
     _model = load_model(filename=config.path_config.MODEL_PATH)
 
     # Validate data
-    validated_data, errors = validate_training_input(data=data)
+    validated_data, errors = validate_input(data=data)
 
     result = {
         "trip_duration": None,

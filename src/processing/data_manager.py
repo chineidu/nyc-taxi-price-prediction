@@ -15,8 +15,7 @@ from pydantic import ValidationError
 from sklearn.pipeline import Pipeline
 
 # Custom Imports
-from src.config.core import (DATA_FILEPATH, ROOT, TRAINED_MODELS_FILEPATH,
-                             config)
+from src.config.core import DATA_FILEPATH, ROOT, TRAINED_MODELS_FILEPATH, config
 from src.config.schema import ValidateInputSchema, ValidateTrainingData
 
 
@@ -85,7 +84,7 @@ def load_data(*, filename: tp.Union[str, Path]) -> pd.DataFrame:
 def validate_training_input(
     *,
     data: pd.DataFrame,
-) -> tp.Tuple[pd.DataFrame, tp.Union[None, str]]:
+) -> tp.Tuple[tp.Optional[pd.DataFrame], tp.Union[None, str]]:
     """This is used to validate the training data using a Pydantic Model.
 
     Params:
@@ -102,19 +101,22 @@ def validate_training_input(
     error = None
     # Validate the data. Convert NaNs to None
     try:
-        _ = ValidateTrainingData(
+        validated_data = ValidateTrainingData(
             inputs=data.replace({np.nan: None}).to_dict(orient="records")
         )
+        validated_dict = validated_data.dict().get("inputs")  # Extract the data
+        data = pd.DataFrame(data=validated_dict)
         return (data, error)
+
     except ValidationError as err:  # pragma: no cover
         error = err.json()
-        return (data, error)
+        return (None, error)
 
 
 def validate_input(
     *,
     data: pd.DataFrame,
-) -> tp.Tuple[pd.DataFrame, tp.Union[None, str]]:
+) -> tp.Tuple[tp.Optional[pd.DataFrame], tp.Union[None, str]]:
     """This is used to validate the input data using a Pydantic Model.
 
     Params:
@@ -132,13 +134,16 @@ def validate_input(
 
     # Validate the data. Convert NaNs to None
     try:  # pragma: no cover
-        _ = ValidateInputSchema(
+        validated_data = ValidateInputSchema(
             inputs=data.replace({np.nan: None}).to_dict(orient="records")
         )
+        validated_dict = validated_data.dict().get("inputs")  # Extract the data
+        data = pd.DataFrame(data=validated_dict)
         return (data, error)
+
     except ValidationError as err:  # pragma: no cover
         error = err.json()
-        return (data, error)
+        return (None, error)
 
 
 def save_model(*, filename: tp.Union[str, Path], pipe: Pipeline) -> None:
