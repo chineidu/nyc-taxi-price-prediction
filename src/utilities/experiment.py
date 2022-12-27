@@ -4,9 +4,9 @@ This module contains function(s) for tracking an experiment using MLFlow.
 author: Chinedu Ezeofor
 """
 
-import logging
 # Built-in
 import typing as tp
+import logging
 import warnings
 
 import mlflow
@@ -14,6 +14,7 @@ import mlflow
 import numpy as np
 import pandas as pd
 from pydantic import BaseModel
+
 # Sklearn
 from sklearn import metrics
 from sklearn.pipeline import Pipeline

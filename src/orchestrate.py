@@ -6,8 +6,8 @@ from prefect import flow, get_run_logger, task
 from prefect.task_runners import ConcurrentTaskRunner
 from prefect.tasks import task_input_hash
 
-from src.config.core import config
 # Custom Imports
+from src.config.core import config
 from src.processing.data_manager import load_data, save_model
 from src.train import train_model
 from src.utilities.experiment import eval_metrics

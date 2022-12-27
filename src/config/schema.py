@@ -3,8 +3,8 @@ This module is used to validate the data.
 
 author: Chinedu Ezeofor
 """
-import datetime
 # Built-in
+import datetime
 import typing as tp
 
 # Standard imports

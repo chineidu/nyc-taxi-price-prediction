@@ -6,8 +6,8 @@ author: Chinedu Ezeofor
 import logging
 import typing as tp
 from pathlib import Path
-
 import joblib
+
 # Standard imports
 import numpy as np
 import pandas as pd

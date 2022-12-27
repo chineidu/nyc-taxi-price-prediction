@@ -7,9 +7,9 @@ import pandas as pd
 # from Scikit-learn
 from sklearn.model_selection import train_test_split
 
+# Custom Imports
 from src.config.core import config
 from src.pipeline import rf_pipe
-# Custom Imports
 from src.processing.data_manager import load_data, save_model
 from src.utilities.experiment import eval_metrics
 

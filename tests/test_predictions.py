@@ -5,7 +5,6 @@ author: Chinedu Ezeofor
 """
 import numpy as np
 import pandas as pd
-import pytest
 
 # Custom imports
 from src import make_predictions

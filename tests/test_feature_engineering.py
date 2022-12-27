@@ -1,5 +1,4 @@
 import pandas as pd
-import pytest
 
 from feature_engine.transformation import YeoJohnsonTransformer
 

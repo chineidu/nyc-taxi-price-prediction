@@ -3,8 +3,8 @@ from pathlib import Path
 
 import yaml
 
-import src
 # Custom Imports
+import src
 from src.config.schema import ConfigVars, ModelConfig, PathConfig
 
 SRC_ROOT = Path(src.__file__).absolute().parent
