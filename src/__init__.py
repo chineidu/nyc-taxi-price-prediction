@@ -5,4 +5,3 @@ from src.processing.data_manager import load_model as load_model
 from src.processing.data_manager import load_version as load_version
 
 __version__ = load_version()
-VERSION = "0.0.1"
