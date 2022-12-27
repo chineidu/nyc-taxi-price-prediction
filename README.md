@@ -142,3 +142,12 @@ $ prefect deployment build \
 <entry_point>:<name_off_flow> -a
 ```
 
+## Add Git Tag
+
+```console
+# Create tag
+$ git tag <tag> -m "enter your message"
+
+# Push the tag to remote repo
+$ git push origin <tag> 
+```
