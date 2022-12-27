@@ -32,12 +32,6 @@ def prefect_test_fixture():
         yield
 
 
-# @pytest.fixture(scope="module")
-# def test_data() -> pd.DataFrame:
-#     data = load_data(filepath=config.app_config.test_data_file, is_train=False)
-#     return data.head(1)
-
-
 @pytest.fixture()
 def client() -> tp.Generator:
     """Config for FastAPI"""
