@@ -40,7 +40,7 @@ def make_predictions(*, data: pd.DataFrame) -> tp.Dict:
         pred = list(np.exp(pred))  # Convert from log to minutes
 
         result = {
-            "trip_duration": [round(x, 1) for x in pred],  # type: ignore
+            "trip_duration": [(round(x, 1)) for x in pred],  # type: ignore
             "model_version": _version,
             "errors": errors,
         }
