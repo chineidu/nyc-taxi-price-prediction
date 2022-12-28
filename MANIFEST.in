@@ -1,0 +1,16 @@
+include *.txt
+include *.md
+include *.joblib
+recursive-include ./src/*
+
+include src/data/yellow_tripdata_2022-01.parquet
+include src/trained_models/*.joblib
+include src/config.yml
+
+include ./requirements.txt
+include ./test_requirements.txt
+exclude *.log
+exclude *.cfg
+
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]

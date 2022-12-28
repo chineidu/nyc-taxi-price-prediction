@@ -1,7 +1,7 @@
 .PHONY: setup-venv setup test typecheck lint stylecheck checks
 
 CONTAINER_TAG=my_app # enter tag for building container
-SRC_CODE=proj
+SRC_CODE=src
 COVERAGE_THRESH=85
 
 setup-venv: # Create virtual env. You have to run this first!
