@@ -1,3 +1,8 @@
+"""
+This module is used to orchestrate the model training.
+
+author: Chinedu Ezeofor
+"""
 import typing as tp
 from datetime import timedelta
 from pathlib import Path

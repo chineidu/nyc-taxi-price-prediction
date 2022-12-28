@@ -1,3 +1,8 @@
+"""
+This module is used for making predictions.
+
+author: Chinedu Ezeofor
+"""
 import typing as tp
 
 import numpy as np

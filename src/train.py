@@ -1,3 +1,8 @@
+"""
+This module is used to train the model.
+
+author: Chinedu Ezeofor
+"""
 import logging
 import typing as tp
 import warnings
