@@ -18,7 +18,7 @@ setup-venv-local: setup-venv # Create virtual env (Run this locally)
 	python3 setup.py sdist && python3 -m pip install -e .
 
 train:  # This is used to run the flow runs that trains the model.
-	. .venv/bin/activate
+	. .venv/bin/activate && python3 -V
 	python3 src/orchestrate.py
 
 

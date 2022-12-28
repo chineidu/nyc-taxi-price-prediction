@@ -21,4 +21,3 @@ def test_flow_run() -> None:
 
     # Then
     assert expected_output == result.get("status")
-

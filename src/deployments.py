@@ -14,7 +14,7 @@ deployment = Deployment.build_from_flow(  # pragma: no cover
     parameters={"filename": config.path_config.TRAIN_DATA},
     tags=["demo", "Neidu"],
     work_queue_name="ml",
-) # pragma: no cover
+)  # pragma: no cover
 
 
 if __name__ == "__main__":  # pragma: no cover

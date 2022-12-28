@@ -12,6 +12,8 @@ import joblib
 import numpy as np
 import pandas as pd
 from pydantic import ValidationError
+from sklearn.model_selection import train_test_split
+# Scikit-learn
 from sklearn.pipeline import Pipeline
 
 # Custom Imports
@@ -80,6 +82,49 @@ def load_data(*, filename: tp.Union[str, Path]) -> pd.DataFrame:
         ]
         data["trip_duration"] = np.log1p(data["trip_duration"])  # Log transform
     return data
+
+
+def split_into_features_n_target(*, data: pd.DataFrame, target: str) -> tp.Tuple:
+    """Split the data into independentand dependent features.
+
+    Params:
+    -------
+    data (Pandas DF): DF containing the training data.
+    target (int): The dependent feature.
+
+    Returns:
+    --------
+    X, y (Tuple): The independent and dependent features respectively.
+    """
+    X = data.drop(columns=[target])
+    y = data[target]
+    return (X, y)
+
+
+def split_train_data(
+    *, data: pd.DataFrame, target: str, test_size: float, random_state: int
+) -> tp.Tuple:
+    """This returns a split training data containing the
+    X_train, X_validate, y_train and y_validate
+
+    Params:
+    -------
+    data (Pandas DF): DF containing the training data.
+    target (int): The dependent feature.
+    test_size (float): The proportion of the data to include in the test split.
+    random_state (int): Controls the shuffling applied and ensures reproducibility.
+
+    Returns:
+    --------
+    X_train, X_validate, y_train and y_validate (tuple):
+        A tuple containing the training and validation sets.
+    """
+    X, y = split_into_features_n_target(data=data, target=target)
+
+    X_train, X_validate, y_train, y_validate = train_test_split(
+        X, y, test_size=test_size, random_state=random_state
+    )
+    return (X_train, X_validate, y_train, y_validate)
 
 
 def validate_training_input(

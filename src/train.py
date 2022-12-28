@@ -9,7 +9,9 @@ from sklearn.model_selection import train_test_split
 # Custom Imports
 from src.config.core import config
 from src.pipeline import rf_pipe
-from src.processing.data_manager import load_data, save_model
+from src.processing.data_manager import (load_data, logger, save_model,
+                                         split_into_features_n_target,
+                                         split_train_data)
 from src.utilities.experiment import eval_metrics
 
 warnings.filterwarnings("error")
@@ -27,25 +29,17 @@ def train_model(*, train_data: pd.DataFrame) -> tp.Tuple:
     None
     """
 
-    def _set_up_logger(delim: str = "::") -> tp.Any:
-        """This is used to create a basic logger."""
-        format_ = f"%(levelname)s {delim} %(asctime)s {delim} %(message)s"
-        logging.basicConfig(level=logging.INFO, format=format_)
-        logger = logging.getLogger(__name__)
-        return logger
-
-    logger = _set_up_logger()
-
     pipe = rf_pipe
-    # Split the data
-    X = train_data.drop(columns=[config.model_config.TARGET])
-    y = train_data[config.model_config.TARGET]
+    target = target = config.model_config.TARGET
+    test_size = config.model_config.TEST_SIZE
+    random_state = config.model_config.RANDOM_STATE
 
-    X_train, X_validate, y_train, y_validate = train_test_split(
-        X,
-        y,
-        test_size=config.model_config.TEST_SIZE,
-        random_state=config.model_config.RANDOM_STATE,
+    # Split the data
+    X_train, X_validate, y_train, y_validate = split_train_data(
+        data=train_data,
+        target=target,
+        test_size=test_size,
+        random_state=random_state,
     )
 
     # Train Model
