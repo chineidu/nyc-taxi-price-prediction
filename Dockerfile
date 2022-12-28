@@ -10,7 +10,7 @@ COPY ["./", "./"]
 # Install dependencies using the copied files
 RUN pip install --upgrade -r test_requirements.txt
 
-# Package the src directory
+# Convert src to a package
 RUN python setup.py sdist && pip install -e .
 
 # Entrypoint

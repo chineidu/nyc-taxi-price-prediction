@@ -1,9 +1,12 @@
 .PHONY: setup-venv setup test typecheck lint stylecheck checks
 
-CONTAINER_TAG=my_app # enter tag for building container
-CONTAINER_WORK_DIR=opt
+IMAGE_NAME=my_app
+TAG=v1
+WORK_DIR=opt
 SRC_CODE=src
 COVERAGE_THRESH=85
+PORT=8000
+
 
 setup-venv: # Create virtual env. You have to run this first!
 	python3 -m venv .venv && . .venv/bin/activate
@@ -20,7 +23,7 @@ train:  # This is used to run the flow runs that trains the model.
 
 
 setup:  
-	DOCKER_BUILDKIT=1 docker build -t ${CONTAINER_TAG} -f Dockerfile .
+	docker build -t ${IMAGE_NAME}:${TAG} -f Dockerfile .
 
 clean-pyc:
 	find . -name '*.pyc' -exec rm -f {} +
@@ -53,11 +56,14 @@ stylecheck:
 
 checks: test lint typecheck stylecheck
 
-run-checks: # opt is the name of the docker's workdir
+run-container:
+	docker run -it -p ${PORT}:${PORT} -t ${IMAGE_NAME}:${TAG}
+
+run-checks: 
 	# Use the current working directory as the docker's volume. 
 	docker run --rm -it --name run-checks \
-	-v $(shell pwd):/${CONTAINER_WORK_DIR} -t ${CONTAINER_TAG} make checks
+	-v $(shell pwd):/${WORK_DIR} -t ${IMAGE_NAME}:${TAG} make checks
 
-bash:
+bash: # --rm: 'remove' the image after building n running it
 	docker run --rm -it --name run-checks \
-	-v $(shell pwd):/${CONTAINER_WORK_DIR} -t ${CONTAINER_TAG} bash
+	-v $(shell pwd):/${WORK_DIR} -t ${IMAGE_NAME}:${TAG} bash
