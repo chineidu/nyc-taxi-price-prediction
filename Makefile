@@ -1,6 +1,7 @@
 .PHONY: setup-venv setup test typecheck lint stylecheck checks
 
 CONTAINER_TAG=my_app # enter tag for building container
+CONTAINER_WORK_DIR=opt
 SRC_CODE=src
 COVERAGE_THRESH=85
 
@@ -11,8 +12,7 @@ setup-venv: # Create virtual env. You have to run this first!
 
 setup-venv-local: setup-venv # Create virtual env (Run this locally)
 	python3 -m venv .venv && . .venv/bin/activate
-	python3 -m pip install --upgrade build && python3 \
-	-m pip install -e .
+	python3 setup.py sdist && python3 -m pip install -e .
 
 train:  # This is used to run the flow runs that trains the model.
 	. .venv/bin/activate
@@ -55,7 +55,9 @@ checks: test lint typecheck stylecheck
 
 run-checks: # opt is the name of the docker's workdir
 	# Use the current working directory as the docker's volume. 
-	docker run --rm -it --name run-checks -v $(shell pwd):/opt -t ${CONTAINER_TAG} make checks
+	docker run --rm -it --name run-checks \
+	-v $(shell pwd):/${CONTAINER_WORK_DIR} -t ${CONTAINER_TAG} make checks
 
 bash:
-	docker run --rm -it --name run-checks -v $(shell pwd):/opt -t ${CONTAINER_TAG} bash
+	docker run --rm -it --name run-checks \
+	-v $(shell pwd):/${CONTAINER_WORK_DIR} -t ${CONTAINER_TAG} bash
