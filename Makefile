@@ -1,7 +1,7 @@
 .PHONY: setup-venv setup test typecheck lint stylecheck checks
 
-CONTAINER_TAG="fastapi_app" # enter tag for building container
-SRC_CODE=src
+CONTAINER_TAG=my_app # enter tag for building container
+SRC_CODE=proj
 COVERAGE_THRESH=85
 
 setup-venv: # Create virtual env. You have to run this first!
@@ -19,7 +19,7 @@ train:  # This is used to run the flow runs that trains the model.
 	python3 src/orchestrate.py
 
 
-setup:  # fastapi_app is the tag. you can rename it
+setup:  
 	DOCKER_BUILDKIT=1 docker build -t ${CONTAINER_TAG} -f Dockerfile .
 
 clean-pyc:
