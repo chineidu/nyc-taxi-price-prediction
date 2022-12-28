@@ -11,6 +11,7 @@ from feature_engine.imputation import AddMissingIndicator, MeanMedianImputer
 from feature_engine.selection import DropFeatures
 from feature_engine.transformation import YeoJohnsonTransformer
 from sklearn.ensemble import RandomForestRegressor
+
 # from Scikit-learn
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
@@ -20,6 +21,14 @@ import src.processing.feat_engineering as fe
 from src.config.core import config
 
 warnings.filterwarnings("error")
+
+
+params = {
+    "n_estimators": config.model_config.N_ESTIMATORS,
+    "max_depth": config.model_config.MAX_DEPTH,
+    "random_state": config.model_config.RANDOM_STATE,
+}
+
 
 # Build Train Pipeline
 rf_pipe = Pipeline(
@@ -69,14 +78,10 @@ rf_pipe = Pipeline(
         ),
         # ===== Scale features =====
         ("scale data", StandardScaler()),
-        # ===== Linear model =====
+        # ===== Random Forest model =====
         (
             "RF model",
-            RandomForestRegressor(
-                n_estimators=config.model_config.N_ESTIMATORS,
-                max_depth=config.model_config.MAX_DEPTH,
-                random_state=config.model_config.RANDOM_STATE,
-            ),
+            RandomForestRegressor(**params),
         ),
     ]
 )
