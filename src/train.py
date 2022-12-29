@@ -31,7 +31,8 @@ def train_model(*, train_data: pd.DataFrame) -> tp.Tuple:
 
     Returns:
     --------
-    None
+    pipe, y_validate, y_pred (Tuple): Tuple containing the
+        trained_model_pipe, actual y and predicted y values.
     """
 
     pipe = rf_pipe
