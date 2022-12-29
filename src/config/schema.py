@@ -100,6 +100,7 @@ class PathConfig(BaseModel):
     TEST_DATA: str
     MODEL_PATH: str
     TEST_MODEL_PATH: str
+    TEST_DATA_WF_NO_TARGET: str
 
 
 class ConfigVars(BaseModel):

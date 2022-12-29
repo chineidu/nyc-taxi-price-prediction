@@ -96,8 +96,11 @@ def split_into_features_n_target(*, data: pd.DataFrame, target: str) -> tp.Tuple
     --------
     X, y (Tuple): The independent and dependent features respectively.
     """
-    X = data.drop(columns=[target])
-    y = data[target]
+    if target in data.columns:
+        X = data.drop(columns=[target])
+        y = data[target]
+    else:
+        raise NotImplementedError("Unsupported Dataframe")
     return (X, y)
 
 

@@ -1,6 +1,7 @@
 # File paths
 TRAIN_DATA: yellow_tripdata_2022-01.parquet
 TEST_DATA: yellow_tripdata_2022-02.parquet
+TEST_DATA_WF_NO_TARGET: test_data_wf_no_targ.csv
 MODEL_PATH: regression_pipe.joblib
 TEST_MODEL_PATH: test_model.joblib
 
