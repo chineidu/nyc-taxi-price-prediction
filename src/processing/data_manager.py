@@ -8,17 +8,18 @@ import typing as tp
 from pathlib import Path
 
 import joblib
+
 # Standard imports
 import numpy as np
 import pandas as pd
 from pydantic import ValidationError
 from sklearn.model_selection import train_test_split
+
 # Scikit-learn
 from sklearn.pipeline import Pipeline
 
 # Custom Imports
-from src.config.core import (DATA_FILEPATH, SRC_ROOT, TRAINED_MODELS_FILEPATH,
-                             config)
+from src.config.core import DATA_FILEPATH, SRC_ROOT, TRAINED_MODELS_FILEPATH, config
 from src.config.schema import ValidateInputSchema, ValidateTrainingData
 
 
@@ -34,23 +35,37 @@ logger = _set_up_logger()
 Estimator = tp.Union[Pipeline, tp.Any]  # Alias for estimator
 
 
-def load_data(*, filename: tp.Union[str, Path]) -> pd.DataFrame:
+def get_unique_IDs(feat: str) -> str:
+    """This returns a universally unique generated ID."""
+    import uuid
+
+    if feat is not None:
+        return str(uuid.uuid4())
+
+
+def load_data(*, filename: tp.Union[str, Path], uri: bool = False) -> pd.DataFrame:
     """This returns the data as a Pandas DF.
 
     Params:
     -------
     filename (Path): The input filepath.
+    uri (bool, default=False): True if the filename is an S3 URI else False
 
     Returns:
     --------
     data (Pandas DF): The loaded DF.
     """
-    filename = DATA_FILEPATH / filename
+    if not uri:
+        filename = DATA_FILEPATH / filename
     filename = str(filename)
     logger.info("Loading Data ... ")
-    data = (
-        pd.read_csv(filename) if filename.endswith("csv") else pd.read_parquet(filename)
-    )
+    try:
+        data = (
+            pd.read_csv(filename) if filename.endswith("csv") else pd.read_parquet(filename)
+        )
+    except Exception as err:
+        logger.info(err)
+        
     TRIP_DUR_THRESH = 60  # trip_duration
     TRIP_DIST_THRESH = 30  # trip_distance
     TOTAL_AMT_THRESH = 100  # total_amount
@@ -67,6 +82,7 @@ def load_data(*, filename: tp.Union[str, Path]) -> pd.DataFrame:
             trip_duration = round(trip_duration.dt.total_seconds() / MINS, 2)
             return trip_duration
 
+        data["id"] = data["VendorID"].apply(get_unique_IDs)  # Generate IDs
         data["trip_duration"] = calculate_trip_duration(data)
         data = data.loc[
             (data["trip_duration"] > MIN_THRESH)
@@ -237,7 +253,6 @@ def remove_old_pipelines(*, files_to_remove: tp.Optional[tp.List[str]] = None) -
 def load_version() -> str:
     """This is used to load the model verson."""
     filename = SRC_ROOT / "VERSION"
-    logger.info("VERSION Loaded ...")
     with open(filename, "r") as file:
         __version__ = file.read().strip()
     return __version__
