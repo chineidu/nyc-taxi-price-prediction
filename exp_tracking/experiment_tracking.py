@@ -74,3 +74,31 @@ with mlflow.start_run():
 
     # Confirmed it's stored on S3
     logger.info(mlflow.get_artifact_uri())
+
+
+
+# ==== Make Predictions Suding The Model From The Model Registry ====
+import pandas as pd
+from pprint import pprint as pp
+
+# Does not depend on the tracking server
+RUN_ID = "98f43706f6184694be1ee10c41c7b69d"
+S3_BUCKET_NAME = f"s3://mlflow-model-registry-neidu/1/{RUN_ID}/artifacts/model"
+new_data = {
+    "DOLocationID": [82, 72],
+    "payment_type": [1, 2],
+    "PULocationID": [5, 99],
+    "RatecodeID": [np.nan, 2],
+    "tpep_pickup_datetime": ["2022-12-16 14:33:43", "2022-12-18 09:18:03"],
+    "trip_distance": [5.5, 3.1],
+    "VendorID": [2, 1],
+    "total_amount": [12, 9.5],
+}
+
+df = pd.DataFrame(new_data)
+# Conevrt to datetime
+df["tpep_pickup_datetime"] = pd.to_datetime(df["tpep_pickup_datetime"], errors="coerce")
+
+# Download model artifact from S3
+estimator = mlflow.pyfunc.load_model(model_uri=f"{S3_BUCKET_NAME}")
+pp(estimator.predict(df))
