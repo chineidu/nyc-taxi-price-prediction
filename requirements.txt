@@ -12,6 +12,7 @@ prefect==2.7.3
 prometheus-flask-exporter==0.21.0
 pyarrow
 requests-auth-aws-sigv4==0.7
+s3fs== 0.4.2
 scikit-learn==1.2.0
 types-PyYAML==6.0.12
 # xgboost==1.7.2
