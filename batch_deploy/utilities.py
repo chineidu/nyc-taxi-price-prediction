@@ -9,8 +9,10 @@ author: Chinedu Ezeofor
 import numpy as np
 import pandas as pd
 
+from datetime import timedelta, datetime
+
 # Custom Imports
-from src.processing.data_manager import logger
+from src.processing.data_manager import logger, load_data
 
 
 def get_predictions(*, data: pd.DataFrame, run_id: str) -> np.ndarray:

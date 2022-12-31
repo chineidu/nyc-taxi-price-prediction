@@ -14,7 +14,7 @@ from prefect.task_runners import ConcurrentTaskRunner
 from prefect.context import get_run_context
 
 # Custom Imports
-from src.processing.data_manager import load_data
+from src.processing.data_manager import load_data, logger
 from batch_deploy.utilities import compare_predictions, save_data_to_s3
 
 # Create tasks
@@ -61,12 +61,53 @@ def get_paths(*, taxi_type: str, run_id: str, run_date: datetime) -> tp.Tuple:
     return input_file, output_file
 
 
+@flow(task_runner=ConcurrentTaskRunner)
+def batch_preprocess(*, taxi_type: str, run_id: str, run_date: datetime):
+    """This is a wrapper function used to load the data,
+    make predictions and save the results to S3."""
+    logger = get_run_logger()
+    input_file, output_file = get_paths(
+        run_date=run_date, taxi_type=taxi_type, run_id=run_id
+    )
+    logger.info("Loading data using input filepath ...")
+    data = load_data(filename=input_file, uri=True)
+    logger.info("Making predictions on input data ...")
+    result_df = compare_predictions(data=data, run_id=run_id)
+    logger.info("Saving data to S3 ...")
+    save_data_to_s3(data=result_df, output=output_file)
+    logger.info("Batch Prediction processing done!")
+
+
 @flow(task_runner=ConcurrentTaskRunner)  # type: ignore
-def main():
-    """This is the main function"""
+def batch_predict_flow(
+    *, run_id: str, taxi_type: str, run_date: tp.Optional[datetime] = None
+):
+    """This is the workflow for making batch predictions."""
     logger = get_run_logger()
     logger.info("Starting batch predictions ...")
+    if run_date is None:
+        ctx = get_run_context()
+        run_date = ctx.flow_run.expected_start_time
 
+    batch_preprocess(run_id=run_id, taxi_type=taxi_type, run_date=run_date)
+
+
+@flow(task_runner=ConcurrentTaskRunner)  # type: ignore
+def batch_predict_backfill_flow(*, run_id: str, taxi_type: str):
+    """This is the workflow for making batch predictions on previous
+    NYC Taxi data."""
+    logger = get_run_logger()
+    logger.info("Starting batch predictions ...")
+    start_date = datetime(year=2022, month=6, day=1)
+    end_date = datetime(year=2022, month=8, day=1)
+
+    while start_date <= end_date:
+        batch_preprocess(run_id=run_id, taxi_type=taxi_type, run_date=start_date)
+        start_date += relativedelta(months=1)
+
+
+def main():
+    """This is the main function"""
     parser = ArgumentParser(
         prog="Batch predictions",
         description="This is used to make batch predictions of the NYC taxi trip duration.",
@@ -83,7 +124,7 @@ def main():
         "-d",
         help="The date the script was run in `year-month-day format`. e.g `2022-03-30`",
         type=str,
-        required=True,
+        required=False,
     )
     parser.add_argument(
         "--taxi-type",
@@ -93,29 +134,18 @@ def main():
         required=True,
     )
     args = parser.parse_args()
-    # Extract the variables
-    run_id, run_date, taxi_type = (args.run_id, args.run_date.lower(), args.taxi_type)
 
-    if run_date == "none":
-        ctx = get_run_context()
-        run_date = ctx.flow_run.expected_start_time
-    else:
+    # Extract the variables
+    run_id, taxi_type = (args.run_id, args.taxi_type)
+    if args.run_date:
+        run_date = args.run_date.lower()
         date = run_date.split("-")
         year, month, day = (int(date[0]), int(date[1]), int(date[2]))
         run_date = datetime(year=year, month=month, day=day)
-
-    logger.info("Getting input and output filepaths ...")
-    input_file, output_file = get_paths(
-        run_date=run_date, taxi_type=taxi_type, run_id=run_id
-    )
-    logger.info("Loading data using input filepath ...")
-    data = load_data(filename=input_file, uri=True)
-    logger.info("Making predictions on input data ...")
-    result_df = compare_predictions(data=data, run_id=run_id)
-    logger.info("Saving data to S3 ...")
-    save_data_to_s3(data=result_df, output=output_file)
-    logger.info("Batch Prediction processing done!")
-    logger.info(input_file)
+    else:
+        run_date = None
+    batch_predict_flow(run_id=run_id, run_date=run_date, taxi_type=taxi_type)
+    batch_predict_backfill_flow(run_id=run_id, taxi_type=taxi_type)
 
 
 if __name__ == "__main__":
