@@ -9,6 +9,7 @@ import os
 import json
 import typing as tp
 import boto3
+from pprint import pprint as pp
 import base64
 
 import pandas as pd
@@ -25,14 +26,14 @@ TEST_RUN = os.getenv("TEST_RUN", "False") == "True"
 kinesis_client = boto3.client("kinesis")
 
 
-def predict(*, data: pd.DataFrame):
+def predict(*, data: pd.DataFrame) -> float:
     S3_BUCKET_NAME = f"s3://mlflow-model-registry-neidu/1/{RUN_ID}/artifacts/model"
     model = model = mlflow.pyfunc.load_model(model_uri=f"{S3_BUCKET_NAME}")
     result = model.predict(data)[0]
     return float(result)
 
 
-def prepare_data(*, features: tp.Dict):
+def prepare_data(*, features: tp.Dict) -> pd.DataFrame:
     data = features.get("ride")
     df = pd.DataFrame(data, index=[0])
     df["tpep_pickup_datetime"] = pd.to_datetime(
@@ -41,7 +42,20 @@ def prepare_data(*, features: tp.Dict):
     return df
 
 
-def lambda_handler(*, event: tp.Dict, context=None):
+def send_events(event: tp.Any) -> tp.Dict:
+    """This is used to send events to the Kinesis stream"""
+    client = boto3.client("kinesis")
+    stream_name = "ride_events"
+
+    response = client.put_record(
+        StreamName=stream_name, Data=json.dumps(event), PartitionKey="1"
+    )
+
+    pp(json.dumps(event))
+    return response
+
+
+def lambda_handler(*, event: tp.Dict, context=None) -> tp.Dict:
     predictions = []
 
     for record in event["Records"]:
