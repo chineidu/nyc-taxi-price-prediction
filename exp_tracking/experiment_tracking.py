@@ -8,10 +8,9 @@ author: Chinedu Ezeofor
 """
 import warnings
 
-
+import pandas as pd
+from pprint import pprint as pp
 import mlflow
-from sklearn.pipeline import Pipeline
-from sklearn.ensemble import RandomForestRegressor
 
 # Custom imports
 from src.processing.data_manager import split_train_data
@@ -77,9 +76,7 @@ with mlflow.start_run():
 
 
 
-# ==== Make Predictions Suding The Model From The Model Registry ====
-import pandas as pd
-from pprint import pprint as pp
+# ==== Make Predictions Using The Model From The Model Registry ====
 
 # Does not depend on the tracking server
 RUN_ID = "98f43706f6184694be1ee10c41c7b69d"
