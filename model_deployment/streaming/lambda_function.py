@@ -15,8 +15,6 @@ import base64
 import pandas as pd
 import mlflow
 
-# Custom imports
-from model_deployment.batch_deploy.utilities import get_predictions
 
 # Environment variables
 RIDE_PREDICTIONS_STREAM_NAME = os.getenv("RIDE_PREDICTIONS", "ride_predictions")

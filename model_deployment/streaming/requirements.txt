@@ -1,0 +1,6 @@
+boto3==1.26.26
+feature-engine==1.5.2
+mlserver-mlflow==1.2.0
+pyarrow
+scikit-learn==1.2.0
+

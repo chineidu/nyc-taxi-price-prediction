@@ -35,7 +35,7 @@ compare_predictions = task(
 save_data_to_s3 = task(save_data_to_s3, retries=3, retry_delay_seconds=5)
 
 
-@task(retries=3, retry_delay_seconds=5)
+@task(name="get_paths_task", retries=3, retry_delay_seconds=5)
 def get_paths(*, taxi_type: str, run_id: str, run_date: datetime) -> tp.Tuple:
     """This returns the input and output S3 bucket URIs for the data.
 
@@ -61,7 +61,7 @@ def get_paths(*, taxi_type: str, run_id: str, run_date: datetime) -> tp.Tuple:
     return input_file, output_file
 
 
-@flow(task_runner=ConcurrentTaskRunner)
+@flow(name="apply_batch_prediction", task_runner=ConcurrentTaskRunner)
 def batch_preprocess(*, taxi_type: str, run_id: str, run_date: datetime) -> None:
     """This is a wrapper function used to load the data,
     make predictions and save the results to S3."""
@@ -78,11 +78,17 @@ def batch_preprocess(*, taxi_type: str, run_id: str, run_date: datetime) -> None
     logger.info("Batch Prediction processing done!")
 
 
-@flow(task_runner=ConcurrentTaskRunner)  # type: ignore
+@flow(name="batch_prediction", task_runner=ConcurrentTaskRunner)  # type: ignore
 def batch_predict_flow(
     *, run_id: str, taxi_type: str, run_date: tp.Optional[datetime] = None
 ) -> None:
-    """This is the workflow for making batch predictions."""
+    """This is the workflow for making batch predictions.
+    
+    Note:
+    -----
+    Prefect doesn't support passing datetime objects as parameter so
+    `get_run_context` is used to obtain the current date as the run_date.
+    """
     logger = get_run_logger()
     logger.info("Starting batch predictions ...")
     if run_date is None:
@@ -92,7 +98,7 @@ def batch_predict_flow(
     batch_preprocess(run_id=run_id, taxi_type=taxi_type, run_date=run_date)
 
 
-@flow(task_runner=ConcurrentTaskRunner)  # type: ignore
+@flow(name="backfill_batch_prediction", task_runner=ConcurrentTaskRunner)  # type: ignore
 def batch_predict_backfill_flow(*, run_id: str, taxi_type: str) -> None:
     """This is the workflow for making batch predictions on previous
     NYC Taxi data."""
@@ -103,7 +109,7 @@ def batch_predict_backfill_flow(*, run_id: str, taxi_type: str) -> None:
 
     while start_date <= end_date:
         batch_preprocess(run_id=run_id, taxi_type=taxi_type, run_date=start_date)
-        start_date += relativedelta(months=1)
+        start_date += relativedelta(months=1) # Increment month
 
 
 def main() -> None:

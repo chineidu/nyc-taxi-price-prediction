@@ -4,8 +4,9 @@ This module is used to run the streaming service.
 author: Chinedu Ezeofor
 """
 
-from model_deployment.streaming.lambda_function import lambda_handler
-from src import logger
+# from model_deployment.streaming.lambda_function import lambda_handler
+# import lambda_function
+from lambda_function import lambda_handler
 
 
 event = {
@@ -35,4 +36,4 @@ if __name__ == "__main__":
 
     response = lambda_handler(event=event, context=None)
     pp(response)
-    logger.info("Done ...")
+    pp("Done ...")
