@@ -72,7 +72,7 @@ with mlflow.start_run():
     )
     logger.info("Experiment Done! 😎...")
 
-    # Confirmed it's stored on S3
+    # Confirm it's stored on S3
     logger.info(mlflow.get_artifact_uri())
 
 
