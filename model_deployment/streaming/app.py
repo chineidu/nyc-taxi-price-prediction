@@ -1,8 +1,10 @@
-from model_deployment.streaming.lambda_function import (
-    lambda_handler,
-    prepare_data,
-    predict,
-)
+"""
+This module is used to run the streaming service.
+
+author: Chinedu Ezeofor
+"""
+
+from model_deployment.streaming.lambda_function import lambda_handler
 from src import logger
 
 
@@ -26,22 +28,10 @@ event = {
         }
     ]
 }
-"""
-
-
-"""
-
 
 
 if __name__ == "__main__":
     from pprint import pprint as pp
-    from src import logger
-
-    # df = prepare_data(features=event)
-    # pp(df)
-    # print()
-    # pred = predict(data=df)
-    # pp(pred)
 
     response = lambda_handler(event=event, context=None)
     pp(response)

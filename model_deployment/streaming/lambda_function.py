@@ -1,3 +1,10 @@
+"""
+This module contains utility functions for the
+Kinesis streaning service.
+
+author: Chinedu Ezeofor
+"""
+
 import os
 import json
 import typing as tp
