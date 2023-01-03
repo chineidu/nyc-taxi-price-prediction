@@ -18,6 +18,7 @@ import pandas as pd
 
 # Environment variables
 RIDE_PREDICTIONS_STREAM_NAME = os.getenv("RIDE_PREDICTIONS", "ride_predictions")
+# Run ID was no longer used!
 # RUN_ID = os.getenv("RUN_ID", "98f43706f6184694be1ee10c41c7b69d")
 TEST_RUN = os.getenv("TEST_RUN", "False") == "True"
 
@@ -36,6 +37,7 @@ def predict(*, data: pd.DataFrame) -> float:
 
 
 def prepare_data(*, features: tp.Dict) -> pd.DataFrame:
+    """This is used to preprocess the data."""
     data = features.get("ride")
     df = pd.DataFrame(data, index=[0])
     df["tpep_pickup_datetime"] = pd.to_datetime(
@@ -57,6 +59,9 @@ def send_events(event: tp.Any) -> tp.Dict:
 
 
 def lambda_handler(event: tp.Dict, context=None) -> tp.Dict:
+    """This is the lambda function that consumes events
+    from the Kinesis stream. It decodes the encoded record
+    and makes the trip prediction using the trained model."""
     predictions = []
 
     for record in event["Records"]:
