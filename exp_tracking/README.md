@@ -20,7 +20,7 @@ For info on how to run the server, check [here](https://mlflow.org/docs/latest/t
 
 ## Using A Remote Server
 
-1. You can create an EC2 instance and configure the instance. i.e enable inbound rules so that you can ssh, send requests and connect your DB to the instance.
+1. You can create an `EC2` instance and configure the instance. i.e enable inbound rules so that you can ssh, send http requests and connect your DB to the instance.
 
 ### Sample Command
 
