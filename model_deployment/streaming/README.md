@@ -106,7 +106,7 @@ prod = send_events(event)
 
 
 ```json
-The event above generated the record base64 encoded below:
+// The event above generated the record base64 encoded below:
 {
   "Records": [
     {
