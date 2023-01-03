@@ -3,8 +3,8 @@ from fastapi import APIRouter, status
 from fastapi.encoders import jsonable_encoder
 from loguru import logger
 
-from src import __version__ as model_version
 # Custom imports
+from src import __version__ as model_version
 from src.api.config import settings
 from src.api.schema import APIDetails, InputDataSchema, ResponsePredictSchema
 from src.predict import make_predictions
