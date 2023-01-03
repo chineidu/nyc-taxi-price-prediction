@@ -3,20 +3,15 @@ This module is used to train the model.
 
 author: Chinedu Ezeofor
 """
-import logging
 import typing as tp
 import warnings
 
 import pandas as pd
-# from Scikit-learn
-from sklearn.model_selection import train_test_split
 
 # Custom Imports
 from src.config.core import config
 from src.pipeline import rf_pipe
-from src.processing.data_manager import (load_data, logger, save_model,
-                                         split_into_features_n_target,
-                                         split_train_data)
+from src.processing.data_manager import load_data, logger, save_model, split_train_data
 from src.utilities.experiment import eval_metrics
 
 warnings.filterwarnings("error")

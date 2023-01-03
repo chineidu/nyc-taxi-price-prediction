@@ -3,9 +3,8 @@ This module is used to run the streaming service.
 
 author: Chinedu Ezeofor
 """
+from pprint import pprint as pp
 
-# from model_deployment.streaming.lambda_function import lambda_handler
-# import lambda_function
 from lambda_function import lambda_handler
 
 
@@ -32,7 +31,6 @@ event = {
 
 
 if __name__ == "__main__":
-    from pprint import pprint as pp
 
     response = lambda_handler(event=event, context=None)
     pp(response)

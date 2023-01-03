@@ -6,6 +6,7 @@ author: Chinedu Ezeofor
 import logging
 import typing as tp
 from pathlib import Path
+import uuid
 
 import joblib
 
@@ -13,9 +14,9 @@ import joblib
 import numpy as np
 import pandas as pd
 from pydantic import ValidationError
-from sklearn.model_selection import train_test_split
 
 # Scikit-learn
+from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 
 # Custom Imports
@@ -37,8 +38,6 @@ Estimator = tp.Union[Pipeline, tp.Any]  # Alias for estimator
 
 def get_unique_IDs(feat: str) -> str:
     """This returns a universally unique generated ID."""
-    import uuid
-
     if feat is not None:
         return str(uuid.uuid4())
 

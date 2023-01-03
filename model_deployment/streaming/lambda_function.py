@@ -10,23 +10,27 @@ import json
 import typing as tp
 import boto3
 from pprint import pprint as pp
+import joblib
 import base64
 
 import pandas as pd
-import mlflow
 
 
 # Environment variables
 RIDE_PREDICTIONS_STREAM_NAME = os.getenv("RIDE_PREDICTIONS", "ride_predictions")
-RUN_ID = os.getenv("RUN_ID", "98f43706f6184694be1ee10c41c7b69d")
+# RUN_ID = os.getenv("RUN_ID", "98f43706f6184694be1ee10c41c7b69d")
 TEST_RUN = os.getenv("TEST_RUN", "False") == "True"
 
 kinesis_client = boto3.client("kinesis")
 
 
 def predict(*, data: pd.DataFrame) -> float:
-    S3_BUCKET_NAME = f"s3://mlflow-model-registry-neidu/1/{RUN_ID}/artifacts/model"
-    model = model = mlflow.pyfunc.load_model(model_uri=f"{S3_BUCKET_NAME}")
+    """This is used to make predictions on unseen data using 
+    the trained model."""
+    fp = "trained_models/model.pkl"
+    with open(fp, "rb") as file:
+        model = joblib.load(file)
+
     result = model.predict(data)[0]
     return float(result)
 
@@ -48,12 +52,11 @@ def send_events(event: tp.Any) -> tp.Dict:
     response = client.put_record(
         StreamName=stream_name, Data=json.dumps(event), PartitionKey="1"
     )
-
     pp(json.dumps(event))
     return response
 
 
-def lambda_handler(*, event: tp.Dict, context=None) -> tp.Dict:
+def lambda_handler(event: tp.Dict, context=None) -> tp.Dict:
     predictions = []
 
     for record in event["Records"]:

@@ -23,4 +23,6 @@ tests
 *.md
 .venv
 .vscode
-sample
+train_model.py
+data
+

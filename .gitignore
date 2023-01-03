@@ -129,5 +129,5 @@ dmypy.json
 .pyre/
 .vscode/
 
-sample.py
+*sample.py
 src/data

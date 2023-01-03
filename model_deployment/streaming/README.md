@@ -72,10 +72,41 @@ aws kinesis put-record \
    }'
 ```
 
+```python
+# I used Python's API instaed of the AWS CLI to send the record
+def send_events(*, event: tp.Any) -> tp.Dict:
+    """This is used to send events to the Kinesis stream"""
+    client = boto3.client("kinesis")
+    stream_name = "ride_events"
+
+    response = client.put_record(
+        StreamName=stream_name, Data=json.dumps(event), PartitionKey="1"
+    )
+
+    pp(json.dumps(event))
+    return response
+
+event = {
+    "ride": {
+        "DOLocationID": 130,
+        "payment_type": 2,
+        "PULocationID": 115,
+        "RatecodeID": 1.0,
+        "total_amount": 12.2,
+        "tpep_pickup_datetime": "2022-02-01 14:28:05",
+        "trip_distance": 2.34,
+        "VendorID": 1,
+    },
+    "ride_id": 123,
+}
+prod = send_events(event)
+```
+
 ### Test event
 
 
 ```json
+The event above generated the record base64 encoded below:
 {
   "Records": [
     {
@@ -124,45 +155,39 @@ echo ${RESULT} | jq -r '.Records[0].Data' | base64 --decode | jq
 
 ```bash
 export PREDICTIONS_STREAM_NAME="ride_predictions"
-export RUN_ID="e1efc53e9bd149078b0c12aeaa6365df"
+export RUN_ID="98f43706f6184694be1ee10c41c7b69d"
 export TEST_RUN="True"
 
-python test.py
+python app.py
 ```
 
 ### Putting everything to Docker
 
 ```bash
-docker build -t stream-model-duration:v1 .
-
-docker run -it --rm \
-    -p 8080:8080 \
-    -e PREDICTIONS_STREAM_NAME="ride_predictions" \
-    -e RUN_ID="e1efc53e9bd149078b0c12aeaa6365df" \
-    -e TEST_RUN="True" \
-    -e AWS_DEFAULT_REGION="eu-west-1" \
-    stream-model-duration:v1
+docker build -t stream-model-duration:v1 -f Dockerfile .
 ```
 
 URL for testing:
 
 * http://localhost:8080/2015-03-31/functions/function/invocations
 
-
-
 ### Configuring AWS CLI to run in Docker
 
 To use AWS CLI, you may need to set the env variables:
 
 ```bash
+# Set env
+export AWS_ACCESS_KEY_ID="your_secret_key" 
+export AWS_SECRET_ACCESS_KEY="your_secret_access_key"
+
 docker run -it --rm \
     -p 8080:8080 \
     -e PREDICTIONS_STREAM_NAME="ride_predictions" \
-    -e RUN_ID="e1efc53e9bd149078b0c12aeaa6365df" \
+    -e RUN_ID="98f43706f6184694be1ee10c41c7b69d" \
     -e TEST_RUN="True" \
     -e AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
     -e AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
-    -e AWS_DEFAULT_REGION="${AWS_DEFAULT_REGION}" \
+    -e AWS_DEFAULT_REGION="eu-west-1" \
     stream-model-duration:v1
 ```
 
@@ -172,9 +197,9 @@ Alternatively, you can mount the `.aws` folder with your credentials to the `.aw
 docker run -it --rm \
     -p 8080:8080 \
     -e PREDICTIONS_STREAM_NAME="ride_predictions" \
-    -e RUN_ID="e1efc53e9bd149078b0c12aeaa6365df" \
+    -e RUN_ID="98f43706f6184694be1ee10c41c7b69d" \
     -e TEST_RUN="True" \
-    -v c:/Users/alexe/.aws:/root/.aws \
+    -v ~/.aws:/root/.aws \
     stream-model-duration:v1
 ```
 
