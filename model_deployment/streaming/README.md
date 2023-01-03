@@ -208,20 +208,36 @@ docker run -it --rm \
 Creating an ECR repo
 
 ```bash
-aws ecr create-repository --repository-name duration-model
+# The command above generates a `repositoryUri` which will 
+# be required to push to `ECR`
+aws ecr create-repository --repository-name ride-duration-model
 ```
 
-Logging in
+#### Logging in
 
+* Authenticate (Log in)
+  
 ```bash
-$(aws ecr get-login --no-include-email)
+export repository_name="126946216053.dkr.ecr.eu-west-1.amazonaws.com/ride-duration-model"
+export aws_region="eu-west-1"
+export aws_account="enter-your-account-id"
+
+aws ecr get-login-password \
+    | docker login \
+        --password-stdin \
+        --username AWS \
+        "${aws_account}.dkr.ecr.${aws_region}.amazonaws.com/${repository_name}"
 ```
 
-Pushing 
+### Pushing
+
+#### Note
+
+`REMOTE_URI` and `repository_name` are the same as: `repositoryUri`
 
 ```bash
-REMOTE_URI="387546586013.dkr.ecr.eu-west-1.amazonaws.com/duration-model"
-REMOTE_TAG="v1"
+export REMOTE_URI="126946216053.dkr.ecr.eu-west-1.amazonaws.com/ride-duration-model"
+export REMOTE_TAG="v1"
 REMOTE_IMAGE=${REMOTE_URI}:${REMOTE_TAG}
 
 LOCAL_IMAGE="stream-model-duration:v1"
