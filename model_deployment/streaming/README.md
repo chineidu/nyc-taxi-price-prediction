@@ -163,6 +163,8 @@ python app.py
 
 ### Putting everything to Docker
 
+* The Dockerfile used to build the image is located in the `streaming` directory.
+
 ```bash
 docker build -t stream-model-duration:v1 -f Dockerfile .
 ```
@@ -208,8 +210,7 @@ docker run -it --rm \
 Creating an ECR repo
 
 ```bash
-# The command above generates a `repositoryUri` which will 
-# be required to push to `ECR`
+# This command generates a `repositoryUri` which will be required to push to `ECR`
 aws ecr create-repository --repository-name ride-duration-model
 ```
 
