@@ -73,7 +73,7 @@ aws kinesis put-record \
 ```
 
 ```python
-# I used Python's API instaed of the AWS CLI to send the record
+# I used Python's API instead of the AWS CLI to send the record
 def send_events(*, event: tp.Any) -> tp.Dict:
     """This is used to send events to the Kinesis stream"""
     client = boto3.client("kinesis")
