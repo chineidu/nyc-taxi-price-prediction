@@ -131,3 +131,4 @@ dmypy.json
 
 *sample.py
 src/data
+.DS_Store
