@@ -43,7 +43,7 @@ def make_predictions(*, data: pd.DataFrame) -> tp.Dict:
         logger.info("Making Predictions ...")
         # Make predictions
         pred = _model.predict(validated_data)
-        pred = list(np.exp(pred))  # Convert from log to minutes
+        pred = list(np.expm1(pred))  # Convert from log to minutes
 
         result = {
             "trip_duration": [(round(x, 1)) for x in pred],  # type: ignore

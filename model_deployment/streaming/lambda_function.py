@@ -13,6 +13,7 @@ from pprint import pprint as pp
 import joblib
 import base64
 
+import numpy as np
 import pandas as pd
 
 
@@ -33,7 +34,8 @@ def predict(*, data: pd.DataFrame) -> float:
         model = joblib.load(file)
 
     result = model.predict(data)[0]
-    return float(result)
+    result = np.expm1(result)
+    return round(float(result), 2)
 
 
 def prepare_data(*, features: tp.Dict) -> pd.DataFrame:
