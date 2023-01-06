@@ -1,0 +1,10 @@
+scikit-learn==1.2.0
+fastapi==0.88.0
+pyyaml==6.0
+tqdm
+prometheus_client==0.15.0
+prometheusrock==0.2.0
+pyarrow==10.0.1
+prefect==2.7.3
+pymongo==4.3.3
+evidently==0.2.1

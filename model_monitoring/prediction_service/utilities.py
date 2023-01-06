@@ -1,5 +1,5 @@
 """
-This module containes helper functions and data objects.
+This module containes helper functions and schemas.
 
 author: Chinedu Ezeofor
 """

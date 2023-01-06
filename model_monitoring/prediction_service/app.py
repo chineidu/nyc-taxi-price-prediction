@@ -16,7 +16,7 @@ import typing as tp
 
 from utilities import InputSchema, ResponsePredictSchema, predict
 
-EVIDENTLY_SERVICE_ADDRESS = os.getenv("EVIDENTLY_SERVICE", "http://127.0.0.1:5000")
+EVIDENTLY_SERVICE_ADDRESS = os.getenv("EVIDENTLY_SERVICE", "http://0.0.0.0:5000")
 MONGODB_ADDRESS = os.getenv("MONGODB_ADDRESS", "mongodb://127.0.0.1:27017")
 
 mongo_client = MongoClient(MONGODB_ADDRESS)
@@ -54,7 +54,7 @@ model_version = "v1"
 
 
 @app.post(
-    path="/predict/",
+    path="/predict",
     response_model=ResponsePredictSchema,
     status_code=status.HTTP_200_OK,
 )

@@ -1,3 +1,9 @@
+"""
+This module contains the endpoints for making predictions
+and checking the health of the API.
+
+author: Chinedu Ezeofor
+"""
 import pandas as pd
 from fastapi import APIRouter, status
 from fastapi.encoders import jsonable_encoder

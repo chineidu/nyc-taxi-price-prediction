@@ -47,7 +47,7 @@ def load_data(*, filename: tp.Union[str, Path], uri: bool = False) -> pd.DataFra
 
     Params:
     -------
-    filename (Path): The input filepath.
+    filename (Path): The relative input filepath.
     uri (bool, default=False): True if the filename is an S3 URI else False
 
     Returns:
@@ -55,16 +55,19 @@ def load_data(*, filename: tp.Union[str, Path], uri: bool = False) -> pd.DataFra
     data (Pandas DF): The loaded DF.
     """
     if not uri:
-        filename = DATA_FILEPATH / filename
+        filename = f"{DATA_FILEPATH}/{filename}"
     filename = str(filename)
+
     logger.info("Loading Data ... ")
     try:
         data = (
-            pd.read_csv(filename) if filename.endswith("csv") else pd.read_parquet(filename)
+            pd.read_csv(filename)
+            if filename.endswith("csv")
+            else pd.read_parquet(filename)
         )
     except Exception as err:
         logger.info(err)
-        
+
     TRIP_DUR_THRESH = 60  # trip_duration
     TRIP_DIST_THRESH = 30  # trip_distance
     TOTAL_AMT_THRESH = 100  # total_amount
@@ -82,6 +85,7 @@ def load_data(*, filename: tp.Union[str, Path], uri: bool = False) -> pd.DataFra
             return trip_duration
 
         data["id"] = data["VendorID"].apply(get_unique_IDs)  # Generate IDs
+        logger.info("Added IDs! ")
         data["trip_duration"] = calculate_trip_duration(data)
         data = data.loc[
             (data["trip_duration"] > MIN_THRESH)
