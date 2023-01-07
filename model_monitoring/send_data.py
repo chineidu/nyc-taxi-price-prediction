@@ -36,7 +36,7 @@ with open("target.csv", "w") as f_target:
         ).total_seconds() / 60
         row["tpep_pickup_datetime"] = str(row["tpep_pickup_datetime"])
         row["tpep_dropoff_datetime"] = str(row["tpep_dropoff_datetime"])
-        # row["duration"] = round(duration, 2)
+        
         if duration != 0.0:  # Don't make predictions for trips with 0 miles (duration)
             f_target.write(f"{row['id']},{duration}\n")  # save data
 
