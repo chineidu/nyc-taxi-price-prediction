@@ -75,7 +75,7 @@ def load_data(*, filename: tp.Union[str, Path], uri: bool = False) -> pd.DataFra
 
     if filename.endswith("parquet"):
 
-        def calculate_trip_duration(data: pd.DataFrame) -> pd.DataFrame:
+        def calculate_trip_duration(data: pd.DataFrame) ->  np.ndarray:
             """This returns a DF containing the calculated trip_duration in minutes."""
             data = data.copy()
             # Convert to minutes

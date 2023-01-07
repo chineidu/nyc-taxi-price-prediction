@@ -5,21 +5,32 @@ the MongoDB database.
 author: Chinedu Ezeofor
 """
 import os
+import typing as tp
 import pandas as pd
 from argparse import ArgumentParser
-from pprint import pprint as pp
 from pymongo import MongoClient
+from pymongo.errors import ServerSelectionTimeoutError
 
 
-MONGODB_ADDRESS = os.getenv("MONGODB_ADDRESS", "mongodb://127.0.0.1:27018")
-
-# Create client
-client = MongoClient(MONGODB_ADDRESS)
-db = client.get_database("prediction_service")  # Create db
+def create_conn() -> tp.Any:
+    """This is used to create a connection to the database."""
+    MONGODB_ADDRESS = os.getenv("MONGODB_ADDRESS", "mongodb://127.0.0.1:27018")
+    try:
+        # Create client
+        client = MongoClient(MONGODB_ADDRESS)
+        db = client.get_database("prediction_service")  # Create db
+        print("Connection successful!\n")
+        return db
+    except ServerSelectionTimeoutError as e:
+        print(e)
+        print("Connection NOT successful!")
 
 
 def main() -> None:
     """This is the main function for running the project."""
+    # Create connection
+    db = create_conn()
+
     parser = ArgumentParser(
         prog="Database size",
         description="For checking the data stored on the MongoDB database.",
@@ -35,7 +46,7 @@ def main() -> None:
         help="The stopping index for slicing the result.",
         required=False,
         type=int,
-        default=4
+        default=4,
     )
     parser.add_argument(
         "-v", "--verbose", action="count", help="Increase the verbosity", default=0

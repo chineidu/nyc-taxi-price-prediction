@@ -27,7 +27,6 @@ class InputSchema(BaseModel):
     tpep_pickup_datetime: str
     trip_distance: float
     VendorID: int
-    duration: tp.Optional[float]
 
     class Config:
         """Sample Payload"""
