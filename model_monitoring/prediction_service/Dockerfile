@@ -6,6 +6,7 @@ WORKDIR /opt
 # Copy all the requirements and source code
 COPY ["./", "./"]
 
-RUN pip3 install --upgrade -r requirements.txt
+RUN pip3 install --no-cache-dir --upgrade -r requirements.txt
 
-CMD ["python", "app.py"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+

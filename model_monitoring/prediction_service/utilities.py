@@ -10,9 +10,9 @@ from pydantic import BaseModel
 import os
 import joblib
 import typing as tp
-import datetime
 
 MODEL_FILE = os.getenv("MODEL_FILE", "model.pkl")
+
 
 class InputSchema(BaseModel):
     """
@@ -24,9 +24,10 @@ class InputSchema(BaseModel):
     PULocationID: int
     RatecodeID: float
     total_amount: float
-    tpep_pickup_datetime: datetime.datetime
+    tpep_pickup_datetime: str
     trip_distance: float
     VendorID: int
+    duration: tp.Optional[float]
 
     class Config:
         """Sample Payload"""
@@ -41,6 +42,34 @@ class InputSchema(BaseModel):
                 "tpep_pickup_datetime": "2022-02-01 10:15:17",
                 "trip_distance": 3.17,
                 "VendorID": 2,
+            }
+        }
+
+
+class InputDataSchema(BaseModel):
+    """
+    Config object for input data.
+    """
+
+    inputs: tp.List[InputSchema]
+
+    class Config:
+        """Sample Payload"""
+
+        schema_extra = {
+            "example": {
+                "inputs": [
+                    {
+                        "DOLocationID": 122,
+                        "payment_type": 1,
+                        "PULocationID": 236,
+                        "RatecodeID": 1.0,
+                        "total_amount": 12.36,
+                        "tpep_pickup_datetime": "2022-02-01 10:15:17",
+                        "trip_distance": 3.17,
+                        "VendorID": 2,
+                    }
+                ]
             }
         }
 

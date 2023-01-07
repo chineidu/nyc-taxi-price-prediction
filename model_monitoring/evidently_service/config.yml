@@ -4,9 +4,8 @@ datasets:
       categorical_features:
         - PULocationID
         - DOLocationID
-        - payment_type
         - RatecodeID
-        - tpep_pickup_datetime
+        - payment_type
         - VendorID
       numerical_features:
         - trip_distance
@@ -16,6 +15,8 @@ datasets:
       separator: ','
     monitors:
       - data_drift
+      - regression_performance
+      - num_target_drift
     reference_file: ./datasets/yellow_tripdata_2022-01.parquet
 service:
   calculation_period_sec: 2

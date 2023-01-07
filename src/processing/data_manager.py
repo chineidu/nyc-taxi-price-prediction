@@ -80,7 +80,14 @@ def load_data(*, filename: tp.Union[str, Path], uri: bool = False) -> pd.DataFra
             data = data.copy()
             # Convert to minutes
             MINS = 60
-            trip_duration = data["tpep_dropoff_datetime"] - data["tpep_pickup_datetime"]
+            try:
+                trip_duration = (
+                    data["tpep_dropoff_datetime"] - data["tpep_pickup_datetime"]
+                )
+            except:
+                trip_duration = (
+                    data["lpep_dropoff_datetime"] - data["lpep_pickup_datetime"]
+                )
             trip_duration = round(trip_duration.dt.total_seconds() / MINS, 2)
             return trip_duration
 

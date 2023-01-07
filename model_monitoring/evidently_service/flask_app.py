@@ -9,22 +9,23 @@ The service gets a reference dataset from reference.csv file and process current
 
 Metrics calculation results are available with `GET /metrics` HTTP method in Prometheus compatible format.
 """
-
+import pandas as pd
 import os
 
 import dataclasses
 import datetime
 import logging
-import typing as tp
+from typing import Dict
+from typing import List
+from typing import Optional
 
-import uvicorn
-from pprint import pprint as pp
+import flask
 import pandas as pd
-from pydantic import BaseModel
 import prometheus_client
 from pyarrow import parquet as pq
-from fastapi import FastAPI,status
+from flask import Flask, jsonify
 import yaml
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
 from evidently.pipeline.column_mapping import ColumnMapping
 from evidently.model_monitoring import ModelMonitoring
@@ -36,81 +37,22 @@ from evidently.model_monitoring import NumTargetDriftMonitor
 from evidently.model_monitoring import ProbClassificationPerformanceMonitor
 from evidently.model_monitoring import RegressionPerformanceMonitor
 
+from evidently.runner.loader import DataLoader
+from evidently.runner.loader import DataOptions
 
 
-app = FastAPI()
+app = Flask(__name__)
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[logging.StreamHandler()],
 )
-logger = logging.getLogger(__name__)
 
 # Add prometheus wsgi middleware to route /metrics requests
-from prometheus_fastapi_instrumentator import Instrumentator
-
-@app.on_event("startup")
-async def startup():
-    Instrumentator().instrument(app).expose(app)
-
-
-class InputSchema(BaseModel):
-    """
-    Config object for input data variables.
-    """
-
-    DOLocationID: int
-    payment_type: int
-    PULocationID: int
-    RatecodeID: float
-    total_amount: float
-    tpep_pickup_datetime: str
-    trip_distance: float
-    VendorID: int
-
-    class Config:
-        """Sample Payload"""
-
-        schema_extra = {
-            "example": {
-                "DOLocationID": 122,
-                "payment_type": 1,
-                "PULocationID": 236,
-                "RatecodeID": 1.0,
-                "total_amount": 12.36,
-                "tpep_pickup_datetime": "2022-02-01 10:15:17",
-                "trip_distance": 3.17,
-                "VendorID": 2,
-            }
-        }
-
-class InputDataSchema(BaseModel):
-    """
-    Config object for input data.
-    """
-
-    inputs: tp.List[InputSchema]
-
-    class Config:
-        """Sample Payload"""
-
-        schema_extra = {
-            "example": {
-                "inputs": [
-                    {
-                        "DOLocationID": 122,
-                        "payment_type": 1,
-                        "PULocationID": 236,
-                        "RatecodeID": 1.0,
-                        "total_amount": 12.36,
-                        "tpep_pickup_datetime": "2022-02-01 10:15:17",
-                        "trip_distance": 3.17,
-                        "VendorID": 2,
-                    }
-                ]
-            }
-        }
+app.wsgi_app = DispatcherMiddleware(
+    app.wsgi_app, {"/metrics": prometheus_client.make_wsgi_app()}
+)
 
 
 @dataclasses.dataclass
@@ -127,7 +69,7 @@ class MonitoringServiceOptions:
 class LoadedDataset:
     name: str
     references: pd.DataFrame
-    monitors: tp.List[str]
+    monitors: List[str]
     column_mapping: ColumnMapping
 
 
@@ -144,19 +86,19 @@ EVIDENTLY_MONITORS_MAPPING = {
 
 class MonitoringService:
     # names of monitoring datasets
-    datasets: tp.List[str]
-    metric: tp.Dict[str, prometheus_client.Gauge]
-    last_run: tp.Optional[datetime.datetime]
+    datasets: List[str]
+    metric: Dict[str, prometheus_client.Gauge]
+    last_run: Optional[datetime.datetime]
     # collection of reference data
-    reference: tp.Dict[str, pd.DataFrame]
+    reference: Dict[str, pd.DataFrame]
     # collection of current data
-    current: tp.Dict[str, tp.Optional[pd.DataFrame]]
+    current: Dict[str, Optional[pd.DataFrame]]
     # collection of monitoring objects
-    monitoring: tp.Dict[str, ModelMonitoring]
+    monitoring: Dict[str, ModelMonitoring]
     calculation_period_sec: float = 15
     window_size: int
 
-    def __init__(self, datasets: tp.Dict[str, LoadedDataset], window_size: int):
+    def __init__(self, datasets: Dict[str, LoadedDataset], window_size: int):
         self.reference = {}
         self.monitoring = {}
         self.current = {}
@@ -179,6 +121,9 @@ class MonitoringService:
     def iterate(self, dataset_name: str, new_rows: pd.DataFrame):
         """Add data to current dataset for specified dataset"""
         window_size = self.window_size
+
+        df = pd.DataFrame(self.current)
+        df.to_csv("result.csv", index=False)
 
         if dataset_name in self.current:
             current_data = self.current[dataset_name].append(
@@ -247,10 +192,10 @@ class MonitoringService:
                 logging.error("Value error for metric %s, error: ", metric_key, error)
 
 
-SERVICE: tp.Optional[MonitoringService] = None
+SERVICE: Optional[MonitoringService] = None
 
 
-@app.on_event("startup")
+@app.before_first_request
 def configure_service():
     # pylint: disable=global-statement
     global SERVICE
@@ -301,20 +246,21 @@ def configure_service():
     SERVICE = MonitoringService(datasets=datasets, window_size=options.window_size)
 
 
-@app.post(path="/iterate/{dataset}", status_code=status.HTTP_200_OK)
-def iterate(dataset: str, item: InputSchema):
-    data = item.dict()
+@app.route("/iterate/<dataset>", methods=["POST"])
+def iterate(dataset: str):
+    data = []
+    data.append(flask.request.json)
+    print(data)
 
     global SERVICE
     if SERVICE is None:
         return "Internal Server Error: service not found", 500
-    SERVICE.iterate(dataset_name=dataset, new_rows=pd.DataFrame.from_dict([data]))
+
+    SERVICE.iterate(dataset_name=dataset, new_rows=pd.DataFrame(data))
+    
     return "ok"
 
 
 if __name__ == "__main__":
-    # Use this for debugging purposes only
-    logger.warning("Running in development mode. Do not run like this in production.")
     host, port = "0.0.0.0", 5055
-    
-    uvicorn.run("app:app", host=host, port=port, log_level="info", reload=True)
+    app.run(debug=True, host=host, port=port)
