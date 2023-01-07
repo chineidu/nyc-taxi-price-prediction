@@ -32,7 +32,13 @@ parser.add_argument(
 parser.add_argument(
     "-v", "--verbose", action="count", help="Increase the verbosity", default=0
 )
-parser.add_argument("-d", "--drop-collection", required=False, type=str)
+parser.add_argument(
+    "-d",
+    "--drop-collection",
+    help="To drop the collection, type: `True`",
+    required=False,
+    type=str,
+)
 
 args = parser.parse_args()
 start, stop, drop_coll = (
@@ -57,8 +63,8 @@ if len(result) == 1:
 df = pd.DataFrame(result)
 
 if drop_coll and drop_coll.lower() == "true":
-        db.data.drop()  # Used to drop
-        print("Collection `data` dropped!")
+    db.data.drop()  # Used to drop
+    print("Collection `data` dropped!")
 
 if args.verbose >= 1:
     print(f"Data size: {stored_data_size}")  # Size of the data currently stored
