@@ -81,5 +81,5 @@ http://localhost:9091/
 python check_mongodb.py -h
 
 # To check the 1st 4 records
-python check_mongodb.py --start-index 0 --stop-index 4 -v 
+python check_mongodb.py --start-index 0 -v 
 ```

@@ -33,8 +33,9 @@ def main() -> None:
     parser.add_argument(
         "--stop-index",
         help="The stopping index for slicing the result.",
-        required=True,
+        required=False,
         type=int,
+        default=4
     )
     parser.add_argument(
         "-v", "--verbose", action="count", help="Increase the verbosity", default=0
@@ -45,6 +46,7 @@ def main() -> None:
         help="To drop the collection, type: `True`",
         required=False,
         type=str,
+        default="false",
     )
 
     args = parser.parse_args()
@@ -65,15 +67,16 @@ def main() -> None:
 
     if drop_coll and drop_coll.lower() == "true":
         db.data.drop()  # Used to drop
-        print("Collection `data` dropped!")
+        print(f"Collection `data` containing {stored_data_size} records dropped!")
 
     if args.verbose >= 1:
         print(f"Data size: {stored_data_size}")  # Size of the data currently stored
         print()
         print(f"Slice of data: from {start} to {stop-1}\n{df}")
 
-    elif args.verbose == 0:
+    if args.verbose == 0 and drop_coll == "false":
         print(f"Data size: {stored_data_size}")  # Size of the data currently stored
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
