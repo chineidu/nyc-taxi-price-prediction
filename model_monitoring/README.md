@@ -76,13 +76,10 @@ http://localhost:9091/
 
 7. To check the data stored on `mongodb`, run:
 
-```python
-if args.verbose >= 2:
-     print(
-         f"Hello {name!r}, you're a/an {role!r} and your current level is {level!r}\n"
-     )
-elif args.verbose == 1:
-   print(f"name={name}, role={role}, level={level}")
-elif args.quiet or args.verbose == 0:
-   print(name, role, level)
+```console
+# To get help
+python check_mongodb.py -h
+
+# To check the 1st 4 records
+python check_mongodb.py --start-index 0 --stop-index 4 -v 
 ```
