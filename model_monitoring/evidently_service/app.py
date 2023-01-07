@@ -18,12 +18,11 @@ import logging
 import typing as tp
 
 import uvicorn
-from pprint import pprint as pp
 import pandas as pd
 from pydantic import BaseModel
 import prometheus_client
 from pyarrow import parquet as pq
-from fastapi import FastAPI,status
+from fastapi import FastAPI, status
 import yaml
 
 from evidently.pipeline.column_mapping import ColumnMapping
@@ -37,7 +36,6 @@ from evidently.model_monitoring import ProbClassificationPerformanceMonitor
 from evidently.model_monitoring import RegressionPerformanceMonitor
 
 
-
 app = FastAPI()
 
 logging.basicConfig(
@@ -49,6 +47,7 @@ logger = logging.getLogger(__name__)
 
 # Add prometheus wsgi middleware to route /metrics requests
 from prometheus_fastapi_instrumentator import Instrumentator
+
 
 @app.on_event("startup")
 async def startup():
@@ -84,6 +83,7 @@ class InputSchema(BaseModel):
                 "VendorID": 2,
             }
         }
+
 
 class InputDataSchema(BaseModel):
     """
@@ -316,5 +316,5 @@ if __name__ == "__main__":
     # Use this for debugging purposes only
     logger.warning("Running in development mode. Do not run like this in production.")
     host, port = "0.0.0.0", 5055
-    
+
     uvicorn.run("app:app", host=host, port=port, log_level="info", reload=True)
