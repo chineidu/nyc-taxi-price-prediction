@@ -112,7 +112,7 @@ def fetch_live_data():
     with MongoClient(MONGODB_ADDRESS) as client:
         data = client.get_database(db_name).get_collection(collection_name).find()
         df = pd.DataFrame(list(data))
-        df = df.drop(columns=["id"])
+        # df = df.drop(columns=["id"])
         df.to_csv("curr.csv", index=False)
         return df
 
