@@ -1,7 +1,7 @@
 FROM python:3.10-slim
 
 # Create working directory
-WORKDIR /app
+WORKDIR /opt
 
 # Copy all the requirements and source code
 COPY ["./", "./"]

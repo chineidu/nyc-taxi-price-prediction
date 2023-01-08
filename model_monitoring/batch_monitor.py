@@ -1,7 +1,7 @@
 import os
 import json
 import typing as tp
-from datetime import timedelta
+from datetime import datetime, timedelta
 import joblib
 
 import numpy as np
@@ -9,7 +9,6 @@ import pandas as pd
 from pymongo import MongoClient
 from prefect import task, flow, get_run_logger
 from prefect.tasks import task_input_hash
-import evidently
 from evidently import ColumnMapping
 from evidently.report import Report
 from evidently.metric_preset import (
@@ -40,7 +39,7 @@ def upload_target_to_db(*, filename: str) -> None:
                 row = line.split(",")
                 # Update the data in the collection
                 filter = {"id": row[0]}
-                updated_val = { "$set": { "target": round(float(row[1]))} }
+                updated_val = {"$set": {"target": round(float(row[1]))}}
                 collection.update_one(filter, updated_val)
 
 
@@ -176,7 +175,7 @@ def run_evidently(ref_data: pd.DataFrame, curr_data: pd.DataFrame) -> tp.Tuple:
     cache_key_fn=task_input_hash,
     cache_expiration=timedelta(days=1),
 )
-def save_report_logs(*, json_report: tp.Dict):
+def save_report_logs(*, json_report: tp.Dict) -> None:
     """This is used to save the metrics in MongoDB."""
     logger = get_run_logger()
     db_name = "prediction_service"
@@ -189,15 +188,29 @@ def save_report_logs(*, json_report: tp.Dict):
 
 
 @task(retries=3, retry_delay_seconds=10)
-def save_html_report(*, report:Report, name:str):
-    """This is used to save the metrics report as HTML."""
+def save_html_report(*, report: Report, type: str = "drift") -> None:
+    """This is used to save the metrics report as HTML.
+
+     params:
+     -------
+     report (Report): An Evidently report object.
+     type (str): "drift" or "reg_report"
+
+     Returns:
+     --------
+    None
+    """
     logger = get_run_logger()
-    report.save_html(f"{name}.html")
+    name = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    if type == "drift":
+        report.save_html(f"data_drift_n_qty_report_{name}.html")
+    elif type == "reg_report":
+        report.save_html(f"regression_report_{name}.html")
     logger.info("Report saved as HTML!")
 
 
 @flow
-def run_batch_analyses():
+def run_batch_analyses() -> None:
     """This is the workflow for running the batch model monitoring analyses."""
     logger = get_run_logger()
 
@@ -220,8 +233,8 @@ def run_batch_analyses():
     save_report_logs(json_report=json_report)
 
     logger.info("Saving reports as HTML ...")
-    save_html_report(report=data_drift_n_qty_report, name="drift_quality_report")
-    save_html_report(report=regression_report, name="regression_report")
+    save_html_report(report=data_drift_n_qty_report, type="drift")
+    save_html_report(report=regression_report, type="reg_report")
 
 
 if __name__ == "__main__":

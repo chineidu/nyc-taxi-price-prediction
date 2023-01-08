@@ -20,6 +20,8 @@ services:
     environment:
       EVIDENTLY_SERVICE: "http://evidently_service.:8085"
       MONGODB_ADDRESS: "mongodb://mongo.:27017/"
+    volumes:
+      - ./prediction_service:/opt
     ports:
       - "8001:8000"
     networks:
@@ -33,8 +35,7 @@ services:
     depends_on:
       - grafana
     volumes:
-      - ./evidently_service/datasets:/app/datasets
-      - ./evidently_service/config.yaml:/app/config.yaml
+      - ./evidently_service:/opt
     ports:
       - "8086:8085"
     networks:
