@@ -1,7 +1,7 @@
-fastapi==0.88.0
+fastapi
 PyYAML~=5.1
-prometheus_client==0.15.0
-prometheus-fastapi-instrumentator==5.9.1
+prometheus_client
+prometheus-fastapi-instrumentator
 prometheusrock==0.2.0
 pyarrow==10.0.1
 evidently==0.2.1

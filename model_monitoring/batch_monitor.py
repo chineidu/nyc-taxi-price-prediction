@@ -30,7 +30,6 @@ def upload_target_to_db(*, filename: str) -> None:
     -------
     filename (str): The file containing the actual trip duration.
     """
-    logger = get_run_logger()
     db_name = "prediction_service"
     collection_name = "data"
     with MongoClient(MONGODB_ADDRESS) as client:
@@ -42,7 +41,6 @@ def upload_target_to_db(*, filename: str) -> None:
                 # Update the data in the collection
                 filter = {"id": row[0]}
                 updated_val = { "$set": { "target": float(row[1])} }
-                logger.info("Updating MongoDB ...")
                 collection.update_one(filter, updated_val)
 
 
@@ -58,7 +56,7 @@ def predict(*, data: pd.DataFrame) -> float:
     return pred
 
 
-@task(retries=3, retry_delay_seconds=10)
+@flow(retries=3, retry_delay_seconds=10)
 def load_ref_data(*, filename: str) -> pd.DataFrame:
     """This is used to load the reference data.
 
@@ -106,7 +104,7 @@ def load_ref_data(*, filename: str) -> pd.DataFrame:
 
 
 @task(retries=3, retry_delay_seconds=10)
-def fetch_data():
+def fetch_live_data():
     """This is used to fetch the live data from MongoDB."""
     db_name = "prediction_service"
     collection_name = "data"
@@ -114,6 +112,7 @@ def fetch_data():
     with MongoClient(MONGODB_ADDRESS) as client:
         data = client.get_database(db_name).get_collection(collection_name).find()
         df = pd.DataFrame(list(data))
+        df = df.drop(columns=["id"])
         df.to_csv("curr.csv", index=False)
         return df
 
@@ -135,6 +134,7 @@ def run_evidently(ref_data: pd.DataFrame, curr_data: pd.DataFrame) -> tp.Tuple:
     # Ensure that size of reference data == current data
     data_size = curr_data.shape[0]
     ref_data = ref_data.iloc[:data_size]
+    curr_data = curr_data.drop(columns=["_id"])
 
     logger = get_run_logger()
 
@@ -175,8 +175,8 @@ def run_evidently(ref_data: pd.DataFrame, curr_data: pd.DataFrame) -> tp.Tuple:
 @task(
     retries=3,
     retry_delay_seconds=10,
-    cache_key_fn=task_input_hash,
-    cache_expiration=timedelta(days=1),
+    # cache_key_fn=task_input_hash,
+    # cache_expiration=timedelta(days=1),
 )
 def save_report_logs(*, json_report: tp.Dict):
     """This is used to save the metrics in MongoDB."""
@@ -191,10 +191,10 @@ def save_report_logs(*, json_report: tp.Dict):
 
 
 @task(retries=3, retry_delay_seconds=10)
-def save_html_report(*, report, name):
+def save_html_report(*, report:Report, name:str):
     """This is used to save the metrics report as HTML."""
     logger = get_run_logger()
-    report.save(f"{name}.html")
+    report.save_html(f"{name}.html")
     logger.info("Report saved as HTML!")
 
 
@@ -211,7 +211,7 @@ def run_batch_analyses():
         filename="./evidently_service/datasets/reduced_data.parquet"
     )
     logger.info("Fetching data from MongoDB ...")
-    curr_data = fetch_data()
+    curr_data = fetch_live_data()
 
     logger.info("Running Evidently Service ...")
     data_drift_n_qty_report, regression_report, json_report = run_evidently(
@@ -222,8 +222,8 @@ def run_batch_analyses():
     save_report_logs(json_report=json_report)
 
     logger.info("Saving reports as HTML ...")
-    save_html_report(report=data_drift_n_qty_report)
-    save_html_report(report=regression_report)
+    save_html_report(report=data_drift_n_qty_report, name="drift_quality_report")
+    save_html_report(report=regression_report, name="regression_report")
 
 
 if __name__ == "__main__":

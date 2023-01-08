@@ -56,6 +56,8 @@ class DateTimeEncoder(json.JSONEncoder):
 def send_data(*, timer: float) -> None:
     """This is used to simulate the sending of requests to the predictive service"""
     data = load_batch_data(filename=fp)
+    print(f"Timer is set to: {timer}s\n")
+
     with open("target.csv", "w") as f_target:
         for row in data:
             row["id"] = str(uuid.uuid4())  # Add ID
