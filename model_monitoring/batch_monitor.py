@@ -148,7 +148,12 @@ def run_evidently(ref_data: pd.DataFrame, curr_data: pd.DataFrame) -> tp.Tuple:
     return (data_drift_n_qty_report, regression_report, json_report)
 
 
-@task(retries=3, retry_delay_seconds=10)
+@task(
+    retries=3,
+    retry_delay_seconds=10,
+    cache_key_fn=task_input_hash,
+    cache_expiration=timedelta(days=1),
+)
 def fetch_data():
     """This is used to fetch the live data from MongoDB."""
     db_name = "prediction_service"
@@ -160,7 +165,12 @@ def fetch_data():
         return df
 
 
-@task(retries=3, retry_delay_seconds=10)
+@task(
+    retries=3,
+    retry_delay_seconds=10,
+    cache_key_fn=task_input_hash,
+    cache_expiration=timedelta(days=1),
+)
 def save_report_logs(*, json_report: tp.Dict):
     """This is used to save the metrics in MongoDB."""
     logger = get_run_logger()
