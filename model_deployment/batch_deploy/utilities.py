@@ -36,7 +36,7 @@ def get_predictions(*, data: pd.DataFrame, run_id: str) -> np.ndarray:
         logger.info(err)
     logger.info("Making predictions ...")
     pred = model.predict(data)
-    pred = [(round(x, 1)) for x in list(np.exp(pred))]  # Convert from log to minutes
+    pred = [(round(x, 1)) for x in list(np.expm1(pred))]  # Convert from log to minutes
     return np.array(pred)
 
 
