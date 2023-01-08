@@ -15,7 +15,8 @@ import requests
 
 URL = "http://0.0.0.0:8001/predict"
 
-table = pq.read_table("yellow_tripdata_2022-01.parquet")
+fp = "reduced_data.parquet"  # "yellow_tripdata_2022-01.parquet"
+table = pq.read_table(fp)
 data = table.to_pylist()
 
 
@@ -26,6 +27,7 @@ class DateTimeEncoder(json.JSONEncoder):
         if isinstance(o, datetime):
             return o.isoformat()
         return json.JSONEncoder.default(self, o)
+
 
 
 with open("target.csv", "w") as f_target:
@@ -49,4 +51,5 @@ with open("target.csv", "w") as f_target:
 
         # pp(row)
         pp(f"prediction: {resp['trip_duration']}")
-        sleep(1)
+        sleep(0.1)
+print("Done!!!")

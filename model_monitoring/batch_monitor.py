@@ -9,6 +9,7 @@ import pandas as pd
 from pymongo import MongoClient
 from prefect import task, flow, get_run_logger
 from prefect.tasks import task_input_hash
+import evidently
 from evidently import ColumnMapping
 from evidently.report import Report
 from evidently.metric_preset import (
@@ -20,12 +21,7 @@ from evidently.metric_preset import (
 MONGODB_ADDRESS = os.getenv("MONGODB_ADDRESS", "mongodb://127.0.0.1:27018")
 
 
-@task(
-    retries=3,
-    retry_delay_seconds=10,
-    cache_key_fn=task_input_hash,
-    cache_expiration=timedelta(days=1),
-)
+@task(retries=3, retry_delay_seconds=10)
 def upload_target_to_db(*, filename: str) -> None:
     """This is used to upload the target feature to
     the MongoDB collection.
@@ -60,12 +56,7 @@ def predict(*, data: pd.DataFrame) -> float:
     return pred
 
 
-@task(
-    retries=3,
-    retry_delay_seconds=10,
-    cache_key_fn=task_input_hash,
-    cache_expiration=timedelta(days=1),
-)
+@task(retries=3, retry_delay_seconds=10)
 def load_ref_data(*, filename: str) -> pd.DataFrame:
     """This is used to load the reference data.
 
@@ -104,12 +95,25 @@ def load_ref_data(*, filename: str) -> pd.DataFrame:
 
     logger.info("Calculating target and making predictions ...")
     ref_data["target"] = calculate_trip_duration(data=ref_data)
-    ref_data = ref_data[(ref_data["target"] >= 1) & (ref_data["target"] <= 60)]
+    # ref_data = ref_data[(ref_data["target"] >= 1) & (ref_data["target"] <= 60)]
     features = numerical_features + categorical_features
-    ref_data = ref_data[features]
-    ref_data["predictions"] = predict(data=ref_data)
-
+    ref_data = ref_data[features + ["target"]]
+    ref_data["prediction"] = predict(data=ref_data)
+    ref_data.to_csv("ref.csv", index=False)
     return ref_data
+
+
+@task(retries=3, retry_delay_seconds=10)
+def fetch_data():
+    """This is used to fetch the live data from MongoDB."""
+    db_name = "prediction_service"
+    collection_name = "data"
+
+    with MongoClient(MONGODB_ADDRESS) as client:
+        data = client.get_database(db_name).get_collection(collection_name).find()
+        df = pd.DataFrame(list(data))
+        df.to_csv("curr.csv", index=False)
+        return df
 
 
 @task(retries=3, retry_delay_seconds=10)
@@ -129,6 +133,7 @@ def run_evidently(ref_data: pd.DataFrame, curr_data: pd.DataFrame) -> tp.Tuple:
     # Ensure that size of reference data == current data
     data_size = curr_data.shape[0]
     ref_data = ref_data.iloc[:data_size]
+    curr_data = curr_data.drop(columns=["_id"])
 
     logger = get_run_logger()
 
@@ -172,23 +177,6 @@ def run_evidently(ref_data: pd.DataFrame, curr_data: pd.DataFrame) -> tp.Tuple:
     cache_key_fn=task_input_hash,
     cache_expiration=timedelta(days=1),
 )
-def fetch_data():
-    """This is used to fetch the live data from MongoDB."""
-    db_name = "prediction_service"
-    collection_name = "data"
-
-    with MongoClient(MONGODB_ADDRESS) as client:
-        data = client.get_database(db_name).get_collection(collection_name).find()
-        df = pd.DataFrame(list(data))
-        return df
-
-
-@task(
-    retries=3,
-    retry_delay_seconds=10,
-    cache_key_fn=task_input_hash,
-    cache_expiration=timedelta(days=1),
-)
 def save_report_logs(*, json_report: tp.Dict):
     """This is used to save the metrics in MongoDB."""
     logger = get_run_logger()
@@ -202,7 +190,7 @@ def save_report_logs(*, json_report: tp.Dict):
 
 
 @task(retries=3, retry_delay_seconds=10)
-def save_html_report(*, report: tp.Any, name: str):
+def save_html_report(*, report, name):
     """This is used to save the metrics report as HTML."""
     logger = get_run_logger()
     report.save(f"{name}.html")
@@ -219,14 +207,14 @@ def run_batch_analyses():
 
     logger.info("Fetching reference data ...")
     ref_data = load_ref_data(
-        filename="./evidently_service/datasets/yellow_tripdata_2022-01.parquet"
+        filename="./evidently_service/datasets/reduced_data.parquet"
     )
     logger.info("Fetching data from MongoDB ...")
-    data = fetch_data()
+    curr_data = fetch_data()
 
     logger.info("Running Evidently Service ...")
     data_drift_n_qty_report, regression_report, json_report = run_evidently(
-        ref_data=ref_data, curr_data=data
+        ref_data=ref_data, curr_data=curr_data
     )
 
     logger.info("Saving reports to MongoDB ...")
