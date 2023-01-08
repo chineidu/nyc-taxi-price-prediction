@@ -30,6 +30,7 @@ def upload_target_to_db(*, filename: str) -> None:
     -------
     filename (str): The file containing the actual trip duration.
     """
+    logger = get_run_logger()
     db_name = "prediction_service"
     collection_name = "data"
     with MongoClient(MONGODB_ADDRESS) as client:
@@ -40,8 +41,9 @@ def upload_target_to_db(*, filename: str) -> None:
                 row = line.split(",")
                 # Update the data in the collection
                 filter = {"id": row[0]}
-                updated_val = {"$set": {"target": round(float(row[1]))}}
-                collection.update_one(filter=filter, update=updated_val)
+                updated_val = { "$set": { "target": float(row[1])} }
+                logger.info("Updating MongoDB ...")
+                collection.update_one(filter, updated_val)
 
 
 def predict(*, data: pd.DataFrame) -> float:
@@ -133,7 +135,6 @@ def run_evidently(ref_data: pd.DataFrame, curr_data: pd.DataFrame) -> tp.Tuple:
     # Ensure that size of reference data == current data
     data_size = curr_data.shape[0]
     ref_data = ref_data.iloc[:data_size]
-    curr_data = curr_data.drop(columns=["_id"])
 
     logger = get_run_logger()
 

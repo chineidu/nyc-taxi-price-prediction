@@ -18,7 +18,8 @@ class InputSchema(BaseModel):
     """
     Config object for input data variables.
     """
-
+    
+    id: tp.Optional[str]
     DOLocationID: int
     payment_type: int
     PULocationID: int
