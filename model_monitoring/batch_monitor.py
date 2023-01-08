@@ -20,7 +20,12 @@ from evidently.metric_preset import (
 MONGODB_ADDRESS = os.getenv("MONGODB_ADDRESS", "mongodb://127.0.0.1:27018")
 
 
-@task(retries=3, retry_delay_seconds=10)
+@task(
+    retries=3,
+    retry_delay_seconds=10,
+    cache_key_fn=task_input_hash,
+    cache_expiration=timedelta(days=1),
+)
 def upload_target_to_db(*, filename: str) -> None:
     """This is used to upload the target feature to
     the MongoDB collection.
@@ -75,6 +80,16 @@ def load_ref_data(*, filename: str) -> pd.DataFrame:
     ref_data = pd.read_parquet(filename)
     logger = get_run_logger()
 
+    numerical_features = ["trip_distance", "total_amount"]
+    categorical_features = [
+        "tpep_pickup_datetime",
+        "PULocationID",
+        "DOLocationID",
+        "RatecodeID",
+        "payment_type",
+        "VendorID",
+    ]
+
     def calculate_trip_duration(*, data: pd.DataFrame) -> np.ndarray:
         """This returns a DF containing the calculated trip_duration in minutes."""
         data = data.copy()
@@ -89,6 +104,9 @@ def load_ref_data(*, filename: str) -> pd.DataFrame:
 
     logger.info("Calculating target and making predictions ...")
     ref_data["target"] = calculate_trip_duration(data=ref_data)
+    ref_data = ref_data[(ref_data["target"] >= 1) & (ref_data["target"] <= 60)]
+    features = numerical_features + categorical_features
+    ref_data = ref_data[features]
     ref_data["predictions"] = predict(data=ref_data)
 
     return ref_data
@@ -110,7 +128,7 @@ def run_evidently(ref_data: pd.DataFrame, curr_data: pd.DataFrame) -> tp.Tuple:
     """
     # Ensure that size of reference data == current data
     data_size = curr_data.shape[0]
-    ref_data = ref_data.sample(n=data_size, random_state=123)
+    ref_data = ref_data.iloc[:data_size]
 
     logger = get_run_logger()
 
