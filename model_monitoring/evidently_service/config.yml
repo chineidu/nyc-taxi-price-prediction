@@ -7,6 +7,7 @@ datasets:
         - RatecodeID
         - payment_type
         - VendorID
+        - tpep_pickup_datetime
       numerical_features:
         - trip_distance
         - total_amount
@@ -17,7 +18,7 @@ datasets:
       - data_drift
       - regression_performance
       - num_target_drift
-    reference_file: ./datasets/yellow_tripdata_2022-01.parquet
+    reference_file: ./datasets/reduced_data.parquet
 service:
   calculation_period_sec: 2
   min_reference_size: 30

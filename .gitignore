@@ -136,7 +136,7 @@ sample.ipynb
 
 # Data
 model_monitoring/yellow_tripdata_2022-01.parquet
-model_monitoring/reduced_data.parquet
+# model_monitoring/reduced_data.parquet
 model_monitoring/evidently_service/datasets/yellow_tripdata_2022-01.parquet
 model_monitoring/evidently_service/datasets/reduced_data.parquet
 model_monitoring/target.csv
