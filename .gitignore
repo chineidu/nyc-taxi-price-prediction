@@ -129,7 +129,8 @@ dmypy.json
 .pyre/
 .vscode/
 
-*sample.py
+sample.py
+*.html
 src/data
 .DS_Store
 sample.ipynb
