@@ -7,7 +7,7 @@ source: https://github.com/DataTalksClub/mlops-zoomcamp/blob/main/05-monitoring/
 import json
 import uuid
 import typing as tp
-from argparse import ArgumentParser
+import click
 from datetime import datetime
 from time import sleep
 from pprint import pprint as pp
@@ -29,20 +29,6 @@ def load_batch_data(*, filename: str) -> tp.List:
     data = table.to_pylist()
     return data
 
-def get_parser()->float:
-    """This is used to obtain value(s) from the CLI.
-    It returns a float value for the timer."""
-    parser = ArgumentParser()
-    parser.add_argument(
-        "-t",
-        "--timer",
-        help="The duration of the timer in seconds. e.g 0.2",
-        type=float,
-        required=False,
-        default=0.01,
-    )
-    args = parser.parse_args()
-    return args.timer
 
 class DateTimeEncoder(json.JSONEncoder):
     """This is used to encode datetime objects."""
@@ -53,10 +39,19 @@ class DateTimeEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, o)
 
 
-def send_data(*, timer: float) -> None:
+@click.command()
+@click.option(
+    "-t",
+    "--timer",
+    help="The duration of the timer in seconds.",
+    type=float,
+    default=0.0001,
+    show_default=True,
+)
+def send_data(timer: float) -> None:
     """This is used to simulate the sending of requests to the predictive service"""
     data = load_batch_data(filename=fp)
-    print(f"Timer is set to: {timer}s\n")
+    click.echo(f"Timer is set to: {timer}s\n")
 
     with open("target.csv", "w") as f_target:
         for row in data:
@@ -80,11 +75,8 @@ def send_data(*, timer: float) -> None:
 
             pp(f"prediction: {resp['trip_duration']}")
             sleep(timer)
-    print("Done!!!")
+    click.echo("Done!!!")
 
 
 if __name__ == "__main__":
-    # Get the timer from the CLI
-    timer = get_parser()
-    # Run the main program
-    send_data(timer=timer)
+    send_data()

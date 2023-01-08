@@ -39,10 +39,10 @@ model_version = "v1"
 
 @app.post(
     path="/predict",
-    # response_model=ResponsePredictSchema,
+    response_model=ResponsePredictSchema,
     status_code=status.HTTP_200_OK,
 )
-def predict_trip_duration(input_data: InputSchema) -> None:
+def predict_trip_duration(input_data: InputSchema) -> ResponsePredictSchema:
     """This endpoint is used for predicting the trip
     duration in minutes.
     """
