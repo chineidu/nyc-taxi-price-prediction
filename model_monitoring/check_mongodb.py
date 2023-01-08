@@ -29,21 +29,13 @@ def create_conn() -> tp.Any:
 
 
 @click.command()
-@click.option(
-    "--start-index",
-    help="The start index",
-    prompt="start index",
-    required=True,
-    type=int,
-)
+@click.option("--start-index", help="The start index", default=0)
 @click.option("--stop-index", help="The stop index", default=4)
 @click.option("-v", "--verbose", help="Increase the verbosity.", default=0, count=True)
 @click.option(
     "-d", "--drop", help="Drop the collection", default="false", show_default=True
 )
-def main(
-    start_index: int, stop_index: int, verbose: str, drop: bool
-) -> None:
+def main(start_index: int, stop_index: int, verbose: str, drop: str) -> None:
     """This is the main function for running the project."""
     # Create connection
     db = create_conn()
@@ -64,16 +56,24 @@ def main(
     if drop and drop.lower() == "true":
         db.data.drop()  # Used to drop
         click.echo(
-            f"WARNING: `data` Collection containing {stored_data_size} records dropped!"
+            click.style(
+                f"WARNING: `data` Collection containing {stored_data_size} records dropped!",
+                fg="red",
+                bold=True,
+            )
         )
         db.report.drop()
         click.echo(
-            f"WARNING: `report` Collection containing data and quality drift dropped!"
+            click.style(
+                f"WARNING: `report` Collection containing data and quality drift dropped!",
+                fg="red",
+                bold=True,
+            )
         )
 
     elif verbose >= 2:
         click.echo(
-            f"Data size: {stored_data_size}"
+            click.style(f"Data size: {stored_data_size}", fg="green", bold=True)
         )  # Size of the data currently stored
         click.echo()
         click.echo(f"Slice of data: from {start_index} to {stop_index-1}\n{df}")
@@ -82,7 +82,7 @@ def main(
 
     elif verbose == 1:
         click.echo(
-            f"Data size: {stored_data_size}"
+            click.style(f"Data size: {stored_data_size}", fg="green", bold=True)
         )  # Size of the data currently stored
         click.echo()
         click.echo(f"Slice of data: from {start_index} to {stop_index-1}\n{df}")
