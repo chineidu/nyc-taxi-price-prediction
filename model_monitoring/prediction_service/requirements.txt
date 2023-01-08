@@ -1,5 +1,5 @@
 feature-engine
-scikit-learn==1.2.0
+scikit-learn
 fastapi
 PyYAML~=5.1
 pyarrow

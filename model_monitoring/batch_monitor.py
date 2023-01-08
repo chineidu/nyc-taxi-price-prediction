@@ -40,7 +40,7 @@ def upload_target_to_db(*, filename: str) -> None:
                 row = line.split(",")
                 # Update the data in the collection
                 filter = {"id": row[0]}
-                updated_val = { "$set": { "target": float(row[1])} }
+                updated_val = { "$set": { "target": round(float(row[1]))} }
                 collection.update_one(filter, updated_val)
 
 
@@ -99,7 +99,6 @@ def load_ref_data(*, filename: str) -> pd.DataFrame:
     features = numerical_features + categorical_features
     ref_data = ref_data[features + ["target"]]
     ref_data["prediction"] = predict(data=ref_data)
-    ref_data.to_csv("ref.csv", index=False)
     return ref_data
 
 
@@ -112,8 +111,7 @@ def fetch_live_data():
     with MongoClient(MONGODB_ADDRESS) as client:
         data = client.get_database(db_name).get_collection(collection_name).find()
         df = pd.DataFrame(list(data))
-        # df = df.drop(columns=["id"])
-        df.to_csv("curr.csv", index=False)
+        df = df.drop(columns=["id"])
         return df
 
 
