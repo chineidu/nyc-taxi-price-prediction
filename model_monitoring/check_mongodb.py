@@ -6,8 +6,10 @@ author: Chinedu Ezeofor
 """
 import os
 import typing as tp
-import pandas as pd
+from pprint import pprint as pp
 from argparse import ArgumentParser
+
+import pandas as pd
 from pymongo import MongoClient
 from pymongo.errors import ServerSelectionTimeoutError
 
@@ -70,6 +72,11 @@ def main() -> None:
     data_collection = db.get_collection("data")
     data = [*data_collection.find()]  # Convert to list
     stored_data_size = len(data)
+
+    #Collection for `logs` report
+    logs_collection = db.get_collection("report")
+    logs = [*logs_collection.find()]
+
     # Check a slice of the data contained in the list
     result = data[start:stop]
     if len(result) == 1:
@@ -78,14 +85,23 @@ def main() -> None:
 
     if drop_coll and drop_coll.lower() == "true":
         db.data.drop()  # Used to drop
-        print(f"Collection `data` containing {stored_data_size} records dropped!")
+        print(f"WARNING: `data` Collection containing {stored_data_size} records dropped!")
+        db.report.drop()
+        print(f"WARNING: `report` Collection containing data and quality drift dropped!")
 
-    if args.verbose >= 1:
+    elif args.verbose >= 2:
+        print(f"Data size: {stored_data_size}")  # Size of the data currently stored
+        print()
+        print(f"Slice of data: from {start} to {stop-1}\n{df}")
+        print()
+        pp(logs)
+
+    elif args.verbose == 1:
         print(f"Data size: {stored_data_size}")  # Size of the data currently stored
         print()
         print(f"Slice of data: from {start} to {stop-1}\n{df}")
 
-    if args.verbose == 0 and drop_coll == "false":
+    elif args.verbose == 0 and drop_coll == "false":
         print(f"Data size: {stored_data_size}")  # Size of the data currently stored
 
 

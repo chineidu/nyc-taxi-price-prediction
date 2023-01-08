@@ -175,8 +175,8 @@ def run_evidently(ref_data: pd.DataFrame, curr_data: pd.DataFrame) -> tp.Tuple:
 @task(
     retries=3,
     retry_delay_seconds=10,
-    # cache_key_fn=task_input_hash,
-    # cache_expiration=timedelta(days=1),
+    cache_key_fn=task_input_hash,
+    cache_expiration=timedelta(days=1),
 )
 def save_report_logs(*, json_report: tp.Dict):
     """This is used to save the metrics in MongoDB."""

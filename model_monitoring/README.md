@@ -36,7 +36,13 @@ COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build
 docker-compose up
 ```
 
-4. Send the data (this mimics the usage of the `prediction_service` in production by running:)
+4. Send the data (this mimics the usage of the `prediction_service` in production by running:
+
+>To get help, run: 
+
+```console
+python send_data.py -h 
+```
 
 ```console
 python send_data.py
@@ -62,7 +68,7 @@ with the payload:
 }
 ```
 
-5. To view the metrics using `Graphana`, visit the url:
+1. To view the metrics using `Graphana`, visit the url:
 
 ```html
 http://localhost:3000/
@@ -74,12 +80,22 @@ http://localhost:3000/
 http://localhost:9091/
 ```
 
-7. To check the data stored on `mongodb`, run:
+## Check the data stored on `mongodb`
+
+* To get help on how to use the script, run:
+  
+```console
+python check_mongodb.py -h
+```
+
+* To check the records stored in the `data` collection 
 
 ```console
-# To get help
-python check_mongodb.py -h
-
-# To check the 1st 4 records
 python check_mongodb.py --start-index 0 -v 
+```
+
+* To check the records stored in the `data` collection and the data and quality drift stored in `report` collection.
+
+```console
+python check_mongodb.py --start-index 0 -vv
 ```
