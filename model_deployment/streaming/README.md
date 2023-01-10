@@ -99,7 +99,7 @@ event = {
     },
     "ride_id": 123,
 }
-prod = send_events(event)
+producer = send_events(event=event)
 ```
 
 ### Test event

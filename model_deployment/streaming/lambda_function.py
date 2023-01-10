@@ -27,7 +27,7 @@ kinesis_client = boto3.client("kinesis")
 
 
 def predict(*, data: pd.DataFrame) -> float:
-    """This is used to make predictions on unseen data using 
+    """This is used to make predictions on unseen data using
     the trained model."""
     fp = "trained_models/model.pkl"
     with open(fp, "rb") as file:
@@ -51,10 +51,9 @@ def prepare_data(*, features: tp.Dict) -> pd.DataFrame:
 def send_events(event: tp.Any) -> tp.Dict:
     """This is used to send events to the Kinesis stream"""
     client = boto3.client("kinesis")
-    stream_name = "ride_events"
-
+    RIDE_EVENTS_STREAM_NAME = "ride_events"
     response = client.put_record(
-        StreamName=stream_name, Data=json.dumps(event), PartitionKey="1"
+        StreamName=RIDE_EVENTS_STREAM_NAME, Data=json.dumps(event), PartitionKey="1"
     )
     pp(json.dumps(event))
     return response
@@ -83,7 +82,7 @@ def lambda_handler(event: tp.Dict, context=None) -> tp.Dict:
         }
 
         if not TEST_RUN:
-            # Send the events to another kinesis stream
+            # Send the events to prediction stream
             kinesis_client.put_record(
                 StreamName=RIDE_PREDICTIONS_STREAM_NAME,
                 Data=json.dumps(pred_event),
