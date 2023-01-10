@@ -169,10 +169,6 @@ python app.py
 docker build -t stream-model-duration:v1 -f Dockerfile .
 ```
 
-URL for testing:
-
-* http://localhost:8080/2015-03-31/functions/function/invocations
-
 ### Configuring AWS CLI to run in Docker
 
 To use AWS CLI, you may need to set the env variables:
@@ -185,7 +181,6 @@ export AWS_SECRET_ACCESS_KEY="your_secret_access_key"
 docker run -it --rm \
     -p 8080:8080 \
     -e PREDICTIONS_STREAM_NAME="ride_predictions" \
-    -e RUN_ID="98f43706f6184694be1ee10c41c7b69d" \
     -e TEST_RUN="True" \
     -e AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
     -e AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
@@ -199,10 +194,19 @@ Alternatively, you can mount the `.aws` folder with your credentials to the `.aw
 docker run -it --rm \
     -p 8080:8080 \
     -e PREDICTIONS_STREAM_NAME="ride_predictions" \
-    -e RUN_ID="98f43706f6184694be1ee10c41c7b69d" \
     -e TEST_RUN="True" \
     -v ~/.aws:/root/.aws \
     stream-model-duration:v1
+```
+
+URL for testing:
+
+* http://localhost:8080/2015-03-31/functions/function/invocations
+
+* To test, run:
+
+```console
+python test_docker.py
 ```
 
 ### Publishing Docker images

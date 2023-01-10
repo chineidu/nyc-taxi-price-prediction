@@ -58,6 +58,12 @@ def send_events(event: tp.Any) -> tp.Dict:
     pp(json.dumps(event))
     return response
 
+def decode_record(*, data: tp.Dict) -> tp.Dict:
+    """This is used to decode the encoded data."""
+    decoded_data = base64.b64decode(data).decode("utf-8")
+    ride_events = json.loads(decoded_data)
+    return ride_events
+
 
 def lambda_handler(event: tp.Dict, context=None) -> tp.Dict:
     """This is the lambda function that consumes events
@@ -67,7 +73,7 @@ def lambda_handler(event: tp.Dict, context=None) -> tp.Dict:
 
     for record in event["Records"]:
         data = record.get("kinesis").get("data")
-        decoded_data = base64.b64decode(data).decode("utf-8")
+        decoded_data = decode_record(data=data)
         ride_events = json.loads(decoded_data)
 
         # Add ID
