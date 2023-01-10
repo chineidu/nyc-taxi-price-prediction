@@ -11,7 +11,7 @@ import pandas as pd
 # Custom Imports
 from src.config.core import config
 from src.pipeline import rf_pipe
-from src.processing.data_manager import load_data, logger, save_model, split_train_data
+from src.processing.data_manager import load_data, save_model, split_train_data
 from src.utilities.experiment import eval_metrics
 
 warnings.filterwarnings("error")
@@ -44,11 +44,9 @@ def train_model(*, train_data: pd.DataFrame) -> tp.Tuple:
     )
 
     # Train Model
-    logger.info("Training model ...")
     pipe.fit(X_train, y_train)
 
     # Predictions using validation data
-    logger.info("Making Predictions ...")
     y_pred = rf_pipe.predict(X_validate)
     return pipe, y_validate, y_pred
 

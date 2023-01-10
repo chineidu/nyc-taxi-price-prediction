@@ -10,8 +10,7 @@ import pandas as pd
 
 # Custom Imports
 from src.config.core import config
-from src.processing.data_manager import (load_model, load_version, logger,
-                                         validate_input)
+from src.processing.data_manager import load_model, load_version, validate_input
 
 
 def make_predictions(*, data: pd.DataFrame) -> tp.Dict:
@@ -40,7 +39,6 @@ def make_predictions(*, data: pd.DataFrame) -> tp.Dict:
     }
 
     if not errors:
-        logger.info("Making Predictions ...")
         # Make predictions
         pred = _model.predict(validated_data)
         pred = list(np.expm1(pred))  # Convert from log to minutes
