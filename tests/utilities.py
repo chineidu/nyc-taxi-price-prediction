@@ -26,9 +26,8 @@ class MockModel:
         return result * self.value
 
 
-
 class MockLambdaHandler:
-    def __init__(self, ) -> None:
+    def __init__(self) -> None:
         self.test_run = TEST_RUN
         return None
 

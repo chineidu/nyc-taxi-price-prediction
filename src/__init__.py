@@ -1,3 +1,5 @@
+# pylint: disable=useless-import-alias
+# pylint: disable=missing-module-docstring
 from src.predict import make_predictions as make_predictions
 from src.processing.data_manager import logger as logger
 from src.processing.data_manager import load_data as load_data
