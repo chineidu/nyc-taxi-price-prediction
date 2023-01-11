@@ -1,0 +1,4 @@
+boto3==1.26.26
+deepdiff==6.2.3
+feature-engine==1.5.2
+scikit-learn==1.2.0
