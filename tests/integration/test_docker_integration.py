@@ -46,7 +46,7 @@ def test_docker_integration() -> None:
     url = "http://localhost:8080/2015-03-31/functions/function/invocations"
     respose = requests.post(url, json=event).json()
     pp(respose)
-    d_diff = DeepDiff(expected_output, respose)  # It compares
+    d_diff = DeepDiff(expected_output, respose)  # It compares the inputs
 
     # Then
     assert "values_changed" not in d_diff

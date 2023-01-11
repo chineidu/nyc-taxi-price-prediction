@@ -1,0 +1,11 @@
+services:
+  streaming:
+    image: ${IMAGE_NAME}
+    ports:
+      - 8080:8080
+    environment:
+      - PREDICTIONS_STREAM_NAME=ride_predictions
+      - TEST_RUN=True
+      - AWS_DEFAULT_REGION=eu-west-1
+    volumes:
+      - "~/.aws:/root/.aws"

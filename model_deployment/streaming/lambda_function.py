@@ -9,7 +9,6 @@ import os
 import json
 import typing as tp
 import boto3
-from pathlib import Path
 from pprint import pprint as pp
 import joblib
 import base64

@@ -23,6 +23,7 @@ tests
 *.md
 .venv
 .vscode
+app.py
 train_model.py
 data
-
+docker-compose.yml
