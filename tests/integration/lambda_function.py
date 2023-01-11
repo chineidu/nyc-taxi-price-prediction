@@ -7,15 +7,14 @@ author: Chinedu Ezeofor
 
 import os
 import json
-import typing as tp
-import boto3
-from pprint import pprint as pp
-import joblib
 import base64
+import typing as tp
+from pprint import pprint as pp
 
+import boto3
 import numpy as np
+import joblib
 import pandas as pd
-
 
 # Environment variables
 RIDE_PREDICTIONS_STREAM_NAME = os.getenv("RIDE_PREDICTIONS", "ride_predictions")

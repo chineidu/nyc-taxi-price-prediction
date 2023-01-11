@@ -88,7 +88,7 @@ def load_data(*, filename: tp.Union[str, Path], uri: bool = False) -> pd.DataFra
             if filename.endswith("csv")
             else pd.read_parquet(filename)
         )
-    except Exception as err:
+    except FileNotFoundError as err:
         logger.info(err)
 
     TRIP_DUR_THRESH = 60  # trip_duration
