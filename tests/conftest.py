@@ -1,15 +1,21 @@
+"""
+This module contains all the pytest fixtures.
+
+author: Chinedu Ezeofor
+"""
+import typing as tp
+
 import pandas as pd
 import pytest
-from prefect.testing.utilities import prefect_test_harness
 from fastapi.testclient import TestClient
+from prefect.testing.utilities import prefect_test_harness
+
+from src.api import app
 
 # Custom Imports
 from src.config.core import config
 from src.processing.data_manager import load_data
-from src.api import app
 from tests.utilities import MockModel, load_encoded_data
-
-import typing as tp
 
 
 @pytest.fixture()
@@ -98,6 +104,7 @@ def sample_data_event() -> tp.Dict:
 
 @pytest.fixture()
 def kinesis_stream() -> tp.Dict:
+    """Load a Kinesis stream"""
     encoded_data = load_encoded_data()
     stream = {
         "Records": [

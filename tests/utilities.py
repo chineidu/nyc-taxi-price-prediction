@@ -1,10 +1,16 @@
+"""
+This module contains helper classes/functions used for
+unit testing.
+
+author: Chinedu Ezeofor
+"""
+import os
 import typing as tp
 from pathlib import Path
-import os
-
-from model_deployment.streaming.lambda_function import prepare_data, decode_record
 
 import pandas as pd
+
+from model_deployment.streaming.lambda_function import decode_record, prepare_data
 
 RIDE_PREDICTIONS_STREAM_NAME = os.getenv("RIDE_PREDICTIONS", "ride_predictions")
 TEST_RUN = os.getenv("TEST_RUN", "False") == "True"
@@ -56,6 +62,6 @@ class MockLambdaHandler:
 def load_encoded_data() -> tp.Dict:
     """This function loads the encoded data."""
     BASE_DIR = Path(__name__).absolute().parent
-    with open(f"{BASE_DIR}/tests/encoded_data.txt", "r") as file:
+    with open(f"{BASE_DIR}/tests/encoded_data.txt", "r", encoding="utf-8") as file:
         encoded_data = file.read().strip()
     return encoded_data

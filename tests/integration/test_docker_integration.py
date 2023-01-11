@@ -4,12 +4,11 @@ for the streaming service.
 
 author: Chinedu Ezeofor
 """
-import requests
+
 from pprint import pprint as pp
 
+import requests
 from deepdiff import DeepDiff
-
-
 
 # Given
 expected_output = {
@@ -44,7 +43,7 @@ event = {
     ]
 }
 url = "http://localhost:8080/2015-03-31/functions/function/invocations"
-respose = requests.post(url, json=event).json()
+respose = requests.post(url, json=event, timeout=60).json()
 pp(f"response: {respose}")
 print()
 d_diff = DeepDiff(expected_output, respose)  # It compares the inputs
