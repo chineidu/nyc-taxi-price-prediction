@@ -56,6 +56,7 @@ def send_events(event: tp.Any) -> tp.Dict:
     pp(json.dumps(event))
     return response
 
+
 def decode_record(*, data: tp.Dict) -> tp.Dict:
     """This is used to decode the encoded data."""
     decoded_data = base64.b64decode(data).decode("utf-8")
