@@ -20,8 +20,6 @@ import pandas as pd
 
 # Environment variables
 RIDE_PREDICTIONS_STREAM_NAME = os.getenv("RIDE_PREDICTIONS", "ride_predictions")
-# Run ID was no longer used!
-# RUN_ID = os.getenv("RUN_ID", "98f43706f6184694be1ee10c41c7b69d")
 TEST_RUN = os.getenv("TEST_RUN", "False") == "True"
 
 kinesis_client = boto3.client("kinesis")
@@ -30,9 +28,7 @@ kinesis_client = boto3.client("kinesis")
 def predict(*, data: pd.DataFrame) -> float:
     """This is used to make predictions on unseen data using
     the trained model."""
-    BASE_DIR = Path(__name__).absolute().parent
-    CURR_DIR = f"{BASE_DIR}/model_deployment/streaming"
-    fp = f"{CURR_DIR}/trained_models/model.pkl"
+    fp = "./trained_models/model.pkl"
     with open(fp, "rb") as file:
         model = joblib.load(file)
 
