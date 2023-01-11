@@ -7,9 +7,9 @@ from fastapi.testclient import TestClient
 from src.config.core import config
 from src.processing.data_manager import load_data
 from src.api import app
+from tests.utilities import MockModel, load_encoded_data
 
 import typing as tp
-from pathlib import Path
 
 
 @pytest.fixture()
@@ -67,18 +67,11 @@ def test_event() -> tp.Dict:
     return event
 
 
-def load_encoded_data() -> tp.Dict:
-    """This function loads the encoded data."""
-    BASE_DIR = Path(__name__).absolute().parent
-    with open(f"{BASE_DIR}/tests/encoded_data.txt", "r") as file:
-        encoded_data = file.read().strip()
-    return encoded_data
-
-
 @pytest.fixture()
 def encoded_data() -> tp.Dict:
     """This loads the encoded data as a fixture."""
     return load_encoded_data()
+
 
 @pytest.fixture()
 def sample_data_event() -> tp.Dict:
@@ -102,6 +95,7 @@ def sample_data_event() -> tp.Dict:
     )
     return df
 
+
 @pytest.fixture()
 def kinesis_stream() -> tp.Dict:
     encoded_data = load_encoded_data()
@@ -115,16 +109,6 @@ def kinesis_stream() -> tp.Dict:
         ]
     }
     return stream
-
-
-class MockModel:
-    def __init__(self, value: int) -> None:
-        self.value = value
-
-    def predict(self, data: pd.DataFrame) -> float:
-        """This is a mock prediction method."""
-        result = data["total_amount"].values[0]
-        return result * self.value
 
 
 @pytest.fixture()

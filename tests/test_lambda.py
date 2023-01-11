@@ -5,6 +5,7 @@ from model_deployment.streaming.lambda_function import (
     decode_record,
     lambda_handler,
 )
+from tests.utilities import MockLambdaHandler
 
 import typing as tp
 import json
@@ -80,8 +81,9 @@ def test_predict_event(sample_data_event: pd.DataFrame, mock_model) -> None:
 def test_lambda_handler(kinesis_stream: tp.Dict) -> None:
     """This tests the lambda_handler function."""
     # Given
-    # kinesis_stream = json.loads(kinesis_stream)
-    print(kinesis_stream)
+    from pprint import pprint as pp
+
+    mock_lh = MockLambdaHandler()
     expected_output = {
         "predictions": [
             {
@@ -93,7 +95,10 @@ def test_lambda_handler(kinesis_stream: tp.Dict) -> None:
     }
 
     # When
-    result = lambda_handler(event=kinesis_stream)
+    result = mock_lh.lambda_handler(event=kinesis_stream)
 
     # Then
     assert expected_output == result
+
+
+

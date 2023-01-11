@@ -9,6 +9,7 @@ import os
 import json
 import typing as tp
 import boto3
+from pathlib import Path
 from pprint import pprint as pp
 import joblib
 import base64
@@ -29,7 +30,9 @@ kinesis_client = boto3.client("kinesis")
 def predict(*, data: pd.DataFrame) -> float:
     """This is used to make predictions on unseen data using
     the trained model."""
-    fp = "trained_models/model.pkl"
+    BASE_DIR = Path(__name__).absolute().parent
+    CURR_DIR = f"{BASE_DIR}/model_deployment/streaming"
+    fp = f"{CURR_DIR}/trained_models/model.pkl"
     with open(fp, "rb") as file:
         model = joblib.load(file)
 
@@ -73,8 +76,7 @@ def lambda_handler(event: tp.Dict, context=None) -> tp.Dict:
 
     for record in event["Records"]:
         data = record.get("kinesis").get("data")
-        decoded_data = decode_record(data=data)
-        ride_events = json.loads(decoded_data)
+        ride_events = decode_record(data=data)
 
         # Add ID
         ride_id = ride_events.get("ride_id")
