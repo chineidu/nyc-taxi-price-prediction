@@ -1,10 +1,13 @@
-import pandas as pd
+import typing as tp
+from pathlib import Path
+import os
 
 from model_deployment.streaming.lambda_function import prepare_data, decode_record
 
+import pandas as pd
 
-import typing as tp
-from pathlib import Path
+RIDE_PREDICTIONS_STREAM_NAME = os.getenv("RIDE_PREDICTIONS", "ride_predictions")
+TEST_RUN = os.getenv("TEST_RUN", "False") == "True"
 
 
 class MockModel:
@@ -17,10 +20,11 @@ class MockModel:
         return result * self.value
 
 
+
 class MockLambdaHandler:
-    def __init__(self) -> None:
+    def __init__(self, ) -> None:
+        self.test_run = TEST_RUN
         return None
-    
 
     def lambda_handler(self, event: tp.Dict, context=None) -> tp.Dict:
         """This is a mock lambda function."""
@@ -33,7 +37,7 @@ class MockLambdaHandler:
             # Add ID
             ride_id = ride_events.get("ride_id")
             data = prepare_data(features=ride_events)
-            
+
             prediction = 9.47
 
             pred_event = {

@@ -14,27 +14,15 @@ from src.utilities.experiment import eval_metrics
 def test_make_predictions(test_data: pd.DataFrame) -> None:
     """This tests the predictions."""
     # Given
-    expected_output = [
-        16.3,
-        21.2,
-        31.7,
-        21.2,
-        27.8,
-        11.3,
-        21.2,
-        3.9,
-        21.2,
-        9.6,
-    ]  # [17.3, 22.2, 32.7, 22.2, 28.8, 12.3, 22.2, 4.9, 22.2, 10.6]
+    expected_output = [16.3, 21.2, 31.7, 21.2, 27.8, 11.3, 21.2, 3.9, 21.2, 9.6]
 
     # When
     pred = make_predictions(data=test_data.iloc[:10])  # Make predictions
     results = pred.get("trip_duration")
-    print(results)
 
     # Then
-    # assert np.isclose(expected_output, results, rtol=0.04).all()
-    # assert pred.get("errors") is None
+    assert np.isclose(expected_output, results, rtol=0.04).all()
+    assert pred.get("errors") is None
 
 
 def test_evaluate_metrics() -> None:

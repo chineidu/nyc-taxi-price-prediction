@@ -99,6 +99,3 @@ def test_lambda_handler(kinesis_stream: tp.Dict) -> None:
 
     # Then
     assert expected_output == result
-
-
-
