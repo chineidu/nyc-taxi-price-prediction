@@ -1,14 +1,12 @@
 import pandas as pd
-
 from feature_engine.transformation import YeoJohnsonTransformer
-
 
 # Custom Imports
 from src.config.core import config
 from src.processing.feat_engineering import (
+    SelectFeatures,
     CalculateDayOfWeek,
     CalculateHourOfDay,
-    SelectFeatures,
 )
 
 
@@ -76,9 +74,7 @@ def test_yeo_johnson_transformer(test_data: pd.DataFrame) -> None:
     selected_rows = [300, 600, 800, 1_800]
 
     # When
-    yeo_tranf = YeoJohnsonTransformer(
-        variables=config.model_config.VARS_TO_LOG_TRANSFORM
-    )
+    yeo_tranf = YeoJohnsonTransformer(variables=config.model_config.VARS_TO_LOG_TRANSFORM)
     trans_df = yeo_tranf.fit_transform(test_data).iloc[selected_rows]
     result = [trans_df["trip_distance"].to_list(), trans_df["total_amount"].to_list()]
 

@@ -8,11 +8,12 @@ import warnings
 
 import pandas as pd
 
+from src.pipeline import rf_pipe
+
 # Custom Imports
 from src.config.core import config
-from src.pipeline import rf_pipe
-from src.processing.data_manager import load_data, save_model, split_train_data
 from src.utilities.experiment import eval_metrics
+from src.processing.data_manager import load_data, save_model, split_train_data
 
 warnings.filterwarnings("error")
 

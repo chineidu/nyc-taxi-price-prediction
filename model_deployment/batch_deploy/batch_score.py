@@ -5,17 +5,17 @@ author: Chinedu Ezeofor
 """
 import typing as tp
 from argparse import ArgumentParser
-from datetime import timedelta, datetime
-from dateutil.relativedelta import relativedelta
+from datetime import datetime, timedelta
 
-from prefect import task, flow, get_run_logger
+from prefect import flow, task, get_run_logger
 from prefect.tasks import task_input_hash
-from prefect.task_runners import ConcurrentTaskRunner
 from prefect.context import get_run_context
+from prefect.task_runners import ConcurrentTaskRunner
+from dateutil.relativedelta import relativedelta
 
 # Custom Imports
 from src.processing.data_manager import load_data
-from model_deployment.batch_deploy.utilities import compare_predictions, save_data_to_s3
+from model_deployment.batch_deploy.utilities import save_data_to_s3, compare_predictions
 
 # Create tasks
 load_data = task(
@@ -83,7 +83,7 @@ def batch_predict_flow(
     *, run_id: str, taxi_type: str, run_date: tp.Optional[datetime] = None
 ) -> None:
     """This is the workflow for making batch predictions.
-    
+
     Note:
     -----
     Prefect doesn't support passing datetime objects as parameter so
@@ -109,7 +109,7 @@ def batch_predict_backfill_flow(*, run_id: str, taxi_type: str) -> None:
 
     while start_date <= end_date:
         batch_preprocess(run_id=run_id, taxi_type=taxi_type, run_date=start_date)
-        start_date += relativedelta(months=1) # Increment month
+        start_date += relativedelta(months=1)  # Increment month
 
 
 def main() -> None:

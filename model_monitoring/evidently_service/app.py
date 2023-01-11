@@ -11,30 +11,29 @@ Metrics calculation results are available with `GET /metrics` HTTP method in Pro
 """
 
 import os
-
-import dataclasses
-import datetime
-import logging
 import typing as tp
+import logging
+import datetime
+import dataclasses
 
-import uvicorn
-import pandas as pd
-from pydantic import BaseModel
-import prometheus_client
-from pyarrow import parquet as pq
-from fastapi import FastAPI, status
 import yaml
-
+import pandas as pd
+import uvicorn
+import prometheus_client
+from fastapi import FastAPI, status
+from pyarrow import parquet as pq
+from pydantic import BaseModel
+from evidently.model_monitoring import (
+    ModelMonitoring,
+    DataDriftMonitor,
+    DataQualityMonitor,
+    CatTargetDriftMonitor,
+    NumTargetDriftMonitor,
+    RegressionPerformanceMonitor,
+    ClassificationPerformanceMonitor,
+    ProbClassificationPerformanceMonitor,
+)
 from evidently.pipeline.column_mapping import ColumnMapping
-from evidently.model_monitoring import ModelMonitoring
-from evidently.model_monitoring import CatTargetDriftMonitor
-from evidently.model_monitoring import ClassificationPerformanceMonitor
-from evidently.model_monitoring import DataDriftMonitor
-from evidently.model_monitoring import DataQualityMonitor
-from evidently.model_monitoring import NumTargetDriftMonitor
-from evidently.model_monitoring import ProbClassificationPerformanceMonitor
-from evidently.model_monitoring import RegressionPerformanceMonitor
-
 
 app = FastAPI()
 
@@ -166,9 +165,7 @@ class MonitoringService:
         for dataset_info in datasets.values():
             self.reference[dataset_info.name] = dataset_info.references
             self.monitoring[dataset_info.name] = ModelMonitoring(
-                monitors=[
-                    EVIDENTLY_MONITORS_MAPPING[k]() for k in dataset_info.monitors
-                ],
+                monitors=[EVIDENTLY_MONITORS_MAPPING[k]() for k in dataset_info.monitors],
                 options=[],
             )
             self.column_mapping[dataset_info.name] = dataset_info.column_mapping
@@ -181,9 +178,7 @@ class MonitoringService:
         window_size = self.window_size
 
         if dataset_name in self.current:
-            current_data = self.current[dataset_name].append(
-                new_rows, ignore_index=True
-            )
+            current_data = self.current[dataset_name].append(new_rows, ignore_index=True)
 
         else:
             current_data = new_rows

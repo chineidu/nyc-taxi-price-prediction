@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from model_deployment.streaming.lambda_function import decode_record, prepare_data
+from model_deployment.streaming.lambda_function import prepare_data, decode_record
 
 RIDE_PREDICTIONS_STREAM_NAME = os.getenv("RIDE_PREDICTIONS", "ride_predictions")
 TEST_RUN = os.getenv("TEST_RUN", "False") == "True"

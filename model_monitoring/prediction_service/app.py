@@ -4,15 +4,15 @@ endpoint and sending the predictions for monitoring.
 
 author: Chinedu Ezeofor
 """
+import os
+import typing as tp
+import logging
+
 import pandas as pd
 import uvicorn
+import requests
 from fastapi import FastAPI, status
 from pymongo import MongoClient
-
-import os
-import logging
-import requests
-import typing as tp
 
 from utilities import InputSchema, ResponsePredictSchema, predict
 

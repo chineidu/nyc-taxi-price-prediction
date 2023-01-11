@@ -3,9 +3,10 @@ This module is used to validate the data.
 
 author: Chinedu Ezeofor
 """
+import typing as tp
+
 # Built-in
 import datetime
-import typing as tp
 
 # Standard imports
 from pydantic import BaseModel

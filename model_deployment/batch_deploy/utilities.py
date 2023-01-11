@@ -7,8 +7,8 @@ author: Chinedu Ezeofor
 
 # Standard imports
 import numpy as np
-import pandas as pd
 import mlflow
+import pandas as pd
 
 # Custom Imports
 from src.processing.data_manager import logger, load_data

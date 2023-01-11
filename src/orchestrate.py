@@ -4,18 +4,19 @@ This module is used to orchestrate the model training.
 author: Chinedu Ezeofor
 """
 import typing as tp
-from datetime import timedelta
 from pathlib import Path
+from datetime import timedelta
 
-from prefect import flow, get_run_logger, task
-from prefect.task_runners import ConcurrentTaskRunner
+from prefect import flow, task, get_run_logger
 from prefect.tasks import task_input_hash
+from prefect.task_runners import ConcurrentTaskRunner
+
+from src.train import train_model
 
 # Custom Imports
 from src.config.core import config
-from src.processing.data_manager import load_data, save_model
-from src.train import train_model
 from src.utilities.experiment import eval_metrics
+from src.processing.data_manager import load_data, save_model
 
 # Create task(s). Use this syntax since the functions were imported.
 load_data = task(load_data, retries=3, retry_delay_seconds=3)  # type: ignore

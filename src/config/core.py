@@ -5,7 +5,7 @@ import yaml
 
 # Custom Imports
 import src
-from src.config.schema import ConfigVars, ModelConfig, PathConfig
+from src.config.schema import ConfigVars, PathConfig, ModelConfig
 
 SRC_ROOT = Path(src.__file__).absolute().parent  # src/
 ROOT = SRC_ROOT.parent  # proj/src

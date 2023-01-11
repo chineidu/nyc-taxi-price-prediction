@@ -4,23 +4,20 @@ This module is used to test the model training functions.
 author: Chinedu Ezeofor
 """
 import pandas as pd
-
-from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import StandardScaler
+from feature_engine.selection import DropFeatures
+
+# From feature-engine
+from feature_engine.imputation import MeanMedianImputer, AddMissingIndicator
+from feature_engine.transformation import YeoJohnsonTransformer
+
+import src.processing.feat_engineering as fe
 
 # Custom imports
 from src.train import train_model
 from src.config.core import config
-import src.processing.feat_engineering as fe
 from src.processing.data_manager import save_model, remove_old_pipelines
-
-
-# From feature-engine
-from feature_engine.imputation import AddMissingIndicator, MeanMedianImputer
-from feature_engine.transformation import (
-    YeoJohnsonTransformer,
-)
-from feature_engine.selection import DropFeatures
 
 
 def test_train_model(train_data: pd.DataFrame) -> None:

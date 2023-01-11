@@ -9,37 +9,31 @@ The service gets a reference dataset from reference.csv file and process current
 
 Metrics calculation results are available with `GET /metrics` HTTP method in Prometheus compatible format.
 """
-import pandas as pd
 import os
-
-import dataclasses
-import datetime
 import logging
-from typing import Dict
-from typing import List
-from typing import Optional
+import datetime
+import dataclasses
+from typing import Dict, List, Optional
 
+import yaml
 import flask
 import pandas as pd
 import prometheus_client
-from pyarrow import parquet as pq
 from flask import Flask, jsonify
-import yaml
+from pyarrow import parquet as pq
+from evidently.runner.loader import DataLoader, DataOptions
+from evidently.model_monitoring import (
+    ModelMonitoring,
+    DataDriftMonitor,
+    DataQualityMonitor,
+    CatTargetDriftMonitor,
+    NumTargetDriftMonitor,
+    RegressionPerformanceMonitor,
+    ClassificationPerformanceMonitor,
+    ProbClassificationPerformanceMonitor,
+)
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
-
 from evidently.pipeline.column_mapping import ColumnMapping
-from evidently.model_monitoring import ModelMonitoring
-from evidently.model_monitoring import CatTargetDriftMonitor
-from evidently.model_monitoring import ClassificationPerformanceMonitor
-from evidently.model_monitoring import DataDriftMonitor
-from evidently.model_monitoring import DataQualityMonitor
-from evidently.model_monitoring import NumTargetDriftMonitor
-from evidently.model_monitoring import ProbClassificationPerformanceMonitor
-from evidently.model_monitoring import RegressionPerformanceMonitor
-
-from evidently.runner.loader import DataLoader
-from evidently.runner.loader import DataOptions
-
 
 app = Flask(__name__)
 
@@ -108,9 +102,7 @@ class MonitoringService:
         for dataset_info in datasets.values():
             self.reference[dataset_info.name] = dataset_info.references
             self.monitoring[dataset_info.name] = ModelMonitoring(
-                monitors=[
-                    EVIDENTLY_MONITORS_MAPPING[k]() for k in dataset_info.monitors
-                ],
+                monitors=[EVIDENTLY_MONITORS_MAPPING[k]() for k in dataset_info.monitors],
                 options=[],
             )
             self.column_mapping[dataset_info.name] = dataset_info.column_mapping
@@ -126,9 +118,7 @@ class MonitoringService:
         df.to_csv("result.csv", index=False)
 
         if dataset_name in self.current:
-            current_data = self.current[dataset_name].append(
-                new_rows, ignore_index=True
-            )
+            current_data = self.current[dataset_name].append(new_rows, ignore_index=True)
 
         else:
             current_data = new_rows
@@ -257,7 +247,7 @@ def iterate(dataset: str):
         return "Internal Server Error: service not found", 500
 
     SERVICE.iterate(dataset_name=dataset, new_rows=pd.DataFrame(data))
-    
+
     return "ok"
 
 

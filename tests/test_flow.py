@@ -3,9 +3,10 @@ This module is used to test the workflow and deployments.
 
 author: Chinedu Ezeofor
 """
+from src.config.core import config
+
 # Custom Imports
 from src.orchestrate import run_flow
-from src.config.core import config
 
 
 def test_flow_run() -> None:

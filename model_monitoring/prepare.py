@@ -3,8 +3,8 @@ This module is used to download and saving the dataset.
 
 """
 
-from tqdm import tqdm
 import requests
+from tqdm import tqdm
 
 files = [
     ("yellow_tripdata_2022-01.parquet", "."),

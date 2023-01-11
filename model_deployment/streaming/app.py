@@ -7,7 +7,6 @@ from pprint import pprint as pp
 
 from lambda_function import lambda_handler
 
-
 event = {
     "Records": [
         {

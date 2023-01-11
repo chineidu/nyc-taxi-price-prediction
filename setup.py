@@ -1,6 +1,6 @@
 from pathlib import Path
-from setuptools import setup, find_packages
 
+from setuptools import setup, find_packages
 
 # Package meta-data.
 NAME = "src"  # Package name

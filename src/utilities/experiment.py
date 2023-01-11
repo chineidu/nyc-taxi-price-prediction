@@ -4,18 +4,19 @@ This module contains function(s) for tracking an experiment using MLFlow.
 author: Chinedu Ezeofor
 """
 
-import logging
 # Built-in
 import typing as tp
+import logging
 import warnings
 
-import mlflow
 # Standard imports
 import numpy as np
+import mlflow
 import pandas as pd
-from pydantic import BaseModel
+
 # Sklearn
 from sklearn import metrics
+from pydantic import BaseModel
 from sklearn.pipeline import Pipeline
 
 
@@ -100,9 +101,7 @@ def run_experiment(
         # Make predictions
         y_pred = estimator.predict(training_data.X_validate)
 
-        (rmse, mse, mae, r2) = eval_metrics(
-            actual=training_data.y_validate, pred=y_pred
-        )
+        (rmse, mse, mae, r2) = eval_metrics(actual=training_data.y_validate, pred=y_pred)
         print(f" Model name: {experiment.model_name}")
         print(f"  RMSE: {rmse}")
         print(f"  MSE: {mse}")

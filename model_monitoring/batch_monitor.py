@@ -2,20 +2,16 @@ import os
 import json
 import typing as tp
 from datetime import datetime, timedelta
-import joblib
 
 import numpy as np
+import joblib
 import pandas as pd
+from prefect import flow, task, get_run_logger
 from pymongo import MongoClient
-from prefect import task, flow, get_run_logger
-from prefect.tasks import task_input_hash
 from evidently import ColumnMapping
+from prefect.tasks import task_input_hash
 from evidently.report import Report
-from evidently.metric_preset import (
-    DataDriftPreset,
-    DataQualityPreset,
-    RegressionPreset,
-)
+from evidently.metric_preset import DataDriftPreset, RegressionPreset, DataQualityPreset
 
 MONGODB_ADDRESS = os.getenv("MONGODB_ADDRESS", "mongodb://127.0.0.1:27018")
 
@@ -218,9 +214,7 @@ def run_batch_analyses() -> None:
     upload_target_to_db(filename="target.csv")
 
     logger.info("Fetching reference data ...")
-    ref_data = load_ref_data(
-        filename="./evidently_service/datasets/reduced_data.parquet"
-    )
+    ref_data = load_ref_data(filename="./evidently_service/datasets/reduced_data.parquet")
     logger.info("Fetching data from MongoDB ...")
     curr_data = fetch_live_data()
 

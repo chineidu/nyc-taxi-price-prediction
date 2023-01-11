@@ -7,8 +7,8 @@ author: Chinedu Ezeofor
 import os
 import typing as tp
 from pprint import pprint as pp
-import click
 
+import click
 import pandas as pd
 from pymongo import MongoClient
 from pymongo.errors import ServerSelectionTimeoutError
@@ -88,9 +88,7 @@ def main(start_index: int, stop_index: int, verbose: str, drop: str) -> None:
         click.echo(f"Slice of data: from {start_index} to {stop_index-1}\n{df}")
 
     elif verbose == 0 and drop == "false":
-        click.echo(
-            f"Data size: {stored_data_size}"
-        )  # Size of the data currently stored
+        click.echo(f"Data size: {stored_data_size}")  # Size of the data currently stored
 
 
 if __name__ == "__main__":

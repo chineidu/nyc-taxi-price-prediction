@@ -29,9 +29,7 @@ def test_evaluate_metrics() -> None:
     """This tests the function for calculating
     the evaluation metrics."""
     # Given
-    actual, pred = np.array([20.0, 25.9, 39.5, 31.2]), np.array(
-        [20.5, 22.2, 38.2, 31.9]
-    )
+    actual, pred = np.array([20.0, 25.9, 39.5, 31.2]), np.array([20.5, 22.2, 38.2, 31.9])
     expected_output = (2.0074859899884725, 4.029999999999997, 1.549999999999999)
 
     # When

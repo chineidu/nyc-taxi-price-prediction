@@ -7,13 +7,13 @@ source: https://github.com/DataTalksClub/mlops-zoomcamp/blob/main/05-monitoring/
 import json
 import uuid
 import typing as tp
-import click
-from datetime import datetime
 from time import sleep
 from pprint import pprint as pp
+from datetime import datetime
 
-import pyarrow.parquet as pq
+import click
 import requests
+import pyarrow.parquet as pq
 
 URL = "http://0.0.0.0:8001/predict"
 

@@ -3,24 +3,23 @@ This module is used to load/save the data.
 
 author: Chinedu Ezeofor
 """
-import logging
-import typing as tp
-from pathlib import Path
 import uuid
-
-import joblib
+import typing as tp
+import logging
+from pathlib import Path
 
 # Standard imports
 import numpy as np
+import joblib
 import pandas as pd
 from pydantic import ValidationError
+from sklearn.pipeline import Pipeline
 
 # Scikit-learn
 from sklearn.model_selection import train_test_split
-from sklearn.pipeline import Pipeline
 
 # Custom Imports
-from src.config.core import DATA_FILEPATH, SRC_ROOT, TRAINED_MODELS_FILEPATH, config
+from src.config.core import SRC_ROOT, DATA_FILEPATH, TRAINED_MODELS_FILEPATH, config
 from src.config.schema import ValidateInputSchema, ValidateTrainingData
 
 
@@ -38,8 +37,9 @@ def custom_logger():
 
     """
     import logging.config
-    from rich.logging import RichHandler
     from pathlib import Path
+
+    from rich.logging import RichHandler
 
     BASE_DIR = Path(__name__).absolute().parent
     LOGS_DIR = Path(BASE_DIR, "logs")

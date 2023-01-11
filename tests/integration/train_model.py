@@ -12,8 +12,6 @@ import warnings
 from pprint import pprint as pp
 
 import joblib
-from sklearn.ensemble import RandomForestRegressor
-from feature_engine.selection import DropFeatures
 
 # from feature-engine
 from feature_engine.imputation import MeanMedianImputer, AddMissingIndicator
@@ -24,16 +22,19 @@ warnings.filterwarnings("error")
 # Standard imports
 import numpy as np
 import pandas as pd
-import feat_engineering as fe
+import feat_engineering as fe  # pylint: diasble=import-error
+from sklearn.ensemble import RandomForestRegressor
 
 # From Scikit-learn
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
+from feature_engine.selection import DropFeatures
 
 
 def _set_up_logger(delim: str = "::") -> tp.Any:
     """This is used to create a basic logger."""
+    # pylint: disable=redefined-outer-name
     format_ = f"%(levelname)s {delim} %(asctime)s {delim} %(message)s"
     logging.basicConfig(level=logging.INFO, format=format_)
     logger = logging.getLogger(__name__)

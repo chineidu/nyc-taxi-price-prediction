@@ -5,31 +5,31 @@ the custom package `src`
 
 author: Chinedu Ezeofor
 """
-import typing as tp
-import warnings
-import logging
-import joblib
-from pprint import pprint as pp
 import uuid
+import typing as tp
+import logging
+import warnings
+from pprint import pprint as pp
+
+import joblib
+from sklearn.ensemble import RandomForestRegressor
+from feature_engine.selection import DropFeatures
 
 # from feature-engine
-from feature_engine.imputation import AddMissingIndicator, MeanMedianImputer
-from feature_engine.selection import DropFeatures
+from feature_engine.imputation import MeanMedianImputer, AddMissingIndicator
 from feature_engine.transformation import YeoJohnsonTransformer
-from sklearn.ensemble import RandomForestRegressor
 
 warnings.filterwarnings("error")
 
 # Standard imports
 import numpy as np
 import pandas as pd
+import feat_engineering as fe
 
 # From Scikit-learn
 from sklearn.pipeline import Pipeline
-from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-
-import feat_engineering as fe
+from sklearn.model_selection import train_test_split
 
 
 def _set_up_logger(delim: str = "::") -> tp.Any:
@@ -190,7 +190,6 @@ params = {
     "max_depth": 10,
     "random_state": 123,
 }
-
 
 
 # Build Train Pipeline

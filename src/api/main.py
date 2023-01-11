@@ -1,6 +1,6 @@
-from fastapi import APIRouter, FastAPI, status
-from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
+from fastapi import FastAPI, APIRouter, status
+from fastapi.middleware.cors import CORSMiddleware
 
 # Custom imports
 from src.api.config import settings, setup_app_logging

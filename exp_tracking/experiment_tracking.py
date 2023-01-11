@@ -7,21 +7,21 @@ for experiment tracking.
 author: Chinedu Ezeofor
 """
 import warnings
+from pprint import pprint as pp
 
 import numpy as np
-import pandas as pd
-from pprint import pprint as pp
 import mlflow
+import pandas as pd
+
+from src import config, logger, load_data
+from src.pipeline import params, rf_pipe
+from src.utilities.experiment import eval_metrics
 
 # Custom imports
 from src.processing.data_manager import split_train_data
-from src.pipeline import rf_pipe, params
-from src.utilities.experiment import eval_metrics
-from src import config, load_data, logger
-
 
 # S3_BUCKET_NAME = mlflow-model-registry-neidu
-PORT = 5001  
+PORT = 5001
 TRACKING_SERVER_HOST = "http://127.0.0.1"
 TRACKING_URI = f"{TRACKING_SERVER_HOST}:{PORT}"
 EXPERIMENT_RUN_NAME = "Taxi-duration"
@@ -74,7 +74,6 @@ with mlflow.start_run():
 
     # Confirm it's stored on S3
     logger.info(mlflow.get_artifact_uri())
-
 
 
 # ==== Make Predictions Using The Model From The Model Registry ====

@@ -5,15 +5,15 @@ and checking the health of the API.
 author: Chinedu Ezeofor
 """
 import pandas as pd
+from loguru import logger
 from fastapi import APIRouter, status
 from fastapi.encoders import jsonable_encoder
-from loguru import logger
 
 # Custom imports
 from src import __version__ as model_version
+from src.predict import make_predictions
 from src.api.config import settings
 from src.api.schema import APIDetails, InputDataSchema, ResponsePredictSchema
-from src.predict import make_predictions
 
 api_router = APIRouter()
 

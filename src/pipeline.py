@@ -6,15 +6,16 @@ author: Chinedu Ezeofor
 # Built-in library
 import warnings
 
-# from feature-engine
-from feature_engine.imputation import AddMissingIndicator, MeanMedianImputer
-from feature_engine.selection import DropFeatures
-from feature_engine.transformation import YeoJohnsonTransformer
 from sklearn.ensemble import RandomForestRegressor
 
 # from Scikit-learn
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
+from feature_engine.selection import DropFeatures
+
+# from feature-engine
+from feature_engine.imputation import MeanMedianImputer, AddMissingIndicator
+from feature_engine.transformation import YeoJohnsonTransformer
 
 # Custom Imports
 import src.processing.feat_engineering as fe

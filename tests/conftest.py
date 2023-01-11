@@ -14,8 +14,8 @@ from src.api import app
 
 # Custom Imports
 from src.config.core import config
-from src.processing.data_manager import load_data
 from tests.utilities import MockModel, load_encoded_data
+from src.processing.data_manager import load_data
 
 
 @pytest.fixture()

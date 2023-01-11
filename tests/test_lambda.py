@@ -1,14 +1,9 @@
+import typing as tp
+
 import pandas as pd
 
-from model_deployment.streaming.lambda_function import (
-    prepare_data,
-    decode_record,
-    lambda_handler,
-)
 from tests.utilities import MockLambdaHandler
-
-import typing as tp
-import json
+from model_deployment.streaming.lambda_function import prepare_data, decode_record
 
 
 def test_prepare_data(test_event: tp.Dict) -> None:
@@ -36,9 +31,7 @@ def test_prepare_data(test_event: tp.Dict) -> None:
 
     # Then
     assert expected_output.equals(result)
-    assert expected_output["tpep_pickup_datetime"].equals(
-        result["tpep_pickup_datetime"]
-    )
+    assert expected_output["tpep_pickup_datetime"].equals(result["tpep_pickup_datetime"])
 
 
 def test_decode_record(encoded_data: tp.Dict) -> None:

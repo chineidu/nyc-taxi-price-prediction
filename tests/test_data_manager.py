@@ -8,14 +8,15 @@ author: Chinedu Ezeofor
 import pandas as pd
 import pytest
 
+from src.config.core import TRAINED_MODELS_FILEPATH, config
+
 # Custom Imports
 from src.processing.data_manager import (
-    split_into_features_n_target,
     load_model,
-    validate_training_input,
     validate_input,
+    validate_training_input,
+    split_into_features_n_target,
 )
-from src.config.core import config, TRAINED_MODELS_FILEPATH
 
 
 def test_split_into_features_n_target(test_data: pd.DataFrame) -> None:
@@ -121,7 +122,7 @@ def test_validate_training_input(test_data: pd.DataFrame) -> None:
 
 def test_load_model() -> None:
     """This tests the loading of the predictive model"""
-    # Given 
+    # Given
     filename = config.path_config.MODEL_PATH
 
     # When

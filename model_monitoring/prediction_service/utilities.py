@@ -3,13 +3,13 @@ This module containes helper functions and schemas.
 
 author: Chinedu Ezeofor
 """
+import os
+import typing as tp
+
 import numpy as np
+import joblib
 import pandas as pd
 from pydantic import BaseModel
-
-import os
-import joblib
-import typing as tp
 
 MODEL_FILE = os.getenv("MODEL_FILE", "model.pkl")
 
@@ -18,7 +18,7 @@ class InputSchema(BaseModel):
     """
     Config object for input data variables.
     """
-    
+
     id: tp.Optional[str]
     DOLocationID: int
     payment_type: int

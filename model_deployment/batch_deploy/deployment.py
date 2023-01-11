@@ -5,11 +5,11 @@ using Prefect. Note: you can specify how often the flow should run.
 author: Chinedu Ezeofor
 """
 
-# from deployment.batch_deploy.batch_score import batch_predict_flow, batch_predict_backfill_flow
-from model_deployment import batch_predict_backfill_flow
 from prefect.deployments import Deployment
 from prefect.orion.schemas.schedules import CronSchedule
 
+# from deployment.batch_deploy.batch_score import batch_predict_flow, batch_predict_backfill_flow
+from model_deployment import batch_predict_backfill_flow
 
 deployment = Deployment.build_from_flow(
     # flow=batch_predict_flow,

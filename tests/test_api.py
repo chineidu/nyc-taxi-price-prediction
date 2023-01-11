@@ -4,20 +4,18 @@ This module is used to test the API predictios.
 author: Chinedu Ezeofor
 """
 
-from src.config.core import config
-from src.api.config import settings
-
 import numpy as np
 import pandas as pd
 from fastapi.testclient import TestClient
+
+from src.api.config import settings
+from src.config.core import config
 
 
 def test_api_home(client: TestClient) -> None:
     """This tests the API's home endpoint."""
     # Given
-    expected_output = {
-        "message": f"Welcome to the {settings.PROJECT_NAME!r}"
-    }
+    expected_output = {"message": f"Welcome to the {settings.PROJECT_NAME!r}"}
 
     # When
     response = client.get("http://localhost:8001/")
@@ -51,6 +49,4 @@ def test_make_api_prediction(client: TestClient, test_data: pd.DataFrame) -> Non
     assert response.status_code == 200
     assert prediction_data["trip_duration"]
     assert prediction_data["errors"] is None
-    assert np.isclose(
-        expected_output, prediction_data["trip_duration"], rtol=0.03
-    ).all()
+    assert np.isclose(expected_output, prediction_data["trip_duration"], rtol=0.03).all()

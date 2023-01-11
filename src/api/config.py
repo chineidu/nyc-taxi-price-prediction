@@ -1,6 +1,6 @@
-import logging
 import sys
 import typing as tp
+import logging
 from types import FrameType
 
 from loguru import logger
