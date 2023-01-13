@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 
 # Package meta-data.
 NAME = "src"  # Package name
@@ -18,17 +18,21 @@ with open("README.md", "r") as fh:
 
 
 # Required packages
-def list_reqs(filename: str = "requirements.txt") -> None:
-    with open(ROOT_DIR / filename) as f:
+def list_reqs(*, filename: str = "requirements.txt") -> None:
+    with open(ROOT_DIR / filename, encoding="utf-8") as f:
         return f.read().splitlines()
 
 
 def get_package_version() -> str:
     """Obtain the package version."""
-    with open(ROOT_DIR / "src/VERSION", "r") as file:
+    with open(ROOT_DIR / "src/VERSION", "r", encoding="utf-8") as file:
         _version = file.read().strip()
         return _version
 
+
+docs_packages = ["mkdocs==1.4.2", "mkdocstrings==0.19.1"]
+style_packages = ["black==22.3.0", "flake8==3.9.2", "isort==5.10.1", "pylint==2.15.10"]
+test_packages = list_reqs(filename="test_requirements.txt")
 
 setup(
     name=NAME,
@@ -36,7 +40,7 @@ setup(
     description=DESCRIPTION,
     author=AUTHOR,
     author_email=EMAIL,
-    packages=find_packages(),
+    packages=find_namespace_packages(),
     url=URL,
     install_requires=list_reqs(),
     extras_require={},
