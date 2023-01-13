@@ -6,10 +6,13 @@ from setuptools import setup, find_namespace_packages
 NAME = "src"  # Package name
 DESCRIPTION = "A simple package by Neidu."
 URL = "https://github.com/chineidu/nyc-taxi-price-prediction"
-EMAIL = "neiduezeofor@gmail.com"
+EMAIL = "neidue@email.com"
 AUTHOR = "Chinedu Ezeofor"
-REQUIRES_PYTHON = ">=3.7.0"
+REQUIRES_PYTHON = ">=3.8.0"
 
+docs_packages = ["mkdocs==1.4.2", "mkdocstrings==0.19.1"]
+style_packages = ["black==22.10.0", "flake8==5.0.4", "isort==5.10.1", "pylint==2.15.10"]
+test_packages = ["evidently==0.2.1", "pytest>=7.2.0", "pytest-cov==4.0.0"]
 
 ROOT_DIR = Path(__file__).absolute().parent
 
@@ -23,28 +26,21 @@ def list_reqs(*, filename: str = "requirements.txt") -> None:
         return f.read().splitlines()
 
 
-def get_package_version() -> str:
-    """Obtain the package version."""
-    with open(ROOT_DIR / "src/VERSION", "r", encoding="utf-8") as file:
-        _version = file.read().strip()
-        return _version
-
-
-docs_packages = ["mkdocs==1.4.2", "mkdocstrings==0.19.1"]
-style_packages = ["black==22.3.0", "flake8==3.9.2", "isort==5.10.1", "pylint==2.15.10"]
-test_packages = list_reqs(filename="test_requirements.txt")
-
 setup(
     name=NAME,
-    version=get_package_version(),
+    version="0.1.0",
     description=DESCRIPTION,
     author=AUTHOR,
     author_email=EMAIL,
     packages=find_namespace_packages(),
     url=URL,
     install_requires=list_reqs(),
-    extras_require={},
     python_requires=REQUIRES_PYTHON,
+    extras_require={
+        "dev": docs_packages + style_packages + test_packages + ["pre-commit==2.21.0"],
+        "docs": docs_packages,
+        "test": test_packages,
+    },
     include_package_data=True,
     classifiers=[
         # Trove classifiers
@@ -52,7 +48,6 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
@@ -63,7 +58,3 @@ setup(
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
 )
-
-
-# if __name__ == '__main__':
-#     print(find_packages("src"))
