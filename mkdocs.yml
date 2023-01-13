@@ -6,15 +6,16 @@ nav:
   - Home: index.md
   - Prediction-Service: 
     - Api: src/api/routes.md
+  - Monitoring-Service: 
+    - Evidently-Service: monitoring_service.md
   - Train: src/train.md
 
 theme: 
   name: "readthedocs"
 
 plugins:
-  - search
+  - search 
   - autorefs
   - mkdocstrings:
-      watch:
-            - .  # Track all the changes in the root directory
-
+      watch: 
+        - .  # Track all the change  s in the root directory   
