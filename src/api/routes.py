@@ -38,7 +38,7 @@ def health():  # pragma: no cover
     response_model=ResponsePredictSchema,
     status_code=status.HTTP_200_OK,
 )
-def predict_trip_duration(input_data: InputDataSchema)-> ResponsePredictSchema:
+def predict_trip_duration(input_data: InputDataSchema) -> ResponsePredictSchema:
     """This endpoint is used for predicting the trip
     duration in minutes.
 
@@ -58,11 +58,11 @@ def predict_trip_duration(input_data: InputDataSchema)-> ResponsePredictSchema:
         result: 3.12
 
     Params:
-        input_data (InputDataSchema): This is a Pydantic schema for validating 
+        input_data (InputDataSchema): This is a Pydantic schema for validating
         the input data.
 
     Returns:
-        pred (ResponsePredictSchema): This is a Pydantic schema for validating 
+        pred (ResponsePredictSchema): This is a Pydantic schema for validating
         the output data.
     """
     # Get the input data

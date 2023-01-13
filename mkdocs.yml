@@ -9,9 +9,12 @@ nav:
   - Train: src/train.md
 
 theme: 
-  name: "material"
+  name: "readthedocs"
 
 plugins:
   - search
-  - mkdocstrings
+  - autorefs
+  - mkdocstrings:
+      watch:
+            - .  # Track all the changes in the root directory
 
