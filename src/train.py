@@ -22,12 +22,10 @@ def train_model(*, train_data: pd.DataFrame) -> tp.Tuple:
     """This is used to train the model.
 
     Params:
-    -------
-    train_data (Pandas DF): DF containing the training data.
+        train_data (Pandas DF): DF containing the training data.
 
     Returns:
-    --------
-    pipe, y_validate, y_pred (Tuple): Tuple containing the
+        pipe, y_validate, y_pred (Tuple): Tuple containing the
         trained_model_pipe, actual y and predicted y values.
     """
 

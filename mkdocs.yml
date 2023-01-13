@@ -6,6 +6,7 @@ nav:
   - Home: index.md
   - Prediction-Service: 
     - Api: src/api/routes.md
+  - Train: src/train.md
 
 theme: 
   name: "material"

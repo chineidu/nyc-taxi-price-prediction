@@ -3,7 +3,7 @@
 New York Taxi Trip Duration Prediction ML Project
 
 
-## Try This
+## Content
 * [Make Predictions](src/api/routes.md): Make predictions
 * [Monotoring Service]()
 
