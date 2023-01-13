@@ -2,15 +2,7 @@ from pathlib import Path
 
 from setuptools import setup, find_namespace_packages
 
-# Package meta-data.
-NAME = "src"  # Package name
-DESCRIPTION = "A simple package by Neidu."
-URL = "https://github.com/chineidu/nyc-taxi-price-prediction"
-EMAIL = "neidue@email.com"
-AUTHOR = "Chinedu Ezeofor"
-REQUIRES_PYTHON = ">=3.8.0"
-
-docs_packages = ["mkdocs==1.4.2", "mkdocstrings==0.19.1"]
+docs_packages = ["mkdocs==1.4.2", "mkdocstrings==0.19.1", "mkdocs-material==9.0.4"]
 style_packages = ["black==22.10.0", "flake8==5.0.4", "isort==5.10.1", "pylint==2.15.10"]
 test_packages = ["evidently==0.2.1", "pytest>=7.2.0", "pytest-cov==4.0.0"]
 
@@ -27,34 +19,21 @@ def list_reqs(*, filename: str = "requirements.txt") -> None:
 
 
 setup(
-    name=NAME,
+    name="my-package",
     version="0.1.0",
-    description=DESCRIPTION,
-    author=AUTHOR,
-    author_email=EMAIL,
+    description="A simple package by Neidu.",
+    author="Chinedu Ezeofor",
+    author_email="neidue@email.com",
     packages=find_namespace_packages(),
-    url=URL,
+    url="https://github.com/chineidu/nyc-taxi-price-prediction",
     install_requires=list_reqs(),
-    python_requires=REQUIRES_PYTHON,
+    python_requires=">=3.8",
     extras_require={
         "dev": docs_packages + style_packages + test_packages + ["pre-commit==2.21.0"],
         "docs": docs_packages,
         "test": test_packages,
     },
     include_package_data=True,
-    classifiers=[
-        # Trove classifiers
-        # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
-        "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: Implementation :: CPython",
-        "Programming Language :: Python :: Implementation :: PyPy",
-    ],
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
 )

@@ -1,0 +1,16 @@
+site_name: NYC-Taxi Prediction
+site_url: https://neidu.com/
+repo_url: https://github.com/chineidu/nyc-taxi-price-prediction/
+
+nav:
+  - Home: index.md
+  - Prediction-Service: 
+    - Api: src/api/routes.md
+
+theme: 
+  name: "material"
+
+plugins:
+  - search
+  - mkdocstrings
+

@@ -16,13 +16,13 @@ pip install -e .
 pip install -e ".[dev]"
 ```
 
-* To install with the packages required for making documentation, run:
+* To install ONLY the packages required for making documentation, run:
 
 ```bash
 pip install -e ".[docs]"
 ```
 
-* To install with the packages required for testing, run:
+* To install ONLY the packages required for testing, run:
 
 ```bash
 pip install -e ".[test]"
