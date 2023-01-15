@@ -131,7 +131,6 @@ dmypy.json
 
 sample.py
 *.html
-src/data
 .DS_Store
 sample.ipynb
 
