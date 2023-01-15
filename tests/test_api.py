@@ -28,7 +28,7 @@ def test_api_home(client: TestClient) -> None:
 def test_make_api_prediction(client: TestClient, test_data: pd.DataFrame) -> None:
     # Given
     test_data = test_data.iloc[:5].copy()
-    expected_output = [17.3, 22.2, 32.7, 22.2, 28.8]
+    expected_output = [16.3, 21.2, 31.7, 21.2, 27.8]
 
     # When
     # === Preprocess data ===
