@@ -1,0 +1,4 @@
+outs:
+- md5: 3ad25b8759af015f37d1dc16c5ba9ca7
+  size: 221551
+  path: reduced_data.parquet
