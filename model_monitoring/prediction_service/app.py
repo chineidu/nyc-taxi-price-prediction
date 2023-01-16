@@ -10,11 +10,11 @@ import logging
 
 import pandas as pd
 import uvicorn
-import requests
+import requests  # type: ignore
 from fastapi import FastAPI, status
 from pymongo import MongoClient
 
-from utilities import InputSchema, ResponsePredictSchema, predict
+from utilities import InputSchema, ResponsePredictSchema, predict  # type: ignore
 
 EVIDENTLY_SERVICE_ADDRESS = os.getenv("EVIDENTLY_SERVICE", "http://0.0.0.0:8085")
 MONGODB_ADDRESS = os.getenv("MONGODB_ADDRESS", "mongodb://127.0.0.1:27018")

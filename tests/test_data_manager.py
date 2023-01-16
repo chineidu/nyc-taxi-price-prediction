@@ -12,8 +12,11 @@ from src.config.core import TRAINED_MODELS_FILEPATH, config
 
 # Custom Imports
 from src.processing.data_manager import (
+    load_data,
     load_model,
+    get_unique_IDs,
     validate_input,
+    split_train_data,
     validate_training_input,
     split_into_features_n_target,
 )
@@ -132,3 +135,48 @@ def test_load_model() -> None:
     for f_ in TRAINED_MODELS_FILEPATH.iterdir():
         assert f_.name in filename
     assert trained_model.named_steps
+
+
+def test_get_unique_IDs(test_data: pd.DataFrame) -> None:
+    """Docs"""
+    # Given
+    test_data = test_data.iloc[:10].copy()
+    expected_output = 10
+
+    # When
+    test_data["id"] = test_data["VendorID"].apply(get_unique_IDs)
+
+    # Then
+    assert expected_output == len(test_data["id"])
+
+
+def test_load_data() -> None:
+    """Docs"""
+    # Given
+    filename = config.path_config.TEST_DATA
+    expected_output = 10
+
+    # When
+    result = load_data(filename=filename).iloc[:10]
+
+    # Then
+    assert expected_output == len(result)
+    assert result.columns is not None
+
+
+def test_split_train_data(test_data: pd.DataFrame) -> None:
+    """Docs"""
+    # Given
+    test_data = test_data.iloc[:10].copy()
+
+    # When
+    X_train, X_validate, y_train, y_validate = split_train_data(
+        data=test_data,
+        target=config.model_config.TARGET,
+        test_size=config.model_config.TEST_SIZE,  # 0.1
+        random_state=config.model_config.RANDOM_STATE,
+    )
+
+    # Then
+    assert test_data.shape[0] == X_train.shape[0] + X_validate.shape[0]
+    assert test_data.shape[0] == y_train.shape[0] + y_validate.shape[0]

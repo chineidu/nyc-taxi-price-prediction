@@ -18,10 +18,10 @@ class CalculateDayOfWeek(BaseEstimator, TransformerMixin):
     def __init__(self, feature: str):
         self.feature = feature
 
-    def fit(self, X, y=None):
+    def fit(self, X, y=None):  # pylint: disable=unused-argument
         return self
 
-    def transform(self, X, y=None) -> pd.DataFrame:
+    def transform(self, X, y=None) -> pd.DataFrame:  # pylint: disable=unused-argument
         X = X.copy()
         X["day_of_week"] = X[self.feature].dt.dayofweek
         return X
@@ -34,10 +34,10 @@ class CalculateHourOfDay(BaseEstimator, TransformerMixin):
     def __init__(self, feature: str):
         self.feature = feature
 
-    def fit(self, X, y=None):
+    def fit(self, X, y=None):  # pylint: disable=unused-argument
         return self
 
-    def transform(self, X, y=None) -> pd.DataFrame:
+    def transform(self, X, y=None) -> pd.DataFrame:  # pylint: disable=unused-argument
         X = X.copy()
         X["hour_of_day"] = X[self.feature].dt.hour
         return X
@@ -50,10 +50,10 @@ class SelectFeatures(BaseEstimator, TransformerMixin):
     def __init__(self, features: tp.List[str]):
         self.features = features
 
-    def fit(self, X, y=None):
+    def fit(self, X, y=None):  # pylint: disable=unused-argument
         return self
 
-    def transform(self, X, y=None) -> pd.DataFrame:
+    def transform(self, X, y=None) -> pd.DataFrame:  # pylint: disable=unused-argument
         X = X.copy()
         X = X[self.features]
         return X

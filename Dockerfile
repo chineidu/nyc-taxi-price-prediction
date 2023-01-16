@@ -8,10 +8,10 @@ WORKDIR /opt
 COPY ["./", "./"]
 
 # Install dependencies using the copied files
-RUN pip install --upgrade -r test_requirements.txt
+RUN pip install --upgrade -r requirements.txt
 
 # Convert src to a package
-RUN python setup.py sdist && pip install -e .
+RUN pip install -e .
 
 # Entrypoint
-CMD ["python", "./src/api/main.py"]
+CMD ["python", "./src/api/main.py", "--port", "8000", "--host", "0.0.0.0"]

@@ -13,11 +13,11 @@ import numpy as np
 import mlflow
 import pandas as pd
 
+# Custom imports
+# pylint: disable=cyclic-import
 from src import config, logger, load_data
 from src.pipeline import params, rf_pipe
 from src.utilities.experiment import eval_metrics
-
-# Custom imports
 from src.processing.data_manager import split_train_data
 
 # S3_BUCKET_NAME = mlflow-model-registry-neidu

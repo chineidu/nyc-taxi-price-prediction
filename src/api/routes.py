@@ -73,4 +73,4 @@ def predict_trip_duration(input_data: InputDataSchema) -> ResponsePredictSchema:
     # Get prediction
     logger.info("Making predictions on data ...")
     pred = make_predictions(data=data)
-    return pred
+    return pred  # type: ignore

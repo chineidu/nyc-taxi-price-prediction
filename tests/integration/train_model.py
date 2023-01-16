@@ -1,6 +1,6 @@
 """
 This module is used to train the model.
-This was done to prevent the model from depending on 
+This was done to prevent the model from depending on
 the custom package `src`
 
 author: Chinedu Ezeofor
@@ -264,6 +264,7 @@ def train_model(*, train_data: pd.DataFrame) -> tp.Tuple:
     random_state = RANDOM_STATE
 
     # Split the data
+    # pylint: disable=duplicate-code
     X_train, X_validate, y_train, y_validate = split_train_data(
         data=train_data,
         target=target,

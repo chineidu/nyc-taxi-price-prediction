@@ -145,10 +145,10 @@ SHARD_ITERATOR=$(aws kinesis \
 
 RESULT=$(aws kinesis get-records --shard-iterator $SHARD_ITERATOR)
 
-echo $RESULT | jq 
+echo $RESULT | jq
 
 echo ${RESULT} | jq -r '.Records[0].Data' | base64 --decode | jq
-``` 
+```
 
 
 ### Running the test
@@ -175,7 +175,7 @@ To use AWS CLI, you may need to set the env variables:
 
 ```bash
 # Set env
-export AWS_ACCESS_KEY_ID="your_secret_key" 
+export AWS_ACCESS_KEY_ID="your_secret_key"
 export AWS_SECRET_ACCESS_KEY="your_secret_access_key"
 
 docker run -it --rm \
@@ -206,7 +206,7 @@ URL for testing:
 * To test, run:
 
 ```console
-python test_docker.py
+python run_docker.py
 ```
 
 ### Publishing Docker images
@@ -221,7 +221,7 @@ aws ecr create-repository --repository-name ride-duration-model
 #### Logging in
 
 * Authenticate (Log in)
-  
+
 ```bash
 export repository_name="126946216053.dkr.ecr.eu-west-1.amazonaws.com/ride-duration-model"
 export aws_region="eu-west-1"

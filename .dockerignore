@@ -1,0 +1,10 @@
+sample.py
+sample.ipynb
+tests/
+docs
+exp_tracking
+logs
+mkdocs.yml
+model_deployment
+model_monitoring
+my_package.egg-info

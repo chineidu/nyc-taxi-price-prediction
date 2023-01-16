@@ -11,28 +11,28 @@ from prefect import flow, task, get_run_logger
 from prefect.tasks import task_input_hash
 from prefect.context import get_run_context
 from prefect.task_runners import ConcurrentTaskRunner
-from dateutil.relativedelta import relativedelta
+from dateutil.relativedelta import relativedelta  # type: ignore
 
 # Custom Imports
 from src.processing.data_manager import load_data
 from model_deployment.batch_deploy.utilities import save_data_to_s3, compare_predictions
 
 # Create tasks
-load_data = task(
+load_data = task(  # type: ignore
     load_data,
     retries=3,
     retry_delay_seconds=5,
     cache_key_fn=task_input_hash,
     cache_expiration=timedelta(days=1),
 )
-compare_predictions = task(
+compare_predictions = task(  # type: ignore
     compare_predictions,
     retries=3,
     retry_delay_seconds=5,
     cache_key_fn=task_input_hash,
     cache_expiration=timedelta(days=1),
 )
-save_data_to_s3 = task(save_data_to_s3, retries=3, retry_delay_seconds=5)
+save_data_to_s3 = task(save_data_to_s3, retries=3, retry_delay_seconds=5)  # type: ignore
 
 
 @task(name="get_paths_task", retries=3, retry_delay_seconds=5)
@@ -61,20 +61,20 @@ def get_paths(*, taxi_type: str, run_id: str, run_date: datetime) -> tp.Tuple:
     return input_file, output_file
 
 
-@flow(name="apply_batch_prediction", task_runner=ConcurrentTaskRunner)
+@flow(name="apply_batch_prediction", task_runner=ConcurrentTaskRunner)  # type: ignore
 def batch_preprocess(*, taxi_type: str, run_id: str, run_date: datetime) -> None:
     """This is a wrapper function used to load the data,
     make predictions and save the results to S3."""
     logger = get_run_logger()
-    input_file, output_file = get_paths(
+    input_file, output_file = get_paths(  # type: ignore
         run_date=run_date, taxi_type=taxi_type, run_id=run_id
     )
     logger.info("Loading data using input filepath ...")
-    data = load_data(filename=input_file, uri=True)
+    data = load_data(filename=input_file, uri=True)  # type: ignore
     logger.info("Making predictions on input data ...")
     result_df = compare_predictions(data=data, run_id=run_id)
     logger.info("Saving data to S3 ...")
-    save_data_to_s3(data=result_df, output=output_file)
+    save_data_to_s3(data=result_df, output=output_file)  # type: ignore
     logger.info("Batch Prediction processing done!")
 
 
@@ -93,7 +93,7 @@ def batch_predict_flow(
     logger.info("Starting batch predictions ...")
     if run_date is None:
         ctx = get_run_context()  # It works ONLY w/flows
-        run_date = ctx.flow_run.expected_start_time
+        run_date = ctx.flow_run.expected_start_time  # type: ignore
 
     batch_preprocess(run_id=run_id, taxi_type=taxi_type, run_date=run_date)
 

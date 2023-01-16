@@ -4,7 +4,7 @@ for the streaming service.
 
 author: Chinedu Ezeofor
 """
-import requests
+import requests  # type: ignore
 
 event = {
     "Records": [

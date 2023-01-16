@@ -1,0 +1,5 @@
+services:
+  api_service:
+    image: api_service:v1
+    ports:
+      - 8001:8000

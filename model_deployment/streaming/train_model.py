@@ -1,6 +1,6 @@
 """
 This module is used to train the model.
-This was done to prevent the model from depending on 
+This was done to prevent the model from depending on
 the custom package `src`
 
 author: Chinedu Ezeofor
@@ -317,7 +317,7 @@ if __name__ == "__main__":  # pragma: no cover
     # Load model
     logger.info("Loading model ...")
     model_fp = "trained_models/model.pkl"
-    with open(model_fp, "rb") as file:
+    with open(model_fp, "rb") as file:  # type: ignore
         estimator = joblib.load(file)
 
     logger.info("Getting predictions ...")

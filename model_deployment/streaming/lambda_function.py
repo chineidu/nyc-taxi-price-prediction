@@ -58,7 +58,7 @@ def send_events(event: tp.Any) -> tp.Dict:
 
 def decode_record(*, data: tp.Dict) -> tp.Dict:
     """This is used to decode the encoded data."""
-    decoded_data = base64.b64decode(data).decode("utf-8")
+    decoded_data = base64.b64decode(data).decode("utf-8")  # type: ignore
     ride_events = json.loads(decoded_data)
     return ride_events
 

@@ -5,7 +5,6 @@ author: Chinedu Ezeofor
 """
 import uuid
 import typing as tp
-import logging
 from pathlib import Path
 
 # Standard imports
@@ -36,8 +35,7 @@ def custom_logger():
         logger.critical("There is something terribly wrong and process may terminate.")
 
     """
-    import logging.config
-    from pathlib import Path
+    import logging
 
     from rich.logging import RichHandler
 

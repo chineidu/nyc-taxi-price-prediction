@@ -37,6 +37,7 @@ def test_prepare_data(test_event: tp.Dict) -> None:
 def test_decode_record(encoded_data: tp.Dict) -> None:
     """this tests the decode_record function."""
     # Given
+    # pylint: disable=duplicate-code
     expected_output = {
         "ride": {
             "DOLocationID": 130,

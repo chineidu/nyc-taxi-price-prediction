@@ -35,7 +35,7 @@ def create_conn() -> tp.Any:
 @click.option(
     "-d", "--drop", help="Drop the collection", default="false", show_default=True
 )
-def main(start_index: int, stop_index: int, verbose: str, drop: str) -> None:
+def main(start_index: int, stop_index: int, verbose: int, drop: str) -> None:
     """This is the main function for running the project."""
     # Create connection
     db = create_conn()

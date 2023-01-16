@@ -219,16 +219,16 @@ def run_batch_analyses() -> None:
     curr_data = fetch_live_data()
 
     logger.info("Running Evidently Service ...")
-    data_drift_n_qty_report, regression_report, json_report = run_evidently(
+    data_drift_n_qty_report, regression_report, json_report = run_evidently(  # type: ignore
         ref_data=ref_data, curr_data=curr_data
     )
 
     logger.info("Saving reports to MongoDB ...")
-    save_report_logs(json_report=json_report)
+    save_report_logs(json_report=json_report)  # type: ignore
 
     logger.info("Saving reports as HTML ...")
-    save_html_report(report=data_drift_n_qty_report, type="drift")
-    save_html_report(report=regression_report, type="reg_report")
+    save_html_report(report=data_drift_n_qty_report, type="drift")  # type: ignore
+    save_html_report(report=regression_report, type="reg_report")  # type: ignore
 
 
 if __name__ == "__main__":

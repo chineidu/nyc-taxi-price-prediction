@@ -3,7 +3,7 @@ This module is used to download and saving the dataset.
 
 """
 
-import requests
+import requests  # type: ignore
 from tqdm import tqdm
 
 files = [
@@ -21,10 +21,10 @@ for file, path in files:
     progress_bar = tqdm(total=total_size_in_bytes, unit="iB", unit_scale=True)
 
     print(f"Downloading `{file} `into `{save_path}`...")
-    with open(save_path, "wb") as file:
+    with open(save_path, "wb") as file:  # type: ignore
         for data in response.iter_content(block_size):
             progress_bar.update(len(data))
-            file.write(data)
+            file.write(data)  # type: ignore
     progress_bar.close()
 
     if total_size_in_bytes != 0 and progress_bar.n != total_size_in_bytes:

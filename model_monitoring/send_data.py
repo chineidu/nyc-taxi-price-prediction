@@ -12,7 +12,7 @@ from pprint import pprint as pp
 from datetime import datetime
 
 import click
-import requests
+import requests  # type: ignore
 import pyarrow.parquet as pq
 
 URL = "http://0.0.0.0:8001/predict"

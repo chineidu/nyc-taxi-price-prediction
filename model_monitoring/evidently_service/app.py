@@ -170,15 +170,15 @@ class MonitoringService:
             )
             self.column_mapping[dataset_info.name] = dataset_info.column_mapping
 
-        self.metrics = {}
-        self.next_run_time = {}
+        self.metrics = {}  # type: ignore
+        self.next_run_time = {}  # type: ignore
 
     def iterate(self, dataset_name: str, new_rows: pd.DataFrame):
         """Add data to current dataset for specified dataset"""
         window_size = self.window_size
 
         if dataset_name in self.current:
-            current_data = self.current[dataset_name].append(new_rows, ignore_index=True)
+            current_data = self.current[dataset_name].append(new_rows, ignore_index=True)  # type: ignore
 
         else:
             current_data = new_rows
