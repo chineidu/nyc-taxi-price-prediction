@@ -40,6 +40,4 @@ repos:
   #       always_run: true
   #       args: [
   #           # tests/, # commented coz it takes too long
-  #           "tests/test_data_manager.py",
-  #           "tests/test_feature_engineering.py",
   #         ]
