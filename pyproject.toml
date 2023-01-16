@@ -18,11 +18,12 @@ disable = [
     "logging-fstring-interpolation",
     "logging-too-many-args",
     "redefined-outer-name",
-    "unused-argument",
     "unspecified-encoding",
     "ungrouped-imports",
     "redefined-builtin",
-    "global-variable-not-assigned"
+    "global-variable-not-assigned",
+    "unused-argument",
+    "useless-import-alias"
 ]
 
 [tool.black]
@@ -31,8 +32,10 @@ target-version = ['py310']
 skip-string-normalization = true
 
 [tool.isort]
+skip = [".gitignore", ".dockerignore"]
+group_by_package = true
 multi_line_output = 3
-length_sort = true
+py_version=39
 
 [tool.mypy]
 mypy_path = ["src", ""]

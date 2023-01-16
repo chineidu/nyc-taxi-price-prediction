@@ -29,7 +29,7 @@ repos:
             "-rn", # Only display messages
             "-sn", # Don't display the score
             "--recursive=y",
-            "src"
+            "--rcfile=pyproject.toml", # Link to your config file
           ]
 
   # - repo: local
