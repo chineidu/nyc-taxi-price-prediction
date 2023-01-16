@@ -8,21 +8,18 @@ author: Chinedu Ezeofor
 import typing as tp
 import logging
 import warnings
+from urllib.parse import urlparse
 
 # Standard imports
 import numpy as np
 import mlflow
 import pandas as pd
-
-# Sklearn
 from sklearn import metrics
-from pydantic import BaseModel
+from pydantic import BaseModel  # pylint: disable=no-name-in-module
 from sklearn.pipeline import Pipeline
 
 
-def eval_metrics(
-    actual: np.ndarray, pred: np.ndarray
-) -> tp.Tuple[float, float, float, float]:
+def eval_metrics(actual: np.ndarray, pred: np.ndarray) -> tp.Tuple[float, float, float, float]:
     """This is used to evaluate the performance of the model."""
     rmse = float(metrics.mean_squared_error(actual, pred, squared=False))
     mse = float(metrics.mean_squared_error(actual, pred, squared=True))
@@ -76,10 +73,6 @@ def run_experiment(
     --------
     None
     """
-
-    import logging
-    from urllib.parse import urlparse
-
     warnings.filterwarnings("ignore")  # Required
 
     delim = "::"

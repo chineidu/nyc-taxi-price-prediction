@@ -1,20 +1,32 @@
 [tool.pylint.messages_control]
 
 disable = [
+    "consider-using-sys-exit",
+    "cyclic-import",
+    "duplicate-code",
     "missing-function-docstring",
     "missing-final-newline",
     "missing-class-docstring",
     "missing-module-docstring",
+    "missing-timeout",
+    "no-name-in-module",
+    "inconsistent-return-statements",
     "invalid-name",
+    "import-error",
     "too-few-public-methods",
+    "line-too-long",
     "logging-fstring-interpolation",
+    "logging-too-many-args",
     "redefined-outer-name",
     "unused-argument",
-    "unspecified-encoding"
+    "unspecified-encoding",
+    "ungrouped-imports",
+    "redefined-builtin",
+    "global-variable-not-assigned"
 ]
 
 [tool.black]
-line-length = 90
+line-length = 100
 target-version = ['py310']
 skip-string-normalization = true
 

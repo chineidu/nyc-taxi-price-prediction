@@ -11,8 +11,17 @@ import logging
 import warnings
 from pprint import pprint as pp
 
+# Standard imports
+import numpy as np
 import joblib
+import pandas as pd
+import feat_engineering as fe
 from sklearn.ensemble import RandomForestRegressor
+
+# From Scikit-learn
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
 from feature_engine.selection import DropFeatures
 
 # from feature-engine
@@ -20,16 +29,6 @@ from feature_engine.imputation import MeanMedianImputer, AddMissingIndicator
 from feature_engine.transformation import YeoJohnsonTransformer
 
 warnings.filterwarnings("error")
-
-# Standard imports
-import numpy as np
-import pandas as pd
-import feat_engineering as fe
-
-# From Scikit-learn
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
 
 
 def _set_up_logger(delim: str = "::") -> tp.Any:
@@ -62,12 +61,8 @@ def load_data(*, filename: str, uri: bool = False) -> pd.DataFrame:
         filename = f"data/{filename}"
     logger.info("Loading Data ... ")
     try:
-        data = (
-            pd.read_csv(filename)
-            if filename.endswith("csv")
-            else pd.read_parquet(filename)
-        )
-    except Exception as err:
+        data = pd.read_csv(filename) if filename.endswith("csv") else pd.read_parquet(filename)
+    except ValueError as err:
         logger.info(err)
 
     TRIP_DUR_THRESH = 60  # trip_duration
@@ -89,16 +84,13 @@ def load_data(*, filename: str, uri: bool = False) -> pd.DataFrame:
         data["id"] = data["VendorID"].apply(get_unique_IDs)  # Generate IDs
         data["trip_duration"] = calculate_trip_duration(data)
         data = data.loc[
-            (data["trip_duration"] > MIN_THRESH)
-            & (data["trip_duration"] <= TRIP_DUR_THRESH)
+            (data["trip_duration"] > MIN_THRESH) & (data["trip_duration"] <= TRIP_DUR_THRESH)
         ]
         data = data.loc[
-            (data["trip_distance"] > MIN_THRESH)
-            & (data["trip_distance"] <= TRIP_DIST_THRESH)
+            (data["trip_distance"] > MIN_THRESH) & (data["trip_distance"] <= TRIP_DIST_THRESH)
         ]
         data = data.loc[
-            (data["total_amount"] > MIN_THRESH)
-            & (data["total_amount"] <= TOTAL_AMT_THRESH)
+            (data["total_amount"] > MIN_THRESH) & (data["total_amount"] <= TOTAL_AMT_THRESH)
         ]
         data["trip_duration"] = np.log1p(data["trip_duration"])  # Log transform
     return data
@@ -310,9 +302,7 @@ if __name__ == "__main__":  # pragma: no cover
 
     df = pd.DataFrame(new_data)
     # Conevrt to datetime
-    df["tpep_pickup_datetime"] = pd.to_datetime(
-        df["tpep_pickup_datetime"], errors="coerce"
-    )
+    df["tpep_pickup_datetime"] = pd.to_datetime(df["tpep_pickup_datetime"], errors="coerce")
 
     # Load model
     logger.info("Loading model ...")

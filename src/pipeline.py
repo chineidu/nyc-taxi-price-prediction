@@ -42,9 +42,7 @@ rf_pipe = Pipeline(
         # ===== Add NaN flags =====
         (
             "add na_flag",
-            AddMissingIndicator(
-                missing_only=True, variables=config.model_config.NUM_VARS_WF_NA
-            ),
+            AddMissingIndicator(missing_only=True, variables=config.model_config.NUM_VARS_WF_NA),
         ),
         # ===== Impute NaNs =====
         (

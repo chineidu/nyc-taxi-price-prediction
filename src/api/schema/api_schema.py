@@ -1,10 +1,11 @@
 import typing as tp
 
-from pydantic import BaseModel
+from pydantic import BaseModel  # pylint: disable=no-name-in-module
 
 from src.config.schema import InputSchema
 
 
+# pylint: disable=duplicate-code
 class InputDataSchema(BaseModel):
     """
     Config object for input data.

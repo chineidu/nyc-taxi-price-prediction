@@ -83,7 +83,7 @@ def load_ref_data(*, filename: str) -> pd.DataFrame:
         MINS = 60
         try:
             trip_duration = data["tpep_dropoff_datetime"] - data["tpep_pickup_datetime"]
-        except:
+        except ValueError:
             trip_duration = data["lpep_dropoff_datetime"] - data["lpep_pickup_datetime"]
         trip_duration = round(trip_duration.dt.total_seconds() / MINS)
         return trip_duration
@@ -177,9 +177,7 @@ def save_report_logs(*, json_report: tp.Dict) -> None:
     db_name = "prediction_service"
     collection_name = "report"
     with MongoClient(MONGODB_ADDRESS) as client:
-        client.get_database(db_name).get_collection(collection_name).insert_one(
-            json_report
-        )
+        client.get_database(db_name).get_collection(collection_name).insert_one(json_report)
     logger.info("Reports saved!")
 
 

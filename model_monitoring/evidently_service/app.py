@@ -5,9 +5,11 @@ This is a demo service for Evidently metrics integration with Prometheus and Gra
 
 Read `README.md` for proper setup and installation.
 
-The service gets a reference dataset from reference.csv file and process current data with HTTP API.
+The service gets a reference dataset from reference.csv file and process current
+data with HTTP API.
 
-Metrics calculation results are available with `GET /metrics` HTTP method in Prometheus compatible format.
+Metrics calculation results are available with `GET /metrics` HTTP method in
+Prometheus compatible format.
 """
 
 import os
@@ -35,6 +37,9 @@ from evidently.model_monitoring import (
 )
 from evidently.pipeline.column_mapping import ColumnMapping
 
+# Add prometheus wsgi middleware to route /metrics requests
+from prometheus_fastapi_instrumentator import Instrumentator
+
 app = FastAPI()
 
 logging.basicConfig(
@@ -43,9 +48,6 @@ logging.basicConfig(
     handlers=[logging.StreamHandler()],
 )
 logger = logging.getLogger(__name__)
-
-# Add prometheus wsgi middleware to route /metrics requests
-from prometheus_fastapi_instrumentator import Instrumentator
 
 
 @app.on_event("startup")
@@ -178,7 +180,9 @@ class MonitoringService:
         window_size = self.window_size
 
         if dataset_name in self.current:
-            current_data = self.current[dataset_name].append(new_rows, ignore_index=True)  # type: ignore
+            current_data = self.current[dataset_name].append(
+                new_rows, ignore_index=True
+            )  # type: ignore
 
         else:
             current_data = new_rows
@@ -187,9 +191,7 @@ class MonitoringService:
 
         if current_size > self.window_size:
             # cut current_size by window size value
-            current_data.drop(
-                index=list(range(0, current_size - self.window_size)), inplace=True
-            )
+            current_data.drop(index=list(range(0, current_size - self.window_size)), inplace=True)
             current_data.reset_index(drop=True, inplace=True)
 
         self.current[dataset_name] = current_data
@@ -229,9 +231,7 @@ class MonitoringService:
                 continue
 
             if found is None:
-                found = prometheus_client.Gauge(
-                    metric_key, "", list(sorted(labels.keys()))
-                )
+                found = prometheus_client.Gauge(metric_key, "", list(sorted(labels.keys())))
                 self.metrics[metric_key] = found
 
             try:
@@ -239,7 +239,9 @@ class MonitoringService:
 
             except ValueError as error:
                 # ignore errors sending other metrics
-                logging.error("Value error for metric %s, error: ", metric_key, error)
+                logging.error(
+                    "Value error for metric %s, error: ", metric_key, error
+                )  # pylint: disable=logging-too-many-args
 
 
 SERVICE: tp.Optional[MonitoringService] = None
@@ -249,15 +251,14 @@ SERVICE: tp.Optional[MonitoringService] = None
 def configure_service():
     # pylint: disable=global-statement
     global SERVICE
-    config_file_path = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "config.yml"
-    )
+    config_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.yml")
 
     # try to find a config file, it should be generated via the data preparation script
     if not os.path.exists(config_file_path):
         logging.error("File %s does not exist", config_file_path)
         exit(
-            "Cannot find a config file for the metrics service. Try to check README.md for setup instructions."
+            "Cannot find a config file for the metrics service."
+            "Try to check README.md for setup instructions."
         )
 
     with open(config_file_path, "rb") as config_file:
@@ -268,16 +269,12 @@ def configure_service():
 
     for dataset_name, dataset_options in config["datasets"].items():
         reference_file = dataset_options["reference_file"]
-        logging.info(
-            f"Load reference data for dataset {dataset_name} from {reference_file}"
-        )
+        logging.info(f"Load reference data for dataset {dataset_name} from {reference_file}")
         reference_data = pq.read_table(reference_file).to_pandas()
         reference_data["duration"] = (
             reference_data.tpep_dropoff_datetime - reference_data.tpep_pickup_datetime
         )
-        reference_data.duration = reference_data.duration.apply(
-            lambda td: td.total_seconds() / 60
-        )
+        reference_data.duration = reference_data.duration.apply(lambda td: td.total_seconds() / 60)
         reference_data = reference_data[
             (reference_data.duration >= 1) & (reference_data.duration <= 60)
         ]

@@ -53,9 +53,7 @@ def train_ML_model_flow(
 
 
 @flow(task_runner=ConcurrentTaskRunner)  # type: ignore
-def run_flow(
-    *, filename: Path, save_estimator: bool = True
-) -> tp.Dict:  # pragma: no cover
+def run_flow(*, filename: Path, save_estimator: bool = True) -> tp.Dict:  # pragma: no cover
     """This is the pipeline for running the workflow.
 
     Params:

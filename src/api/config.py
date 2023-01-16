@@ -4,7 +4,7 @@ import logging
 from types import FrameType
 
 from loguru import logger
-from pydantic import AnyHttpUrl, BaseSettings
+from pydantic import AnyHttpUrl, BaseSettings  # pylint: disable=no-name-in-module
 
 
 class LoggingSettings(BaseSettings):
@@ -30,7 +30,7 @@ class Settings(BaseSettings):
 
 
 # This is the config for handling the logs. (Copied)
-# See: https://loguru.readthedocs.io/en/stable/overview.html#entirely-compatible-with-standard-logging  # noqa
+# See: https://loguru.readthedocs.io/en/stable/overview.html#entirely-compatible-with-standard-logging  # noqa pylint: disable=line-too-long
 class InterceptHandler(logging.Handler):
     def emit(self, record: logging.LogRecord) -> None:  # pragma: no cover
         # Get corresponding Loguru level if it exists
@@ -60,9 +60,7 @@ def setup_app_logging(config: Settings) -> None:
         logging_logger = logging.getLogger(logger_name)
         logging_logger.handlers = [InterceptHandler(level=config.logging.LOGGING_LEVEL)]
 
-    logger.configure(
-        handlers=[{"sink": sys.stderr, "level": config.logging.LOGGING_LEVEL}]
-    )
+    logger.configure(handlers=[{"sink": sys.stderr, "level": config.logging.LOGGING_LEVEL}])
 
 
 # Create an instance

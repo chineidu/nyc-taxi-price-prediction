@@ -50,9 +50,7 @@ def predict_trip_duration(input_data: InputSchema) -> ResponsePredictSchema:
     input_data = input_data.dict()
     logger.info("Fetching data ...")
     data = pd.DataFrame([input_data])  # Convert to DF
-    data["tpep_pickup_datetime"] = pd.to_datetime(
-        data["tpep_pickup_datetime"], errors="coerce"
-    )
+    data["tpep_pickup_datetime"] = pd.to_datetime(data["tpep_pickup_datetime"], errors="coerce")
     logger.info("Making predictions on data ...")
     pred = {}
     y_pred = predict(data=data)

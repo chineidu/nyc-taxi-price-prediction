@@ -5,6 +5,7 @@ author: Chinedu Ezeofor
 """
 import uuid
 import typing as tp
+import logging
 from pathlib import Path
 
 # Standard imports
@@ -12,9 +13,8 @@ import numpy as np
 import joblib
 import pandas as pd
 from pydantic import ValidationError
+from rich.logging import RichHandler
 from sklearn.pipeline import Pipeline
-
-# Scikit-learn
 from sklearn.model_selection import train_test_split
 
 # Custom Imports
@@ -35,10 +35,6 @@ def custom_logger():
         logger.critical("There is something terribly wrong and process may terminate.")
 
     """
-    import logging
-
-    from rich.logging import RichHandler
-
     BASE_DIR = Path(__name__).absolute().parent
     LOGS_DIR = Path(BASE_DIR, "logs")
     # Create directory
@@ -57,7 +53,7 @@ logger = custom_logger()
 Estimator = tp.Union[Pipeline, tp.Any]  # Alias for estimator
 
 
-def get_unique_IDs(feat: str) -> str:
+def get_unique_IDs(feat: str) -> str:  # pylint: disable=inconsistent-return-statements
     """This returns a universally unique generated ID."""
     if feat is not None:
         return str(uuid.uuid4())
@@ -81,11 +77,7 @@ def load_data(*, filename: tp.Union[str, Path], uri: bool = False) -> pd.DataFra
 
     logger.info("Loading Data ... ")
     try:
-        data = (
-            pd.read_csv(filename)
-            if filename.endswith("csv")
-            else pd.read_parquet(filename)
-        )
+        data = pd.read_csv(filename) if filename.endswith("csv") else pd.read_parquet(filename)
     except FileNotFoundError as err:
         logger.info(err)
 
@@ -102,13 +94,9 @@ def load_data(*, filename: tp.Union[str, Path], uri: bool = False) -> pd.DataFra
             # Convert to minutes
             MINS = 60
             try:
-                trip_duration = (
-                    data["tpep_dropoff_datetime"] - data["tpep_pickup_datetime"]
-                )
-            except:
-                trip_duration = (
-                    data["lpep_dropoff_datetime"] - data["lpep_pickup_datetime"]
-                )
+                trip_duration = data["tpep_dropoff_datetime"] - data["tpep_pickup_datetime"]
+            except ValueError:
+                trip_duration = data["lpep_dropoff_datetime"] - data["lpep_pickup_datetime"]
             trip_duration = round(trip_duration.dt.total_seconds() / MINS, 2)
             return trip_duration
 
@@ -116,16 +104,13 @@ def load_data(*, filename: tp.Union[str, Path], uri: bool = False) -> pd.DataFra
         logger.info("Added IDs! ")
         data["trip_duration"] = calculate_trip_duration(data)
         data = data.loc[
-            (data["trip_duration"] > MIN_THRESH)
-            & (data["trip_duration"] <= TRIP_DUR_THRESH)
+            (data["trip_duration"] > MIN_THRESH) & (data["trip_duration"] <= TRIP_DUR_THRESH)
         ]
         data = data.loc[
-            (data["trip_distance"] > MIN_THRESH)
-            & (data["trip_distance"] <= TRIP_DIST_THRESH)
+            (data["trip_distance"] > MIN_THRESH) & (data["trip_distance"] <= TRIP_DIST_THRESH)
         ]
         data = data.loc[
-            (data["total_amount"] > MIN_THRESH)
-            & (data["total_amount"] <= TOTAL_AMT_THRESH)
+            (data["total_amount"] > MIN_THRESH) & (data["total_amount"] <= TOTAL_AMT_THRESH)
         ]
         data["trip_duration"] = np.log1p(data["trip_duration"])  # Log transform
     return data

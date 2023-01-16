@@ -53,9 +53,7 @@ def get_paths(*, taxi_type: str, run_id: str, run_date: datetime) -> tp.Tuple:
     year = prev_month.year
     month = prev_month.month
 
-    input_file = (
-        f"s3://nyc-tlc/trip data/{taxi_type}_tripdata_{year:04d}-{month:02d}.parquet"
-    )
+    input_file = f"s3://nyc-tlc/trip data/{taxi_type}_tripdata_{year:04d}-{month:02d}.parquet"
     output_file = f"s3://nyc-duration-prediction-neidu/taxi_type={taxi_type}/year={year:04d}/month={month:02d}/{run_id}.parquet"
 
     return input_file, output_file
