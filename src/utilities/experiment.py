@@ -5,17 +5,17 @@ author: Chinedu Ezeofor
 """
 
 # Built-in
-import typing as tp
 import logging
+import typing as tp
 import warnings
 from urllib.parse import urlparse
 
 # Standard imports
-import numpy as np
 import mlflow
+import numpy as np
 import pandas as pd
+from pydantic import BaseModel
 from sklearn import metrics
-from pydantic import BaseModel  # pylint: disable=no-name-in-module
 from sklearn.pipeline import Pipeline
 
 
