@@ -32,9 +32,7 @@ def create_conn() -> tp.Any:
 @click.option("--start-index", help="The start index", default=0)
 @click.option("--stop-index", help="The stop index", default=4)
 @click.option("-v", "--verbose", help="Increase the verbosity.", default=0, count=True)
-@click.option(
-    "-d", "--drop", help="Drop the collection", default="false", show_default=True
-)
+@click.option("-d", "--drop", help="Drop the collection", default="false", show_default=True)
 def main(start_index: int, stop_index: int, verbose: int, drop: str) -> None:
     """This is the main function for running the project."""
     # Create connection
@@ -65,7 +63,7 @@ def main(start_index: int, stop_index: int, verbose: int, drop: str) -> None:
         db.report.drop()
         click.echo(
             click.style(
-                f"WARNING: `report` Collection containing data and quality drift dropped!",
+                "WARNING: `report` Collection containing data and quality drift dropped!",
                 fg="red",
                 bold=True,
             )

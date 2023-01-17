@@ -11,7 +11,7 @@ files = [
     ("yellow_tripdata_2022-01.parquet", "./evidently_service/datasets"),
 ]
 
-print(f"Downloading files ...")
+print("Downloading files ...")
 for file, path in files:
     url = f"https://d37ci6vzurychx.cloudfront.net/trip-data/{file}"
     response = requests.get(url, stream=True)
@@ -27,7 +27,7 @@ for file, path in files:
             file.write(data)  # type: ignore
     progress_bar.close()
 
-    if total_size_in_bytes != 0 and progress_bar.n != total_size_in_bytes:
+    if total_size_in_bytes not in {0, progress_bar.n}:
         print("ERROR, something went wrong")
     else:
         print("Downloading of files done!")

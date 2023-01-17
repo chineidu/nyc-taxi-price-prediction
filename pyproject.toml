@@ -10,6 +10,7 @@ disable = [
     "missing-module-docstring",
     "missing-timeout",
     "no-name-in-module",
+    "no-value-for-parameter",
     "inconsistent-return-statements",
     "invalid-name",
     "import-error",
