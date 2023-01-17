@@ -4,8 +4,6 @@ prediction on  the data.
 
 author: Chinedu Ezeofor
 """
-
-
 import mlflow
 import numpy as np
 import pandas as pd
