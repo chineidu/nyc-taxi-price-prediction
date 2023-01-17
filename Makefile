@@ -65,7 +65,7 @@ lint:  # Run the linting test
 stylecheck:
 	@echo "\trunning stylecheck test ...\n"
 	. .venv/bin/activate && pylint --recursive=y \
-	src model_monitoring
+	src model_monitoring model_deployment exp_tracking
 
 code_quality: lint typecheck stylecheck
 
