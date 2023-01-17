@@ -36,6 +36,9 @@ pip install -e ".[test]"
 # For help
 pre-commit --help
 
+# Create a sample config and append to the file
+pre-commit sample-config >> .pre-commit-config.yaml
+
 # Install hook
 pre-commit install
 ```
