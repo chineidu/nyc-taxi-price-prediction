@@ -1,6 +1,6 @@
 # Configure State: Create a state bucket in AWS beforehand
 terraform {
-  required_version = "~> 4.0"
+  required_version = ">= 1.3.7"
   backend "s3" {
     bucket  = "mlops-tf-state-neidu"
     key     = "mlops-project-stg.tfstate"
@@ -22,3 +22,19 @@ data "aws_caller_identity" "current_identity" {}
 locals {
   account_id = data.aws_caller_identity.current_identity.account_id
 }
+
+# Reference Modules
+# Ride events
+module "source_kinesis_stream" {
+  source           = "./modules/kinesis"
+  stream_name      = "${var.source_stream_name}_${var.project_name}"
+  shard_count      = var.shard_count
+  retention_period = var.retention_period
+  tags             = var.project_name
+
+}
+
+
+# output "source_kinesis_stream_output" {
+#   value = source_kinesis_stream.
+# }
